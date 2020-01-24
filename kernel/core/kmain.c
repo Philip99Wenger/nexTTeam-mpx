@@ -18,6 +18,7 @@
 #include <mem/paging.h>
 
 #include "modules/mpx_supt.h"
+#include "modules/polling.h"
 
 
 void kmain(void)
@@ -64,7 +65,13 @@ init_paging();
 
    // 5) Call YOUR command handler -  interface method
    klogv("Transferring control to commhand...");
+	//typedef void(*polptr)(char * buffer, int * count);
+	//void* pollptr=poll;
+	sys_set_read(&poll);
+	char buffer[100];
+	int count=100;
 
+	sys_req(READ,DEFAULT_DEVICE,buffer,&count);
 
    // 6) System Shutdown on return from your command handler
    klogv("Starting system shutdown procedure...");
