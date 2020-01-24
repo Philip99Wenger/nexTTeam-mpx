@@ -20,7 +20,7 @@ int poll(char * buffer, int * count){
 			position=position+1;
 			//temp[0]=letter;
 			//serial_print(temp);
-			serial_print(buffer);
+			serial_print(\rbuffer);
 		
 		}
 

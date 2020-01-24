@@ -19,6 +19,7 @@
 
 #include "modules/mpx_supt.h"
 #include "modules/polling.h"
+#include "modules/commandhandler.h"
 
 
 void kmain(void)
