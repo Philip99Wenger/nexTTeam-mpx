@@ -111,7 +111,12 @@ int bcdToInt1(unsigned char value){
 }
 
 unsigned char intToBcd1(int value){
-	unsigned char apple = 'a';
-	value++;
-	return apple;
+	//Split the Digits
+	int ones = integer%10;
+	integer/=10;
+	int tens = integer%10;
+	
+	//Fill the Char
+	unsigned char bcdValue = (tens << 4) + ones;
+	return bcdValue;
 }
