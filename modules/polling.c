@@ -109,13 +109,9 @@ int poll(char * buffer, int * count){
 				break;
 			case 13:
 				doPrint=0;
-				//serial_print("hello there enter presser");
 
-				serial_print("\nsending command: \n");
 				serial_print(buffer);
-				serial_print("\ntotal Chars: \n");
 				tempLetAr[0]=totalChars+'0';
-				serial_print(tempLetAr);
 				serial_print(" \n");
 				*count=totalChars;
 				return 1;
