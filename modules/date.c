@@ -61,6 +61,18 @@ void setDate(int month, int day, int year){
 		sys_req(WRITE, DEFAULT_DEVICE, incorrectDay, MAX_SIZE2);
 		return;
 	}
+	if(day == 31 && (month == 4 || month == 6 || month == 9 || month == 11)){
+		sys_req(WRITE, DEFAULT_DEVICE, incorrectDay, MAX_SIZE2);
+		return;
+	}
+	if(month == 2 && day > 29 && year % 4 == 0){
+		sys_req(WRITE, DEFAULT_DEVICE, incorrectDay, MAX_SIZE2);
+		return;
+	}
+	if(month == 2 && day > 28 && year % 4 != 0){
+		sys_req(WRITE, DEFAULT_DEVICE, incorrectDay, MAX_SIZE2);
+		return;
+	}
 
 	//check in year is valid and return if it is not
 	if(year < 0 || year > 99){
