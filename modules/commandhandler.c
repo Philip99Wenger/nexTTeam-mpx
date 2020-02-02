@@ -5,9 +5,9 @@ char cmdBuffer[100];
 int bufferSize;
 int quit=0;
 
-white(!quit){
+while(!quit){
 //get a command
-memset(buffer, '\0', 100);
+memset(cmdBuffer, '\0', 100);
 bufferSize = 99; //reset size before each call to read
 sys_req(READ, DEFAULT_DEVICE, cmdBuffer, &bufferSize);
 
@@ -15,4 +15,6 @@ sys_req(READ, DEFAULT_DEVICE, cmdBuffer, &bufferSize);
 //see if quit was entered
 }
 
+return 1;
 }
+

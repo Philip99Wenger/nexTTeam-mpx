@@ -15,9 +15,9 @@
 
 #include "mpx_supt.h"
 
-int getdate();
-int bcdToInt(unsigned char value);
+void getdate();
+int bcdToInt1(unsigned char value);
 void setDate(int month, int day, int year);
-unsigned char intToBcd(int data);
+unsigned char intToBcd1(int data);
 
 #endif

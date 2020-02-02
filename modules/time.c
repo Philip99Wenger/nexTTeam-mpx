@@ -1,7 +1,7 @@
 #include "time.h"
 
-int temp = 100;
-int* MAX_SIZE = &temp;
+int temp1 = 100;
+int* MAX_SIZE1 = &temp1;
 
 char display[100];
 
@@ -10,62 +10,61 @@ void gettime(){
 	unsigned char minutes;
 	unsigned char seconds;
 	char currentData[25];
-	char colon=':';
+	char colon[2] =": ";
 
 	//set tempData and display to null
-	*currentData='\0';
 	int i;
-	for (i=0;i<*MAX_SIZE;i++){
+	for (i=0;i<*MAX_SIZE1;i++){
 		display[i]='\0';
 	}
 	for (i=0;i<25;i++){
-		display[i]='\0';
+		currentData[i]='\0';
 	}
 	
 	//get hours
-	outb(0x70, 0x04)
+	outb(0x70, 0x04);
 	hours = (unsigned char)inb(0x71);
-	intToAscii(bcdToInt(hours), currentData);
+	strcpy(currentData, intToAscii(bcdToInt(hours)));
 	strcat(display, currentData);
 	strcat(display, colon);
 
 	//get minutes
 	outb(0x70, 0x02);
 	minutes = (unsigned char)inb(0x71);
-	intToAscii(bcdToInt(minutes), currentData);
+	strcpy(currentData, intToAscii(bcdToInt(minutes)));
 	strcat(display, currentData);
 	strcat(display, colon);
 
 	//get seconds
 	outb(0x70, 0x00);
 	seconds = (unsigned char)inb(0x71);
-	intToAscii(bcdToInt(seconds), currentData);
+	strcpy(currentData, intToAscii(bcdToInt(seconds)));
 	strcat(display, currentData);
 
-	sys_req(WRITE, DEFAULT_DEVICE, display, MAX_SIZE);
+	sys_req(WRITE, DEFAULT_DEVICE, display, MAX_SIZE1);
 
 }
 
 void setTime(int hours, int minutes, int seconds){
-	char* incorrectHours[MAX_SIZE] = "Invalid Hours";
-	char* incorrectMinutes[MAX_SIZE] = "Invalid Minutes";
-	char* incorrectSeconds[MAX_SIZE] = "Invalid Seconds";
+	char incorrectHours[100] = "Invalid Hours";
+	char incorrectMinutes[100] = "Invalid Minutes";
+	char incorrectSeconds[100] = "Invalid Seconds";
 	unsigned char bcdData;
 	//check if hours is valid and return if it is not
 	if(hours < 1 || hours > 24){
-		sys_req(WRITE, DEFAULT_DEVICE, incorrectHours, MAX_SIZE);
+		sys_req(WRITE, DEFAULT_DEVICE, incorrectHours, MAX_SIZE1);
 		return;
 	}
 
 	//check if minutes is valid and return if it is not
 	if(minutes < 0 || minutes > 59){
-		sys_req(WRITE, DEFAULT_DEVICE, incorrectMinutes, MAX_SIZE);
+		sys_req(WRITE, DEFAULT_DEVICE, incorrectMinutes, MAX_SIZE1);
 		return;
 	}
 
 	//check in seconds is valid and return if it is not
 	if(seconds < 0 || seconds > 59){
-		sys_req(WRITE, DEFAULT_DEVICE, incorrectSecconds, MAX_SIZE);
+		sys_req(WRITE, DEFAULT_DEVICE, incorrectSeconds, MAX_SIZE1);
 		return;
 	}
 	cli();
@@ -100,6 +99,8 @@ int bcdToInt(unsigned char value){
 }
 
 unsigned char intToBcd(int value){
+	unsigned char apple = 'a';
+	value++;
+	return apple;
 }
-	 
-}
+
