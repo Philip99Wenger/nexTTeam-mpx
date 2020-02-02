@@ -24,21 +24,21 @@ void getdate(){
 	//get month
 	outb(0x70, 0x08);
 	month = (unsigned char)inb(0x71);
-	strcpy(currentData, intToAscii(bcdToInt1(month)));
+	strcpy(currentData, intToAscii(bcdToInt(month)));
 	strcat(display, currentData);
 	strcat(display, slash);
 
 	//get day
 	outb(0x70, 0x07);
 	day = (unsigned char)inb(0x71);
-	strcpy(currentData, intToAscii(bcdToInt1(day)));
+	strcpy(currentData, intToAscii(bcdToInt(day)));
 	strcat(display, currentData);
 	strcat(display, slash);
 
 	//get year
 	outb(0x70, 0x09);
 	year = (unsigned char)inb(0x71);
-	strcpy(currentData, intToAscii(bcdToInt1(year)));
+	strcpy(currentData, intToAscii(bcdToInt(year)));
 	strcat(display, currentData);
 
 	sys_req(WRITE, DEFAULT_DEVICE, display, MAX_SIZE2);
@@ -83,40 +83,21 @@ void setDate(int month, int day, int year){
 	
 	//set year
 	outb(0x70, 0x09);
-	bcdData = intToBcd1(year);
+	bcdData = intToBcd(year);
 	outb(0x71, bcdData);
 
 	//set month
 	outb(0x70, 0x08);
-	bcdData = intToBcd1(month);
+	bcdData = intToBcd(month);
 	outb(0x71, bcdData);
 
 
 	//set day
 	outb(0x70, 0x07);
-	bcdData = intToBcd1(day);
+	bcdData = intToBcd(day);
 	outb(0x71, bcdData);
 
 
 	sti();
 
-}
-
-int bcdToInt1(unsigned char value){
-	int integerValue;
-	integerValue = (int)((value & 0xF0) >> 4);
-	integerValue = integerValue * 10;
-	integerValue = (int)(value & 0x0F) + integerValue;
-	return integerValue;
-}
-
-unsigned char intToBcd1(int value){
-	//Split the Digits
-	int ones = integer%10;
-	integer/=10;
-	int tens = integer%10;
-	
-	//Fill the Char
-	unsigned char bcdValue = (tens << 4) + ones;
-	return bcdValue;
 }

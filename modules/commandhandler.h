@@ -14,6 +14,8 @@
 #include <mem/paging.h>
 
 #include "mpx_supt.h"
+#include "date.h"
+#include "time.h"
 
 //int poll(char * buffer, int * count);
 void version();

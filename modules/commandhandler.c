@@ -1,7 +1,4 @@
 #include "commandhandler.h"
-#include "string.c"
-#include "time.c"
-#include "date.c"
 
 void version(){
 	char version[] = "VERSION: 1.0";
@@ -19,6 +16,11 @@ int comhand(){
 char cmdBuffer[100];
 int bufferSize;
 int quit=0;
+void (*version_ptr)() = &version;
+void (*help_ptr)() = &help;
+void (*shutdown_ptr)() = &shutdown;
+void (*gettime_ptr)() = &gettime;
+void (*settime_ptr)(int, int, int) = &settime;
 
 while(!quit){
 //get a command
@@ -39,18 +41,19 @@ char commands[7][15]={
 };
 
 void (*commands_ptrs[])()={
-	version,
-	help,
-	shutdown,
-	getTime,
-	(general_fp)setTime,
+	*version_ptr,
+	*help_ptr,
+	*shutdown_ptr,
+	*gettime_ptr,
+	*settime_ptr,
 	getDate,
 	(general_fp)setDate
 };
 
 char *temp;
-for(int i=0; i<sizeof(commands)/sizeof(commands[0]); i++){
-	if(strcmp(cmdBuffer, commands[i]==0){
+int i;
+for(i=0; i<sizeof(commands)/sizeof(commands[0]); i++){
+	if(strcmp(cmdBuffer, commands[i]==0)){
 		if(strcmp(commands[i]==commands[4])){
 			//ask for parameters for setTime
 		}else if(strcmp(commands[i]==commands[6])){
