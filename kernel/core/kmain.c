@@ -20,6 +20,7 @@
 #include "modules/mpx_supt.h"
 #include "modules/polling.h"
 #include "modules/commandhandler.h"
+#include "modules/date.h"
 
 
 void kmain(void)
@@ -67,7 +68,7 @@ init_paging();
    // 5) Call YOUR command handler -  interface method
    klogv("Transferring control to commhand...");
 	//typedef void(*polptr)(char * buffer, int * count);
-	//void* pollptr=poll;
+	//void* pollptr=poll
 	sys_set_read(&poll);
 	char buffer[100];
 	int count=100;

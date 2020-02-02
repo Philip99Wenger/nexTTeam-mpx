@@ -59,4 +59,11 @@ char* strtok(char *s1, const char *s2);
 */
 int atoi(const char *s);
 
+/*
+  Procdeure..: intToAscii
+  Description..: Convert an intger to an ASCII string
+  Params..: int integer -- integer
+*/
+char * intToAscii(int integer)
+
 #endif

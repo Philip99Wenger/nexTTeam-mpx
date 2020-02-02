@@ -198,6 +198,28 @@ char* strtok(char *s1, const char *s2)
   return s1;
 }
 
+char * intToAscii(int integer){
+
+           //Split the Digits
+           int ones = integer%10;
+           integer/=10;
+           int tens = integer%10;
+
+           //Convert to Char
+  	  char OnesPlace = ones+'0';
+           char TensPlace = tens+'0';
+
+           //Place inside Array
+           char array[3] = {(char) TensPlace, (char) OnesPlace, '\0'};
+
+           //Point to Array
+           char *arrayPoint = array;
+
+           //Return the Array
+      	   return arrayPoint;
+}
+       
+
 
 
 /* And finally....
