@@ -12,9 +12,10 @@ ASFLAGS = -f elf -g
 # I'll start you off with just mpx_supt.o
 OBJFILES =\
 mpx_supt.o \
-polling.o
-commandhandler.o
-date.o
+polling.o\
+commandhandler.o\
+date.o\
+time.o
 
 .c.s:
 	$(CC) $(CFLAGS) -S -o $@ $<

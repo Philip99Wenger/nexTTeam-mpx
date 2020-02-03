@@ -64,6 +64,6 @@ int atoi(const char *s);
   Description..: Convert an intger to an ASCII string
   Params..: int integer -- integer
 */
-char * intToAscii(int integer)
+char * intToAscii(int integer);
 
 #endif

@@ -1,23 +1,26 @@
 #include "time.h"
 
-void gettime();
-int bcdToInt(unsigned char value);
-void setTime(int hours, int minutes, int seconds);
-char * intToAscii(int integer)
+int temp = 100;
+int* MAX_SIZE = &temp;
 
-int* MAX_SIZE=100;
-char* display[MAX_SIZE];
+char display[100];
 
 void gettime(){
 	unsigned char hours;
 	unsigned char minutes;
 	unsigned char seconds;
 	char currentData[25];
-	char colon=":"
+	char colon=':';
 
 	//set tempData and display to null
 	*currentData='\0';
-	display='\0';
+	int i;
+	for (i=0;i<*MAX_SIZE;i++){
+		display[i]='\0';
+	}
+	for (i=0;i<25;i++){
+		display[i]='\0';
+	}
 	
 	//get hours
 	outb(0x70, 0x04)
