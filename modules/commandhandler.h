@@ -16,5 +16,7 @@
 #include "mpx_supt.h"
 
 //int poll(char * buffer, int * count);
+void version();
+void help();
 
 #endif
