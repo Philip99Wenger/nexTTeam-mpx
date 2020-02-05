@@ -17,7 +17,7 @@
 
 void gettime();
 int bcdToInt(unsigned char value);
-void setTime(int month, int day, int year);
+void setTime(int hours, int minutes, int seconds);
 unsigned char intToBcd(int data);
 char * intToAscii(int integer);
 

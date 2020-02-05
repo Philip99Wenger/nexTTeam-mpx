@@ -7,17 +7,19 @@ void version(){
 }
 
 void help(){
-	char help[] = "VERSION: 1.0";
+	char help[] = "version	-- displays version of system\ngetTime	-- displays current time of system\nsetTime -- sets current time of system\ngetTime	-- displays current date of system\nsetTime -- sets current date of system";
 	int helpSize = strlen(help);
 	sys_req(WRITE, DEFAULT_DEVICE, help, &helpSize);
 }
 
+void shutdown(){
+
+}
+
 void settimeWrapper(){
-	memset(timeBuffer, '\0', 100);
-	bufferSize = 99;
 	char timeBuffer[100];
-	int BufferSize;
-	int[] parArr;
+	int bufferSize = 99;
+	int parArr[3];
 	int i=0;
 	
 	//prompt user for time to set to
@@ -38,11 +40,9 @@ void settimeWrapper(){
 }
 
 void setdateWrapper(){
-	memset(dateBuffer, '\0', 100);
-	bufferSize = 99;
 	char dateBuffer[100];
-	int BufferSize;
-	int[] parArr;
+	int bufferSize = 99;
+	int parArr[3];
 	int i=0;
 	
 	//prompt user for date to set to

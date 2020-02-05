@@ -17,6 +17,7 @@
 #include "time.h"
 
 void getdate();
+void setDate(int month, int day, int year);
 int bcdToInt1(unsigned char value);
 
 #endif

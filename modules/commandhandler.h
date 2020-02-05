@@ -20,6 +20,7 @@
 //int poll(char * buffer, int * count);
 void version();
 void help();
+void shutdown();
 void settimeWrapper();
 void setdateWrapper();
 
