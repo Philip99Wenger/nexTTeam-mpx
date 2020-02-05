@@ -12,6 +12,56 @@ void help(){
 	sys_req(WRITE, DEFAULT_DEVICE, help, &helpSize);
 }
 
+void settimeWrapper(){
+	memset(timeBuffer, '\0', 100);
+	bufferSize = 99;
+	char timeBuffer[100];
+	int BufferSize;
+	int[] parArr;
+	int i=0;
+	
+	//prompt user for time to set to
+	char prompt[] = "Enter time: hh:mm:ss";
+	int promptSize = strlen(prompt);
+	sys_req(WRITE, DEFAULT_DEVICE, prompt, &promptSize);
+	
+	memset(timeBuffer, '\0', 100);
+	sys_req(READ, DEFAULT_DEVICE, timeBuffer, &bufferSize);
+
+	char* token = strtok(timeBuffer, ":");
+	while (token != NULL){
+		parArr[i] = atoi(token);
+		token = strtok(NULL, ":");
+		i= i+1;
+	}
+	setTime(parArr[0],parArr[1],parArr[2]);
+}
+
+void setdateWrapper(){
+	memset(dateBuffer, '\0', 100);
+	bufferSize = 99;
+	char dateBuffer[100];
+	int BufferSize;
+	int[] parArr;
+	int i=0;
+	
+	//prompt user for date to set to
+	char prompt[] = "Enter date: mm/dd/yy";
+	int promptSize = strlen(prompt);
+	sys_req(WRITE, DEFAULT_DEVICE, prompt, &promptSize);
+
+	memset(dateBuffer, '\0', 100);
+	sys_req(READ, DEFAULT_DEVICE, dateBuffer, &bufferSize);
+
+	char* token = strtok(dateBuffer, "/");
+	while (token != NULL){
+		parArr[i] = atoi(token);
+		token = strtok(NULL, "/");
+		i= i+1;
+	}
+	setDate(parArr[0],parArr[1],parArr[2]);
+}
+
 int comhand(){
 char cmdBuffer[100];
 int bufferSize;
@@ -20,15 +70,15 @@ void (*version_ptr)() = &version;
 void (*help_ptr)() = &help;
 void (*shutdown_ptr)() = &shutdown;
 void (*gettime_ptr)() = &gettime;
-void (*settime_ptr)(int, int, int) = &settime;
+void (*settime_ptr)() = &settimeWrapper;
+void (*getdate_ptr)() = &getdate_ptr;
+void (*setdate_ptr)() = &setdateWrapper;
 
 while(!quit){
 //get a command
 memset(cmdBuffer, '\0', 100);
 bufferSize = 99; //reset size before each call to read
 sys_req(READ, DEFAULT_DEVICE, cmdBuffer, &bufferSize);
-
-typedef void (*general_fp)(void);
 
 char commands[7][15]={
 	"version",
@@ -46,8 +96,8 @@ void (*commands_ptrs[])()={
 	*shutdown_ptr,
 	*gettime_ptr,
 	*settime_ptr,
-	getDate,
-	(general_fp)setDate
+	*getdate_ptr,
+	*setdate_ptr
 };
 
 char *temp;
@@ -63,9 +113,6 @@ for(i=0; i<sizeof(commands)/sizeof(commands[0]); i++){
 		}
 	}
 }
-
-//process the command
-//see if quit was entered
 }
 
 return 1;
