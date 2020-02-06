@@ -12,6 +12,7 @@ ASFLAGS = -f elf -g
 # I'll start you off with just mpx_supt.o
 OBJFILES =\
 mpx_supt.o \
+commandhandler.o\
 polling.o\
 date.o\
 time.o

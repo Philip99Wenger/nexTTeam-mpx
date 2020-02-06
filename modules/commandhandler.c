@@ -71,7 +71,7 @@ void (*help_ptr)() = &help;
 void (*shutdown_ptr)() = &shutdown;
 void (*gettime_ptr)() = &gettime;
 void (*settime_ptr)() = &settimeWrapper;
-void (*getdate_ptr)() = &getdate_ptr;
+void (*getdate_ptr)() = &getdate;
 void (*setdate_ptr)() = &setdateWrapper;
 
 while(!quit){
@@ -100,17 +100,18 @@ void (*commands_ptrs[])()={
 	*setdate_ptr
 };
 
-char *temp;
-int i;
+//char *temp;
+unsigned int i;
 for(i=0; i<sizeof(commands)/sizeof(commands[0]); i++){
-	if(strcmp(cmdBuffer, commands[i]==0)){
-		if(strcmp(commands[i]==commands[4])){
-			//ask for parameters for setTime
-		}else if(strcmp(commands[i]==commands[6])){
-			//ask for parameters for setDate
-		}else{
-			*commands_ptrs[1])(); break;
-		}
+	if(strcmp(cmdBuffer, commands[i])==0){
+//		if(strcmp(commands[i], commands[4]) == 0){
+//			//ask for parameters for setTime
+//		}else if(strcmp(commands[i],commands[6]) == 0){
+//			//ask for parameters for setDate
+//		}else{
+//			*commands_ptrs[1](); break;
+//		}
+		(*commands_ptrs[i])();
 	}
 }
 }
