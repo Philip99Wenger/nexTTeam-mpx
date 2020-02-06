@@ -98,7 +98,7 @@ int bcdToInt(unsigned char value){
 	return integerValue;
 }
 
-unsigned char intToBcd(int value){
+unsigned char intToBcd(int integer){
 	//Split the Digits
 	int ones = integer%10;
 	integer/=10;

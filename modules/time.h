@@ -1,6 +1,6 @@
-#ifndef DATE_H_
+#ifndef TIME_H_
 
-#define DATE_H_
+#define TIME_H_
 
 #include <stdint.h>
 #include <string.h>
