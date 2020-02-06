@@ -18,8 +18,11 @@
 #include "time.h"
 
 //int poll(char * buffer, int * count);
+//! Displays the current version being used for the MPX
 void version();
+//! Displays instructions for how to use each command
 void help();
+//! Shutdown the MPX and terminate
 void shutdown();
 void settimeWrapper();
 void setdateWrapper();

@@ -16,8 +16,9 @@
 #include "mpx_supt.h"
 #include "time.h"
 
+//! Get the date from the registers.  Display the date.
 void getdate();
+//! Set the date in the registers. User supplies the month, day, and year to set.
 void setDate(int month, int day, int year);
-int bcdToInt1(unsigned char value);
 
 #endif
