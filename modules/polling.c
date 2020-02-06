@@ -51,7 +51,6 @@ int poll(char * buffer, int * count){
 				}
 				serial_print("   \r");
 
-				
 				serial_print(strcat(buffer,"\r"));
 			}
 			else if (totalChars==0){
