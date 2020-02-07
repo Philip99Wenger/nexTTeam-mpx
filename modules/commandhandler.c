@@ -44,7 +44,6 @@ void help(){
 		"NAME\n     setDate - change system's current time.\nDETAIL DESCRIPTION\n     Will prompt user to enter date as mm/dd/yy (i.e. month/day/year).\n",
 		"NAME\n     shutdown - shuts down NTOS.\nDETAIL DESCRIPTION\n     Will prompt user to confirm system shut down as yes/no.\n"
 	};
-	int helpDSize = 199;
 	
 	char helpPrompt[] = "Please enter command for more information.\n";
 	int helpPromptSize = strlen(helpPrompt);
@@ -61,10 +60,10 @@ void help(){
 	//read which command
 	memset(helpBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, helpBuffer, &bufferSize);
-
+	
 	int temp;
 	for(i=0; i<sizeof(help2)/sizeof(help2[0]); i++){
-		if(strcmp(helpBuffer, help2[i]) == 0){		
+		if(strcmp(helpBuffer, help2[i]) == 0){	
 			temp = strlen(helpDescriptions[i]);	
 			sys_req(WRITE, DEFAULT_DEVICE, helpDescriptions[i], &temp);
 		}
