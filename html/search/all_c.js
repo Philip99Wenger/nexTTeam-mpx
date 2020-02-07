@@ -4,7 +4,7 @@ var searchData=
   ['setdatewrapper',['setdateWrapper',['../commandhandler_8c.html#a98ef9d146e345684622e57077a7311f5',1,'setdateWrapper():&#160;commandhandler.c'],['../commandhandler_8h.html#a98ef9d146e345684622e57077a7311f5',1,'setdateWrapper():&#160;commandhandler.c']]],
   ['settime',['setTime',['../time_8c.html#a6e33df2746269af76ee0d6f4a76cfcc9',1,'setTime(int hours, int minutes, int seconds):&#160;time.c'],['../time_8h.html#a6e33df2746269af76ee0d6f4a76cfcc9',1,'setTime(int hours, int minutes, int seconds):&#160;time.c']]],
   ['settimewrapper',['settimeWrapper',['../commandhandler_8c.html#afc5d24a66112b1deae8f75f61d2bacb6',1,'settimeWrapper():&#160;commandhandler.c'],['../commandhandler_8h.html#afc5d24a66112b1deae8f75f61d2bacb6',1,'settimeWrapper():&#160;commandhandler.c']]],
-  ['shutdown',['shutdown',['../commandhandler_8c.html#a7861ee1569802186a619778efc85af13',1,'shutdown():&#160;commandhandler.c'],['../commandhandler_8h.html#a7861ee1569802186a619778efc85af13',1,'shutdown():&#160;commandhandler.c']]],
+  ['shutdown',['shutdown',['../commandhandler_8c.html#ad349600382dfe00fc1eead8957ce7832',1,'shutdown():&#160;commandhandler.c'],['../commandhandler_8h.html#ad349600382dfe00fc1eead8957ce7832',1,'shutdown():&#160;commandhandler.c']]],
   ['student_5ffree',['student_free',['../mpx__supt_8c.html#a19c47c02b0338bc13716d98305bb8a34',1,'mpx_supt.c']]],
   ['student_5fmalloc',['student_malloc',['../mpx__supt_8c.html#a421e2b48efb5facc71d16979252710e2',1,'mpx_supt.c']]],
   ['student_5fread',['student_read',['../mpx__supt_8c.html#a5a741368895802120223e2f35d92557f',1,'mpx_supt.c']]],

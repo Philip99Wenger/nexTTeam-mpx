@@ -28,5 +28,7 @@ int shutdown();
 void settimeWrapper();
 //! Prompts the user for date input and sets the date
 void setdateWrapper();
+//! Processes user input and find the correct function based off user request
+int comhand();
 
 #endif
