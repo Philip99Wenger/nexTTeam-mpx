@@ -7,13 +7,34 @@ void version(){
 }
 
 void help(){
-	char help[] = "version	-- displays version of system\ngetTime	-- displays current time of system\nsetTime -- sets current time of system\ngetTime	-- displays current date of system\nsetTime -- sets current date of system";
+	char help[] = "version	-- displays version of system\ngetTime	-- displays current time of system\nsetTime -- sets current time of system\ngetDate	-- displays current date of system\nsetDate -- sets current date of system";
 	int helpSize = strlen(help);
 	sys_req(WRITE, DEFAULT_DEVICE, help, &helpSize);
 }
 
 void shutdown(){
-
+	char shutdownBuffer[100];
+	int bufferSize = 99;
+	
+	char confirm[] = "Are you sure you want to shut down?	yes/no";
+	int confirmSize = strlen(confirm);
+	
+	//prompt user for confirmation
+	sys_req(WRITE, DEFAULT_DEVICE, confirm, &confirmSize);
+	
+	//read user's input
+	memset(shutdownBuffer, '\0', 100);
+	sys_req(READ, DEFAULT_DEVICE, shutdownBuffer, &bufferSize);
+	
+	if(strcmp(shutdownBuffer, "yes") == 0){
+		
+	}else if(strcmp(shutdownBuffer, "no") == 0){
+		
+	}else{
+		char shutdownError[] = "Please only enter the word 'yes' or 'no'.";
+		int errorSize = strlen(shutdownError);
+		sys_req(WRITE, DEFAULT_DEVICE, shutdownError, &errorSize);
+	}
 }
 
 void settimeWrapper(){
@@ -71,7 +92,7 @@ void (*help_ptr)() = &help;
 void (*shutdown_ptr)() = &shutdown;
 void (*gettime_ptr)() = &gettime;
 void (*settime_ptr)() = &settimeWrapper;
-void (*getdate_ptr)() = &getdate_ptr;
+void (*getdate_ptr)() = &getdate;
 void (*setdate_ptr)() = &setdateWrapper;
 
 while(!quit){
@@ -100,17 +121,11 @@ void (*commands_ptrs[])()={
 	*setdate_ptr
 };
 
-char *temp;
-int i;
+unsigned int i;
 for(i=0; i<sizeof(commands)/sizeof(commands[0]); i++){
-	if(strcmp(cmdBuffer, commands[i]==0)){
-		if(strcmp(commands[i]==commands[4])){
-			//ask for parameters for setTime
-		}else if(strcmp(commands[i]==commands[6])){
-			//ask for parameters for setDate
-		}else{
-			*commands_ptrs[1])(); break;
-		}
+	if(strcmp(cmdBuffer, commands[i])==0){
+
+		(*commands_ptrs[i])();
 	}
 }
 }

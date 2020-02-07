@@ -92,8 +92,6 @@ int poll(char * buffer, int * count){
 					serial_print(" ");
 				}
 				serial_print("   \r");
-
-				
 				serial_print(strcat(buffer,"\r"));*/
 				//i=i+1;
 				serial_print(tempLetAr);

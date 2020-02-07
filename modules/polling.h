@@ -15,6 +15,7 @@
 
 #include "mpx_supt.h"
 
+//! Will accept user input.  Processes input and displays the buffer.
 int poll(char * buffer, int * count);
 
 #endif
