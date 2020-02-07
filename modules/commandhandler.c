@@ -32,7 +32,10 @@ void help(){
 	char helpBuffer[100];
 	int bufferSize = 99;
 
-	char help[6][15] = {"version","getTime","setTime","getDate","setDate", "shutdown"};
+	char help[6][15] = {"version\n","getTime\n","setTime\n","getDate\n","setDate\n", "shutdown\n"};
+	int helpSize = 14;
+	char help2[6][15] = {"version","getTime","setTime","getDate","setDate", "shutdown"};
+
 	char helpDescriptions[6][200] = {
 		"NAME\n     version - display current version of NTOS in use.\nDETAIL DESCRIPTION\n     No further description.\n",
 		"NAME\n     getTime - display current time of system.\nDETAIL DESCRIPTION\n     Time will be displayed as hour:minute:second.\n",
@@ -48,24 +51,22 @@ void help(){
 	
 	//writes prompt
 	sys_req(WRITE, DEFAULT_DEVICE, helpPrompt, &helpPromptSize);
+
 	//writes command options
 	unsigned int i;
-	char *temp;
-	int tempSize = 14;
-	for(i=0; i<sizeof(help)/sizeof(help[0]); i++){
-		temp = strcat(help[i], "\n");
-		sys_req(WRITE, DEFAULT_DEVICE, temp, &tempSize);
+	for(i=0; i<sizeof(help2)/sizeof(help2[0]); i++){
+		sys_req(WRITE, DEFAULT_DEVICE, help[i], &helpSize);
 	}
 
 	//read which command
 	memset(helpBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, helpBuffer, &bufferSize);
 
-	for(i=0; i<sizeof(help)/sizeof(help[0]); i++){
-		if(strcmp(helpBuffer, help[i]) == 0){
+	for(i=0; i<sizeof(help2)/sizeof(help2[0]); i++){
+		if(strcmp(helpBuffer, help2[i]) == 0){			
 			sys_req(WRITE, DEFAULT_DEVICE, helpDescriptions[i], &helpDSize);
 		}
-	}	
+	}		
 }
 
 int shutdown(){
