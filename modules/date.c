@@ -58,7 +58,7 @@ void setDate(int month, int day, int year){
 	}
 
 	//check if day is valid and return if it is not
-	if(day < 1 || month > 31){
+	if(day < 1 || day > 31){
 		sys_req(WRITE, DEFAULT_DEVICE, incorrectDay, MAX_SIZE2);
 		return;
 	}
