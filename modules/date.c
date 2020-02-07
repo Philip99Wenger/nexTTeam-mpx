@@ -9,7 +9,6 @@ void getdate(){
 	unsigned char day;
 	unsigned char year;
 	char currentData[25];
-	char slash[2]="/ ";
 
 	//set tempData and display to null
 	int i;
@@ -25,23 +24,23 @@ void getdate(){
 	outb(0x70, 0x08);
 	month = (unsigned char)inb(0x71);
 	strcpy(currentData, intToAscii(bcdToInt(month)));
-	strcat(display, currentData);
-	strcat(display, slash);
+	sys_req(WRITE, DEFAULT_DEVICE, currentData, MAX_SIZE2);
+	strcpy(currentData, "/ ");
+	sys_req(WRITE, DEFAULT_DEVICE, currentData, MAX_SIZE2);		
 
 	//get day
 	outb(0x70, 0x07);
 	day = (unsigned char)inb(0x71);
 	strcpy(currentData, intToAscii(bcdToInt(day)));
-	strcat(display, currentData);
-	strcat(display, slash);
+	sys_req(WRITE, DEFAULT_DEVICE, currentData, MAX_SIZE2);	
+	strcpy(currentData, "/ ");
+	sys_req(WRITE, DEFAULT_DEVICE, currentData, MAX_SIZE2);
 
 	//get year
 	outb(0x70, 0x09);
 	year = (unsigned char)inb(0x71);
 	strcpy(currentData, intToAscii(bcdToInt(year)));
-	strcat(display, currentData);
-
-	sys_req(WRITE, DEFAULT_DEVICE, display, MAX_SIZE2);
+	sys_req(WRITE, DEFAULT_DEVICE, currentData, MAX_SIZE2);
 
 }
 

@@ -10,7 +10,6 @@ void gettime(){
 	unsigned char minutes;
 	unsigned char seconds;
 	char currentData[25];
-	char colon[2] =": ";
 
 	//set tempData and display to null
 	int i;
@@ -25,23 +24,23 @@ void gettime(){
 	outb(0x70, 0x04);
 	hours = (unsigned char)inb(0x71);
 	strcpy(currentData, intToAscii(bcdToInt(hours)));
-	strcat(display, currentData);
-	strcat(display, colon);
+	sys_req(WRITE, DEFAULT_DEVICE, currentData, MAX_SIZE1);
+	strcpy(currentData, ": ");
+	sys_req(WRITE, DEFAULT_DEVICE, currentData, MAX_SIZE1);	
 
 	//get minutes
 	outb(0x70, 0x02);
 	minutes = (unsigned char)inb(0x71);
 	strcpy(currentData, intToAscii(bcdToInt(minutes)));
-	strcat(display, currentData);
-	strcat(display, colon);
+	sys_req(WRITE, DEFAULT_DEVICE, currentData, MAX_SIZE1);
+	strcpy(currentData, ": ");
+	sys_req(WRITE, DEFAULT_DEVICE, currentData, MAX_SIZE1);	
 
 	//get seconds
 	outb(0x70, 0x00);
 	seconds = (unsigned char)inb(0x71);
 	strcpy(currentData, intToAscii(bcdToInt(seconds)));
-	strcat(display, currentData);
-
-	sys_req(WRITE, DEFAULT_DEVICE, display, MAX_SIZE1);
+	sys_req(WRITE, DEFAULT_DEVICE, currentData, MAX_SIZE1);
 
 }
 
