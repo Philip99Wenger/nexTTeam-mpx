@@ -1,7 +1,7 @@
 #include "commandhandler.h"
 
 void version(){
-	char version[] = "VERSION: 1.0";
+	char version[] = "VERSION: 1.0\n";
 	int versionSize = strlen(version);
 	sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
 }
@@ -34,24 +34,27 @@ void help(){
 
 	char help[6][15] = {"version","getTime","setTime","getDate","setDate", "shutdown"};
 	char helpDescriptions[6][200] = {
-		"NAME\n     version - display current version of NTOS in use.\nDETAIL DESCRIPTION\n     No further description.",
-		"NAME\n     getTime - display current time of system.\nDETAIL DESCRIPTION\n     Time will be displayed as hour:minute:second.",
-		"NAME\n     setTime - change system's current time.\nDETAIL DESCRIPTION\n     Will prompt user to enter time as hh:mm:ss (i.e. hour:minute:second).",
-		"NAME\n     getDate - display current date of system.\nDETAIL DESCRIPTION\n     Date will be displayed as month/day/year.",
-		"NAME\n     setDate - change system's current time.\nDETAIL DESCRIPTION\n     Will prompt user to enter date as mm/dd/yy (i.e. month/day/year).",
-		"NAME\n     shutdown - shuts down NTOS.\nDETAIL DESCRIPTION\n     Will prompt user to confirm system shut down as yes/no."
+		"NAME\n     version - display current version of NTOS in use.\nDETAIL DESCRIPTION\n     No further description.\n",
+		"NAME\n     getTime - display current time of system.\nDETAIL DESCRIPTION\n     Time will be displayed as hour:minute:second.\n",
+		"NAME\n     setTime - change system's current time.\nDETAIL DESCRIPTION\n     Will prompt user to enter time as hh:mm:ss (i.e. hour:minute:second).\n",
+		"NAME\n     getDate - display current date of system.\nDETAIL DESCRIPTION\n     Date will be displayed as month/day/year.\n",
+		"NAME\n     setDate - change system's current time.\nDETAIL DESCRIPTION\n     Will prompt user to enter date as mm/dd/yy (i.e. month/day/year).\n",
+		"NAME\n     shutdown - shuts down NTOS.\nDETAIL DESCRIPTION\n     Will prompt user to confirm system shut down as yes/no.\n"
 	};
 	int helpDSize = 199;
 	
-	char helpPrompt[] = "Please enter command for more information.";
+	char helpPrompt[] = "Please enter command for more information.\n";
 	int helpPromptSize = strlen(helpPrompt);
 	
 	//writes prompt
 	sys_req(WRITE, DEFAULT_DEVICE, helpPrompt, &helpPromptSize);
 	//writes command options
 	unsigned int i;
+	char *temp;
+	int tempSize = 14;
 	for(i=0; i<sizeof(help)/sizeof(help[0]); i++){
-		sys_req(WRITE, DEFAULT_DEVICE, help[i], &helpDSize);
+		temp = strcat(help[i], "\n");
+		sys_req(WRITE, DEFAULT_DEVICE, temp, &tempSize);
 	}
 
 	//read which command
@@ -69,7 +72,7 @@ int shutdown(){
 	char shutdownBuffer[100];
 	int bufferSize = 99;
 	
-	char confirm[] = "Are you sure you want to shut down?	yes/no";
+	char confirm[] = "Are you sure you want to shut down?	yes/no\n";
 	int confirmSize = strlen(confirm);
 	
 	//prompt user for confirmation
@@ -85,7 +88,7 @@ int shutdown(){
 	}else if(strcmp(shutdownBuffer, "no") == 0){
 		returnValue = 0;
 	}else{
-		char shutdownError[] = "Please only enter the word 'yes' or 'no'.";
+		char shutdownError[] = "Please only enter the word 'yes' or 'no'.\n";
 		int errorSize = strlen(shutdownError);
 		sys_req(WRITE, DEFAULT_DEVICE, shutdownError, &errorSize);
 		returnValue = 0;
@@ -125,7 +128,7 @@ void setdateWrapper(){
 	int i=0;
 	
 	//prompt user for date to set to
-	char prompt[] = "Enter date: mm/dd/yy";
+	char prompt[] = "Enter date: mm/dd/yy\n";
 	int promptSize = strlen(prompt);
 	sys_req(WRITE, DEFAULT_DEVICE, prompt, &promptSize);
 
@@ -181,7 +184,7 @@ unsigned int i;
 int shutdownVal;
 for(i=0; i<sizeof(commands)/sizeof(commands[0]); i++){
 	if(strcmp(cmdBuffer, commands[i])==0){
-		if(i == 2){
+		if(i == 6){
 			shutdownVal = shutdown();
 			if(shutdownVal == 1){quit = 1;}
 		}else{
