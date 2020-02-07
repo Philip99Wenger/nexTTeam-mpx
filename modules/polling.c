@@ -12,11 +12,10 @@ int poll(char * buffer, int * count){
 	int flag=1;
 	char letter;
 	char sublet;
-	//i=42;
+	int i=0;
 	char tempLetAr[2]={'\0','\0'};
 	int doPrint;
 	//char temp[1]={0};
-	//buffer[0]='\r';
 	
 	while(flag){
 		if (inb(COM1+5)&1){
@@ -26,22 +25,33 @@ int poll(char * buffer, int * count){
 			switch (letter){
 			case 91:
 				sublet=inb(COM1);
+				doPrint=0;
 				
 				if (sublet==51){
 					doPrint=0;
-					//tempLetAr[0]='%';
-					//serial_print(tempLetAr);
+					serial_print("\[K");
 					if (position<totalChars){
+						for (i=position+1;i<totalChars;i++){
 						
-						serial_print("\[1C");
+						tempLetAr[0]=buffer[i];
+						serial_print(tempLetAr);
+						buffer[i-1]=buffer[i];
+
+						}
+						buffer[i-1]='\0';
+						for (i=position+1;i<totalChars;i++){
+						
 						tempLetAr[0]='\b';
 						serial_print(tempLetAr);
-						//tempLetAr[0]='%';
-						//serial_print(tempLetAr);	
-					}	
+
+						}
+						totalChars=totalChars-1;
+						//serial_print("\[K");	
+					}
+					sublet=inb(COM1);	
 					
 				}
-				else if(sublet==67&&position< *count){
+				else if(sublet==67&&(position < *count)){
 					doPrint=0;
 					if(position==totalChars){
 						buffer[position]=' ';
@@ -52,9 +62,11 @@ int poll(char * buffer, int * count){
 					position=position+1;
 					serial_print("\[1C");
 				}
-				else if(sublet==68&&position>0){
+				else if(sublet==68){
 					doPrint=0;
-					position=position-1;
+					if (position > 0){
+						position=position-1;
+					}
 					serial_print("\[1D");
 
 				}
@@ -63,57 +75,75 @@ int poll(char * buffer, int * count){
 				}*/
 				break;
 			case 127:
+				doPrint=0;
 				if (position>0){
 					position=position-1;
-					buffer[position]='\0';
-					totalChars=totalChars-1;
 					tempLetAr[0]='\b';
+					serial_print(tempLetAr);
+					tempLetAr[0]=27;
+					serial_print(tempLetAr);
+					serial_print("\[K");
+				
+					if (position<totalChars){
+						for (i=position+1;i<totalChars;i++){
+					
+						tempLetAr[0]=buffer[i];
+						serial_print(tempLetAr);
+						buffer[i-1]=buffer[i];
 
-				}
-				else if (position==0){
-					buffer[position]='\0';
-					tempLetAr[0]='\b';
+						}
+						buffer[i-1]='\0';
+						for (i=position+1;i<totalChars;i++){
+					
+						tempLetAr[0]='\b';
+						serial_print(tempLetAr);
 
+						}
+					}
+					if (totalChars>0){
+						totalChars=totalChars-1;
+					}
 				}
+				
+
+				break;
+			case 13:
+				doPrint=0;
+				//serial_print("hello there enter presser");
+
+				serial_print("\nsending command: \n");
+				serial_print(buffer);
+				serial_print("\ntotal Chars: \n");
+				tempLetAr[0]=totalChars+'0';
+				serial_print(tempLetAr);
+				serial_print(" \n");
+				*count=totalChars;
+				return 1;
+
 				break;
 			default:
-				if (position < *count ){
+				if (position < *count && letter>31 && letter<127){
 
 					buffer[position]=letter;
+					if (position==totalChars){
+						totalChars=totalChars+1;
+
+					}
 					position=position+1;
-					totalChars=totalChars+1;
 				}
 				
 			
 
 			}
-			if (totalChars>0&&position < *count&&doPrint){
+			if ((totalChars>=0)&&(position < *count)&&(doPrint==1)){
 				/*for(i=0;(i<totalChars+5)&&(i<*count);i++){
 					serial_print(" ");
 				}
 				serial_print("   \r");
 				serial_print(strcat(buffer,"\r"));*/
 				//i=i+1;
+				//serial_print("hi how are you");
 				serial_print(tempLetAr);
-				if (tempLetAr[0]=='\b'){
-					tempLetAr[0]=' ';
-					serial_print(tempLetAr);
-					tempLetAr[0]='\b';
-					serial_print(tempLetAr);
-				}
-			}
-			else if (totalChars==0&&doPrint){
-				/*for(i=0;i<totalChars+5;i++){
-					serial_print(" ");
-				}
-				serial_print("   \r");*/
-				serial_print(tempLetAr);
-				if (tempLetAr[0]=='\b'){
-					tempLetAr[0]=' ';
-					serial_print(tempLetAr);
-					tempLetAr[0]='\b';
-					serial_print(tempLetAr);
-				}
 			}
 			
 			//temp[0]=letter;
