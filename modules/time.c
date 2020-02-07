@@ -41,13 +41,14 @@ void gettime(){
 	seconds = (unsigned char)inb(0x71);
 	strcpy(currentData, intToAscii(bcdToInt(seconds)));
 	sys_req(WRITE, DEFAULT_DEVICE, currentData, MAX_SIZE1);
-
+	strcpy(currentData, "\n ");
+	sys_req(WRITE, DEFAULT_DEVICE, currentData, MAX_SIZE1);	
 }
 
 void setTime(int hours, int minutes, int seconds){
-	char incorrectHours[100] = "Invalid Hours";
-	char incorrectMinutes[100] = "Invalid Minutes";
-	char incorrectSeconds[100] = "Invalid Seconds";
+	char incorrectHours[100] = "\x1B[31mInvalid Hours\x1B[37m\n";
+	char incorrectMinutes[100] = "\x1B[31mInvalid Minutes\x1B[37m\n";
+	char incorrectSeconds[100] = "\x1B[31mInvalid Seconds\x1B[37m\n";
 	unsigned char bcdData;
 	//check if hours is valid and return if it is not
 	if(hours < 1 || hours > 24){
