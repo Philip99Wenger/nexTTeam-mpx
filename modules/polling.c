@@ -110,9 +110,9 @@ int poll(char * buffer, int * count){
 			case 13:
 				doPrint=0;
 
-				serial_print(buffer);
-				tempLetAr[0]=totalChars+'0';
-				serial_print(" \n");
+				//serial_print(buffer);
+				//tempLetAr[0]=totalChars+'0';
+				serial_print("\n ");
 				*count=totalChars;
 				return 1;
 
