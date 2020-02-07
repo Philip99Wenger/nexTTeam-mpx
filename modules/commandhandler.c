@@ -62,9 +62,11 @@ void help(){
 	memset(helpBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, helpBuffer, &bufferSize);
 
+	int temp;
 	for(i=0; i<sizeof(help2)/sizeof(help2[0]); i++){
-		if(strcmp(helpBuffer, help2[i]) == 0){			
-			sys_req(WRITE, DEFAULT_DEVICE, helpDescriptions[i], &helpDSize);
+		if(strcmp(helpBuffer, help2[i]) == 0){		
+			temp = strlen(helpDescriptions[i]);	
+			sys_req(WRITE, DEFAULT_DEVICE, helpDescriptions[i], &temp);
 		}
 	}		
 }
