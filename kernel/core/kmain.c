@@ -70,10 +70,11 @@ init_paging();
 	//typedef void(*polptr)(char * buffer, int * count);
 	//void* pollptr=poll
 	sys_set_read(&poll);
-	char buffer[100];
-	int count=100;
+	//char buffer[100];
+	//int count=100;
+	cmdhand();
 
-	sys_req(READ,DEFAULT_DEVICE,buffer,&count);
+	//sys_req(READ,DEFAULT_DEVICE,buffer,&count);
 
    // 6) System Shutdown on return from your command handler
    klogv("Starting system shutdown procedure...");
