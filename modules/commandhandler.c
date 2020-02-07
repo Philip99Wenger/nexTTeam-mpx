@@ -65,7 +65,7 @@ void help(){
 	}	
 }
 
-void shutdown(){
+int shutdown(){
 	char shutdownBuffer[100];
 	int bufferSize = 99;
 	
@@ -79,15 +79,20 @@ void shutdown(){
 	memset(shutdownBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, shutdownBuffer, &bufferSize);
 	
+	int returnValue;
 	if(strcmp(shutdownBuffer, "yes") == 0){
-		//!!!!!!!!!!!!!!!!!!!!!!!!!!!NEEDS TO ACTUALLY SHUT DOWN HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		returnValue = 1;
 	}else if(strcmp(shutdownBuffer, "no") == 0){
-		
+		returnValue = 0;
 	}else{
 		char shutdownError[] = "Please only enter the word 'yes' or 'no'.";
 		int errorSize = strlen(shutdownError);
 		sys_req(WRITE, DEFAULT_DEVICE, shutdownError, &errorSize);
+		returnValue = 0;
 	}
+	
+	return returnValue;
+
 }
 
 void settimeWrapper(){
@@ -142,7 +147,6 @@ int bufferSize;
 int quit=0;
 void (*version_ptr)() = &version;
 void (*help_ptr)() = &help;
-void (*shutdown_ptr)() = &shutdown;
 void (*gettime_ptr)() = &gettime;
 void (*settime_ptr)() = &settimeWrapper;
 void (*getdate_ptr)() = &getdate;
@@ -157,17 +161,16 @@ sys_req(READ, DEFAULT_DEVICE, cmdBuffer, &bufferSize);
 char commands[7][15]={
 	"version",
 	"help",
-	"shutdown",
 	"getTime",
 	"setTime",
 	"getDate",
-	"setDate"
+	"setDate",
+	"shutdown"
 };
 
 void (*commands_ptrs[])()={
 	*version_ptr,
 	*help_ptr,
-	*shutdown_ptr,
 	*gettime_ptr,
 	*settime_ptr,
 	*getdate_ptr,
@@ -175,10 +178,15 @@ void (*commands_ptrs[])()={
 };
 
 unsigned int i;
+int shutdownVal;
 for(i=0; i<sizeof(commands)/sizeof(commands[0]); i++){
 	if(strcmp(cmdBuffer, commands[i])==0){
-
-		(*commands_ptrs[i])();
+		if(i == 2){
+			shutdownVal = shutdown();
+			if(shutdownVal == 1){quit = 1;}
+		}else{
+			(*commands_ptrs[i])();
+		}	
 	}
 }
 }

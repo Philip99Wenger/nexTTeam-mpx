@@ -23,7 +23,7 @@ void version();
 //! Displays instructions for how to use each command
 void help();
 //! Shutdown the MPX and terminate
-void shutdown();
+int shutdown();
 //! Prompts the user for time input and sets the time
 void settimeWrapper();
 //! Prompts the user for date input and sets the date
