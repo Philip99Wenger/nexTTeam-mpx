@@ -72,7 +72,7 @@ init_paging();
 	sys_set_read(&poll);
 	//char buffer[100];
 	//int count=100;
-	cmdhand();
+	comhand();
 
 	//sys_req(READ,DEFAULT_DEVICE,buffer,&count);
 
