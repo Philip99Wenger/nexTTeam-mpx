@@ -1,7 +1,7 @@
 #include "commandhandler.h"
 //qemu-system-i386 -nographic -kernel kernel.bin -s
 void version(){
-	char version[] = "VERSION: 1.0\n";
+	char version[] = "\x1B[36mVERSION: 1.0\x1B[37m\n";
 	int versionSize = strlen(version);
 	sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
 }
@@ -18,7 +18,9 @@ int shutdown(){
 	int bufferSize = 99;
 	
 	char confirm[] = "Are you sure you want to shut down?	yes/no\n";
+	char stayInMenu[] = "\x1B[32mNot shutting down. Continue entering commands. \x1B[37m\n";
 	int confirmSize = strlen(confirm);
+	int stayInMenuSize = strlen(stayInMenu);
 	
 	//prompt user for confirmation
 	sys_req(WRITE, DEFAULT_DEVICE, confirm, &confirmSize);
@@ -31,6 +33,7 @@ int shutdown(){
 	if(strcmp(shutdownBuffer, "yes") == 0){
 		returnValue = 1;
 	}else if(strcmp(shutdownBuffer, "no") == 0){
+		sys_req(WRITE, DEFAULT_DEVICE, stayInMenu, &stayInMenuSize);
 		returnValue = 0;
 	}else{
 		char shutdownError[] = "Please only enter the word 'yes' or 'no'.\n";

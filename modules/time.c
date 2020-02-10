@@ -49,6 +49,8 @@ void setTime(int hours, int minutes, int seconds){
 	char incorrectHours[100] = "\x1B[31mInvalid Hours\x1B[37m\n";
 	char incorrectMinutes[100] = "\x1B[31mInvalid Minutes\x1B[37m\n";
 	char incorrectSeconds[100] = "\x1B[31mInvalid Seconds\x1B[37m\n";
+	char success[] = "\x1B[32mSuccessfully set the time. \x1B[37m\n";
+	int successSize = strlen(success);
 	unsigned char bcdData;
 	//check if hours is valid and return if it is not
 	if(hours < 1 || hours > 24){
@@ -87,6 +89,8 @@ void setTime(int hours, int minutes, int seconds){
 
 
 	sti();
+
+	sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);
 
 }
 
