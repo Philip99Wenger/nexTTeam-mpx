@@ -90,55 +90,65 @@ void setdateWrapper(){
 }
 
 int comhand(){
-char cmdBuffer[100];
-int bufferSize;
-int quit=0;
-void (*version_ptr)() = &version;
-void (*help_ptr)() = &help;
-void (*gettime_ptr)() = &gettime;
-void (*settime_ptr)() = &settimeWrapper;
-void (*getdate_ptr)() = &getdate;
-void (*setdate_ptr)() = &setdateWrapper;
+	char cmdBuffer[100];
+	int bufferSize;
+	int quit=0;
+	unsigned int i;
+	void (*version_ptr)() = &version;
+	void (*help_ptr)() = &help;
+	void (*gettime_ptr)() = &gettime;
+	void (*settime_ptr)() = &settimeWrapper;
+	void (*getdate_ptr)() = &getdate;
+	void (*setdate_ptr)() = &setdateWrapper;
 
-while(!quit){
-//get a command
-memset(cmdBuffer, '\0', 100);
-bufferSize = 99; //reset size before each call to read
-sys_req(READ, DEFAULT_DEVICE, cmdBuffer, &bufferSize);
+	char commands[7][15]={
+		"version",
+		"help",
+		"getTime",
+		"setTime",
+		"getDate",
+		"setDate",
+		"shutdown"
+	};
+	void (*commands_ptrs[])()={
+		*version_ptr,
+		*help_ptr,
+		*gettime_ptr,
+		*settime_ptr,
+		*getdate_ptr,
+		*setdate_ptr
+	};
+	
+	//Print welcome message
+	char welcome[] = "Welcome to NextTeam's OS!\nPlease type one of the available commands:\n";
+	int welcomeSize = strlen(welcome);
+	sys_req(WRITE, DEFAULT_DEVICE, welcome, &welcomeSize);	
+		
+	int tempSize = 15;
+	char sloppyTemp[] = "\n";
+	int sloppySize = 2;
+	for(i=0; i<sizeof(commands)/sizeof(commands[0]); i++){
+		sys_req(WRITE, DEFAULT_DEVICE, commands[i], &tempSize);
+		sys_req(WRITE, DEFAULT_DEVICE, sloppyTemp, &sloppySize);
+	}	
 
-char commands[7][15]={
-	"version",
-	"help",
-	"getTime",
-	"setTime",
-	"getDate",
-	"setDate",
-	"shutdown"
-};
+	while(!quit){
+		//get a command
+		memset(cmdBuffer, '\0', 100);
+		bufferSize = 99; //reset size before each call to read
+		sys_req(READ, DEFAULT_DEVICE, cmdBuffer, &bufferSize);
 
-void (*commands_ptrs[])()={
-	*version_ptr,
-	*help_ptr,
-	*gettime_ptr,
-	*settime_ptr,
-	*getdate_ptr,
-	*setdate_ptr
-};
-
-unsigned int i;
-int shutdownVal;
-for(i=0; i<sizeof(commands)/sizeof(commands[0]); i++){
-	if(strcmp(cmdBuffer, commands[i])==0){
-		if(i == 6){
-			shutdownVal = shutdown();
-			if(shutdownVal == 1){quit = 1;}
-		}else{
-			(*commands_ptrs[i])();
-		}	
+		int shutdownVal;
+		for(i=0; i<sizeof(commands)/sizeof(commands[0]); i++){
+			if(strcmp(cmdBuffer, commands[i])==0){
+				if(i == 6){
+					shutdownVal = shutdown();
+					if(shutdownVal == 1){quit = 1;}
+				}else{(*commands_ptrs[i])();}	
+			}
+		}
 	}
+	
+	return 1;
 }
-}
-
-return 1;
-}
-
+	
