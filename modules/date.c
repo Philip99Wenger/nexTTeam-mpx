@@ -50,6 +50,8 @@ void setDate(int month, int day, int year){
 	char incorrectMonth[100] = "\x1B[31mInvalid Month\x1B[37m\n";
 	char incorrectDay[100] = "\x1B[31mInvalid Day\x1B[37m\n";
 	char incorrectYear[100] = "\x1B[31mInvalid Year\x1B[37m\n";
+	char successDate[] = "\x1B[32mSuccessfully set the date. \x1B[37m\n";
+	int successDateSize = strlen(successDate);
 	unsigned char bcdData;
 	//check if month is valid and return if it is not
 	if(month < 1 || month > 12){
@@ -100,5 +102,7 @@ void setDate(int month, int day, int year){
 
 
 	sti();
+
+	sys_req(WRITE, DEFAULT_DEVICE, successDate, &successDateSize);
 
 }
