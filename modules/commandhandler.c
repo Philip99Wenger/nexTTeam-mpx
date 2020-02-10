@@ -1,5 +1,5 @@
 #include "commandhandler.h"
-
+//qemu-system-i386 -nographic -kernel kernel.bin -s
 void version(){
 	char version[] = "VERSION: 1.0\n";
 	int versionSize = strlen(version);
@@ -7,67 +7,10 @@ void version(){
 }
 
 void help(){
-
-//command descriptions
-//	char versionD[] = "NAME\n     version - display current version of NTOS in use.\nDETAIL DESCRIPTION\n     No further description.";
-//	int versionDSize = strlen(versionD);
-//
-//	char getTimeD[] = "NAME\n     getTime - display current time of system.\nDETAIL DESCRIPTION\n     Time will be displayed as hour:minute:second.";
-//	int getTimeDSize = strlen(getTimeD);
-//
-//	char setTimeD[] = "NAME\n     setTime - change system's current time.\nDETAIL DESCRIPTION\n     Will prompt user to enter time as hh:mm:ss (i.e. hour:minute:second).";
-//	int setTimeDSize = strlen(setTimeD);
-//
-//	char getDateD[] = "NAME\n     getDate - display current date of system.\nDETAIL DESCRIPTION\n     Date will be displayed as month/day/year.";
-//	int getDateDSize = strlen(getDateD);
-//
-//	char setDateD[] = "NAME\n     setDate - change system's current time.\nDETAIL DESCRIPTION\n     Will prompt user to enter date as mm/dd/yy (i.e. month/day/year)."; 
-//	int setDateDSize = strlen(setDateD);
-//
-//
-//	char shutdownD[]= "NAME\n     shutdown - shuts down NTOS.\nDETAIL DESCRIPTION\n     Will prompt user to confirm system shut down as yes/no."; 
-//	int shutdownDSize = strlen(shutdownD);
-
-//help menu
-	char helpBuffer[100];
-	int bufferSize = 99;
-
-	char help[6][15] = {"version\n","getTime\n","setTime\n","getDate\n","setDate\n", "shutdown\n"};
-	int helpSize = 14;
-	char help2[6][15] = {"version","getTime","setTime","getDate","setDate", "shutdown"};
-
-	char helpDescriptions[6][200] = {
-		"NAME\n     version - display current version of NTOS in use.\nDETAIL DESCRIPTION\n     No further description.\n",
-		"NAME\n     getTime - display current time of system.\nDETAIL DESCRIPTION\n     Time will be displayed as hour:minute:second.\n",
-		"NAME\n     setTime - change system's current time.\nDETAIL DESCRIPTION\n     Will prompt user to enter time as hh:mm:ss (i.e. hour:minute:second).\n",
-		"NAME\n     getDate - display current date of system.\nDETAIL DESCRIPTION\n     Date will be displayed as month/day/year.\n",
-		"NAME\n     setDate - change system's current time.\nDETAIL DESCRIPTION\n     Will prompt user to enter date as mm/dd/yy (i.e. month/day/year).\n",
-		"NAME\n     shutdown - shuts down NTOS.\nDETAIL DESCRIPTION\n     Will prompt user to confirm system shut down as yes/no.\n"
-	};
+	char help[] = "NAME\n     version - display current version of NTOS in use.\nDETAIL DESCRIPTION\n     No further description.\n\nNAME\n     getTime - display current time of system.\nDETAIL DESCRIPTION\n     Time will be displayed as hour:minute:second.\n\nNAME\n     setTime - change system's current time.\nDETAIL DESCRIPTION\n     Will prompt user to enter time as hh:mm:ss (i.e. hour:minute:second).\n\nNAME\n     getDate - display current date of system.\nDETAIL DESCRIPTION\n     Date will be displayed as month/day/year.\n\nNAME\n     setDate - change system's current time.\nDETAIL DESCRIPTION\n     Will prompt user to enter date as mm/dd/yy (i.e. month/day/year).\n\nNAME\n     shutdown - shuts down NTOS.\nDETAIL DESCRIPTION\n     Will prompt user to confirm system shut down as yes/no.\n";
+	int helpSize = strlen(help);
 	
-	char helpPrompt[] = "Please enter command for more information.\n";
-	int helpPromptSize = strlen(helpPrompt);
-	
-	//writes prompt
-	sys_req(WRITE, DEFAULT_DEVICE, helpPrompt, &helpPromptSize);
-
-	//writes command options
-	unsigned int i;
-	for(i=0; i<sizeof(help2)/sizeof(help2[0]); i++){
-		sys_req(WRITE, DEFAULT_DEVICE, help[i], &helpSize);
-	}
-
-	//read which command
-	memset(helpBuffer, '\0', 100);
-	sys_req(READ, DEFAULT_DEVICE, helpBuffer, &bufferSize);
-	
-	int temp;
-	for(i=0; i<sizeof(help2)/sizeof(help2[0]); i++){
-		if(strcmp(helpBuffer, help2[i]) == 0){	
-			temp = strlen(helpDescriptions[i]);	
-			sys_req(WRITE, DEFAULT_DEVICE, helpDescriptions[i], &temp);
-		}
-	}		
+	sys_req(WRITE, DEFAULT_DEVICE, help, &helpSize);
 }
 
 int shutdown(){
