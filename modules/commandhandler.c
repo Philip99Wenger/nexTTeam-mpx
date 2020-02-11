@@ -2,47 +2,6 @@
 //qemu-system-i386 -nographic -kernel kernel.bin -s
 
 
-//STRUCTS
-
-//This is a process//
-typedef struct{ 
-	char processName[8];	//The name of the process
-	int priority;		//0-9 ranking of importance, with 9 going first
-	int stateRRB;		//Ready(0)/Running(1)/Blocked(3)
-	int stateIsSuspended;	//Suspended(1)/Not-Suspended(0)
-	int classIsApp;		//Application(1)/System-Process(0)
-	unsigned char* top;	//Pointer to the start of the process
-	unsigned char* bottom;	//Pointer to the end of the process
-	unsigned char* pcbNext;	//Pointer to the start of the next process
-	unsigned char* pcbPrev;	//Pointer to the start of the last process
-} pcb;
-//This is the ready queue//
-typedef struct{
-	int count;	//Number of processes in the queue
-	pcb *head;	//Pointer to the first pcb in the queue, the first one in order, highest priority
-	pcb *tail;	//Pointer to the last pcb in the queue, the last one in order, lowest priority
-} readyQueue;
-//This is the blocked queue//
-typedef struct{
-	int count;	//Number of processes in the queue
-	pcb *head;	//Pointer to the first pcb in the queue, the first one in order
-	pcb *tail;	//Pointer to the last pcb in the queue, the last one in order
-} blockedQueue;
-//This is the suspended-ready queue//
-typedef struct{
-	int count;	//Number of processes in the queue
-	pcb *head;	//Pointer to the first pcb in the queue, the first one in order, highest priority
-	pcb *tail;	//Pointer to the last pcb in the queue, the last one in order, lowest priority
-} suspendReadyQueue;
-//This is the suspended-blocked queue//
-typedef struct{
-	int count;	//Number of processes in the queue
-	pcb *head;	//Pointer to the first pcb in the queue, the first one in order
-	pcb *tail;	//Pointer to the last pcb in the queue, the last one in order
-} suspendBlockedQueue;
-
-
-
 void version(){
 	char version[] = "\x1B[36mVERSION: 1.0\x1B[37m\n";
 	int versionSize = strlen(version);
