@@ -51,5 +51,6 @@ void insertPCB(pcb* Pcb);
 pcb* allocatePCB();
 
 pcb* setupPCB(char *name, int classCode, int priorityCode);
+void removePCB(pcb* process);
 
 #endif

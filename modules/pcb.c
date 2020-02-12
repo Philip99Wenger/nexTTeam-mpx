@@ -49,3 +49,59 @@ pcb* setupPCB(char *PcbName, int classCode, int priorityCode){
 	return newPCB;
 	
 }
+
+void removePCB(pcb* process) {
+	//char* success[] = "success";
+	//char* error[] = "error";
+	//Queue thisQueue = NULL;
+	
+	//Which Queue?
+	if(process->stateRRB == 0 && process->stateIsSuspended == 0){
+		if(readyQueue.head == process){//Is this a queue's head?
+			readyQueue.head = process->pcbNext;//Chop that off
+		} else if(readyQueue.tail == process){//Is this a queue's tail?
+			readyQueue.tail = process->pcbPrev;//snip snip snip
+		}
+		readyQueue.count--;
+	} else if(process->stateRRB == 2 && process->stateIsSuspended == 0){
+		if(blockedQueue.head == process){//Is this a queue's head?
+			blockedQueue.head = process->pcbNext;//Chop that off
+		} else if(blockedQueue.tail == process){//Is this a queue's tail?
+			blockedQueue.tail = process->pcbPrev;//snip snip snip
+		}
+		blockedQueue.count--;
+	} else if(process->stateRRB == 0 && process->stateIsSuspended == 1){
+		if(suspendReadyQueue.head == process){//Is this a queue's head?
+			suspendReadyQueue.head = process->pcbNext;//Chop that off
+		} else if(suspendReadyQueue.tail == process){//Is this a queue's tail?
+			suspendReadyQueue.tail = process->pcbPrev;//snip snip snip
+		}
+		suspendReadyQueue.count--;
+	} else if(process->stateRRB == 2 && process->stateIsSuspended == 1){
+		if(suspendedBlockedQueue.head == process){//Is this a queue's head?
+			suspendedBlockedQueue.head = process->pcbNext;//Chop that off
+		} else if(suspendedBlockedQueue.tail == process){//Is this a queue's tail?
+			suspendedBlockedQueue.tail = process->pcbPrev;//snip snip snip
+		}
+		suspendedBlockedQueue.count--;
+	}
+
+	//Remove from Doubly-Linked List
+	if((process->pcbPrev == NULL) && (process->pcbNext == NULL)){
+		;//Do Nothing because this doesn't exist anyway
+	} else if(process->pcbPrev == NULL){//Are we at an end of the list?
+		pcb* next = process->pcbNext;
+		next->pcbPrev = NULL;
+	} else if(process->pcbNext == NULL){//Are we at an end o the list?
+		pcb* previous = process->pcbPrev;
+		previous->pcbNext = NULL;
+	} else{//We must be in the middle somewhere
+		pcb* previous = process->pcbPrev;
+		pcb* next = process->pcbNext;
+		previous->pcbNext = next;
+		next->pcbPrev = previous;
+	}
+	
+	//Complete	
+	return;// success;
+}
