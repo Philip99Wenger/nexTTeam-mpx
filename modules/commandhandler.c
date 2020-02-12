@@ -123,6 +123,13 @@ int comhand(){
 		*getdate_ptr,
 		*setdate_ptr
 	};
+	//Print fancy menu
+	char nextTeam[] = "\x1B[33mX   X  XXXX  X   X  XXXXX    XXXXX  XXXX    X    X   X\nXX  X  X      X X     X        X    X      X X   XX XX\nX X X  XXX     X      X        X    XXX   X   X  X X X\nX  XX  X      X X     X        X    X     XXXXX  X   X\nX   X  XXXX  X   X    X        X    XXXX  X   X  X   X\n";
+	int nextTeamSize = strlen(nextTeam);
+	sys_req(WRITE, DEFAULT_DEVICE, nextTeam, &nextTeamSize);
+	char mickey[] = "\x1B[34mT       XXXX      XXXX       \nE      XXXXXX    XXXXXX      \nL       XXXX      XXXX       \nE        XXXXXXXXXXXX        \nT       XX\x1B[37mXXXXXXXXXX\x1B[34mXX       \nU      XX\x1B[37mXXXXXXXXXXXX\x1B[34mXX      \nB     XX\x1B[37mXXXXXXXXXXXXXX\x1B[34mXX     \nB      XX\x1B[37mXXXXXXXXXXXX\x1B[34mXX      \nI       XX\x1B[37mXXXXXXXXXX\x1B[34mXX       \nE        XXXXXXXXXXXX\x1B[37m        \n";
+	int mickeySize = strlen(mickey);
+	sys_req(WRITE, DEFAULT_DEVICE, mickey, &mickeySize);
 	
 	//Print welcome message
 	char welcome[] = "Welcome to NextTeam's OS!\nPlease type one of the available commands:\n";
