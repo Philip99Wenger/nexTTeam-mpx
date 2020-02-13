@@ -176,9 +176,9 @@ void resumeWrapper(){
 //Interface for setupPCB
 void createPCBWrapper(){
 	//Variables	
-	char pcbName[8];
+	char pcbName[100];
 	char *pcbNamePointer = pcbName;
-	int pcbNameSize = 8;
+	int pcbNameSize = 100;
 	char pcbPriority[1];
 	char *pcbPriorityPointer = pcbPriority;
 	int pcbPrioritySize = 1;
@@ -199,14 +199,20 @@ void createPCBWrapper(){
 	char classError[] = "\x1B[31mInvalid entry. Please enter either 'a' or 's'.\x1B[37m\n";
 	char priorityError[] = "\x1B[31mInvalid entry. Please enter an integer between '1' and '9'.\x1B[37m\n";
 	char nameError[] = "\x1B[31mThis name is already taken. Please pick another.\x1B[37m\n";
+	char nameTooLongError[] = "\x1B[31mName Too Long! Keep it no longer than 8 characters.\x1B[37m\n";
 	char success[] = "\x1B[32mValid Entry\x1B[37m\n";
 
 
 	//Recieve Name
 	promptSize = strlen(namePrompt);
 	sys_req(WRITE, DEFAULT_DEVICE, namePromptPointer, &promptSize);
-	memset(pcbName, '\0', 8);
+	memset(pcbName, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, pcbNamePointer, &pcbNameSize);
+	if(strlen(pcbNamePointer)>8){
+		promptSize = strlen(nameTooLongError);
+		sys_req(WRITE, DEFAULT_DEVICE, nameTooLongError, &promptSize);
+		return;//Error!
+	}
 	sameName = findPCB(pcbName);
 	if(sameName!=NULL){
 		promptSize = strlen(nameError);
@@ -234,7 +240,7 @@ void createPCBWrapper(){
 	//Recieve Class
 	promptSize = strlen(classPrompt);
 	sys_req(WRITE, DEFAULT_DEVICE, classPrompt, &promptSize);
-	memset(class, '\0', 3);
+	memset(class, '\0', 1);
 	sys_req(READ, DEFAULT_DEVICE, class, &pcbClassSize);
 	if(*class=='a'){
 		pcbClass=1;
@@ -269,10 +275,8 @@ void deletePCBWrapper(){
 	char nameSuccess[] = "\x1B[32mFound It!\x1B[37m\n";
 	char removeError[] = "\x1B[31mEither something went wrong, or this PCB has already been removed.\x1B[37m\n";
 	char removeSuccess[] = "\x1B[32mSuccessfully Removed!\x1B[37m\n";
-	/**TODO: Uncomment this when FreePCB is completed
 	char freeError[] = "\x1B[31mThere has been a failure to free memory associated with this PCB.\x1B[37m\n";
 	char freeSuccess[] = "\x1B[32mMemory successfully freed!\x1B[37m\n";
-	**/
 	int promptSize;
 
 	//Recieve Process Name
@@ -297,8 +301,7 @@ void deletePCBWrapper(){
 	}
 	promptSize = strlen(removeSuccess);
 	sys_req(WRITE, DEFAULT_DEVICE, removeSuccess, &promptSize);//Success!
-	
-	/**TODO: Uncomment this when FreePCB is completed	
+		
 	//Free Associated Memory
 	if(FreePCB(foundPCB)==-1){
 		promptSize = strlen(freeError);
@@ -308,7 +311,6 @@ void deletePCBWrapper(){
 	promptSize = strlen(freeSuccess);
 	sys_req(WRITE, DEFAULT_DEVICE, freeSuccess, &promptSize);//Success!
 	return;
-	**/
 }
 
 
