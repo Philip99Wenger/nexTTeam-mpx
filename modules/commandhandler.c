@@ -107,13 +107,130 @@ void setdateWrapper(){
 
 **/
 
-/**TODO deletePCBWrapper
+//Interface for SetupPCB()
+void createPCB(){
+	//Variables	
+	char pcbName[8];
+	char *pcbNamePointer = pcbName;
+	int pcbNameSize = 8;
+	char pcbPriority[1];
+	char *pcbPriorityPointer = pcbPriority;
+	int pcbPrioritySize = 1;
+	char pcbClass;
+	int pcbClassSize = 1;
+	char class[1];
+	pcb* newPCB;
+	pcb* sameName;
 
-**/
+	//Prompts
+	char namePrompt[] = "Enter the name for the new PCB that's no longer than 8 characters:\n";
+	char *namePromptPointer = namePrompt;
+	char priorityPrompt[] = "The PCB get's a priority from 0-9, with 9 going first.\nEnter the priority, a single integer from 0 to 9, of the new PCB:\n";
+	char classPrompt[] = "Is this an application or a system process? enter either 'a' for application or 's' for system:\n";
 
-/**TODO createPCBWRAPPER
+	//Error or Success Messages
+	char classError[] = "\x1B[31mInvalid entry. Please enter either 'a' or 's'.\x1B[37m\n";
+	char priorityError[] = "\x1B[31mInvalid entry. Please enter an integer between '1' and '9'.\x1B[37m\n";
+	char nameError[] = "\x1B[31mThis name is already taken. Please pick another.\x1B[37m\n";
+	char success[] = "\x1B[32mValid Entry\x1B[37m\n";
 
-**/
+
+	//Recieve Name
+	int promptSize = strlen(namePrompt);
+	sys_req(WRITE, DEFAULT_DEVICE, namePromptPointer, &promptSize);
+	memset(pcbName, '\0', 8);
+	sys_req(READ, DEFAULT_DEVICE, pcbNamePointer, &pcbNameSize);
+	sameName = findPCB(pcbName);
+	if(sameName!=NULL){
+		promptSize = strlen(nameError);
+		sys_req(WRITE, DEFAULT_DEVICE, nameError, &promptSize);
+		return;//Error!
+	}
+	promptSize = strlen(success);
+	sys_req(WRITE, DEFAULT_DEVICE, success, &promptSize);//Success!
+
+
+	//Recieve Priority
+	promptSize = strlen(priorityPrompt);
+	sys_req(WRITE, DEFAULT_DEVICE, priorityPrompt, &promptSize);
+	memset(&pcbPriority, '\0', 1);
+	sys_req(READ, DEFAULT_DEVICE, pcbPriorityPointer, &pcbPrioritySize);
+	if((*pcbPriority!='0')&&(*pcbPriority!='1')&&(*pcbPriority!='2')&&(*pcbPriority!='3')&&(*pcbPriority!='4')&&(*pcbPriority!='5')&&(*pcbPriority!='6')&&(*pcbPriority!='7')&&(*pcbPriority!='8')&&(*pcbPriority!='9')){
+		promptSize = strlen(priorityError);
+		sys_req(WRITE, DEFAULT_DEVICE, priorityError, &promptSize);
+		return;//Error!
+	}
+	promptSize = strlen(success);
+	sys_req(WRITE, DEFAULT_DEVICE, success, &promptSize);//Success!
+	
+
+	//Recieve Class
+	promptSize = strlen(classPrompt);
+	sys_req(WRITE, DEFAULT_DEVICE, classPrompt, &promptSize);
+	memset(class, '\0', 3);
+	sys_req(READ, DEFAULT_DEVICE, class, &pcbClassSize);
+	if(*class=='a'){
+		pcbClass=1;
+	} else if(*class=='s'){
+		pcbClass=0;
+	} else{
+		promptSize = strlen(classError);
+		sys_req(WRITE, DEFAULT_DEVICE, classError, &promptSize);
+		return;//Error!
+	}
+	promptSize = strlen(success);
+	sys_req(WRITE, DEFAULT_DEVICE, success, &promptSize);//Success!
+
+	//Make The PCB
+	newPCB = setupPCB(pcbName, atoi(&pcbClass), atoi(pcbPriority));
+	//Insert The PCB
+	insertPCB(newPCB);
+}
+
+//Interface for find/remove/freePCB()
+void deletePCB(){
+	//Variables
+	char pcbName[8];
+	char *pcbNamePointer = pcbName;
+	int pcbNameSize = 8;
+	pcb* foundPCB;
+	int removeCode;
+
+	//Prompt And Error/Success
+	char namePrompt[] = "Enter the name for the new PCB that's no longer than 8 characters:\n";
+	char *namePromptPointer = namePrompt;
+	char nameError[] = "\x1B[31mThis Process doesn't seem to exist.\x1B[37m\n";
+	char nameSuccess[] = "\x1B[32mFound It!\x1B[37m\n";
+	char removeError[] = "\x1B[31mEither something went wrong, or this PCB has already been removed.\x1B[37m\n";
+	char removeSuccess[] = "\x1B[32mSuccessfully Removed!\x1B[37m\n";
+
+	//Revieve Process Name
+	int promptSize = strlen(namePrompt);
+	sys_req(WRITE, DEFAULT_DEVICE, namePromptPointer, &promptSize);
+	memset(pcbName, '\0', 8);
+	sys_req(READ, DEFAULT_DEVICE, pcbNamePointer, &pcbNameSize);
+	foundPCB = findPCB(pcbName);
+	if(sameName==NULL){
+		promptSize = strlen(nameError);
+		sys_req(WRITE, DEFAULT_DEVICE, nameError, &promptSize);
+		return;//Error!
+	}
+	promptSize = strlen(nameSuccess);
+	sys_req(WRITE, DEFAULT_DEVICE, nameSuccess, &promptSize);//Success!
+
+	//Remove It!
+	removeCode = removePCB(foundPCB);
+	if(removeCode==-1){
+		promptSize = strlen(removeError);
+		sys_req(WRITE, DEFAULT_DEVICE, removeError, &promptSize);
+		return;//Error!
+	}
+	promptSize = strlen(removeSuccess);
+	sys_req(WRITE, DEFAULT_DEVICE, removeSuccess, &promptSize);//Success!
+	
+	//Free Associated Memory
+	
+}
 
 /**TODO blockWrapper
 

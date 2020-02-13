@@ -16,6 +16,7 @@
 #include "mpx_supt.h"
 #include "date.h"
 #include "time.h"
+#include "pcb.h"
 
 //int poll(char * buffer, int * count);
 //! Displays the current version being used for the MPX
@@ -30,5 +31,9 @@ void settimeWrapper();
 void setdateWrapper();
 //! Processes user input and find the correct function based off user request
 int comhand();
+//! Allows the user to create a process
+void createPCB();
+//! Allows the user to remove a process
+void deletePCB();
 
 #endif
