@@ -169,9 +169,6 @@ void resumeWrapper(){
 }
 
 
-/**TODO setPriorityWrapper
-
-**/
 
 //Interface for setupPCB
 void createPCBWrapper(){
@@ -201,7 +198,6 @@ void createPCBWrapper(){
 	char nameError[] = "\x1B[31mThis name is already taken. Please pick another.\x1B[37m\n";
 	char nameTooLongError[] = "\x1B[31mName Too Long! Keep it no longer than 8 characters.\x1B[37m\n";
 	char success[] = "\x1B[32mValid Entry\x1B[37m\n";
-
 
 	//Recieve Name
 	promptSize = strlen(namePrompt);
@@ -303,7 +299,7 @@ void deletePCBWrapper(){
 	sys_req(WRITE, DEFAULT_DEVICE, removeSuccess, &promptSize);//Success!
 		
 	//Free Associated Memory
-	if(FreePCB(foundPCB)==-1){
+	if(freePCB(foundPCB)==-1){
 		promptSize = strlen(freeError);
 		sys_req(WRITE, DEFAULT_DEVICE, freeError, &promptSize);
 		return;//Error!
@@ -471,8 +467,8 @@ int comhand(){
 	void (*getdate_ptr)() = &getdate;
 	void (*setdate_ptr)() = &setdateWrapper;
 	//R2 functions -- uncomment as implemented
-	//void (*suspend_ptr)() = &suspendWrapper;
-	//void (*resume_ptr)() = &resumeWrapper;
+	void (*suspend_ptr)() = &suspendWrapper;
+	void (*resume_ptr)() = &resumeWrapper;
 	void (*setPriority_ptr)() = &setPriorityWrapper;
 	void (*showPCB_ptr)() = &showPCBWrapper;
 	void (*showAllProcess_ptr)() = &showAllProcesses;
@@ -512,8 +508,8 @@ int comhand(){
 		*settime_ptr,
 		*getdate_ptr,
 		*setdate_ptr,
-		//*suspend_ptr,
-		//*resume_ptr,
+		*suspend_ptr,
+		*resume_ptr,
 		*setPriority_ptr,
 		*showPCB_ptr,
 		*showAllProcess_ptr,
