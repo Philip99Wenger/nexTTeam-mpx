@@ -219,6 +219,21 @@ void removePCB(pcb* process) {
 	return;// success;
 }
 
+void setPriority(char *name, int priorityNum){
+	char noPCB[] = "There is no PCB with that name.\n";
+	int noSize = strlen(noPCB);
+	pcb* priorityPCB = findPCB(name);
+	if (priorityPCB != NULL){
+		priorityPCB->priority = priorityNum;
+		removePCB(priorityPCB);
+		insertPCB(priorityPCB);
+	}
+	else{
+		sys_req(WRITE, DEFAULT_DEVICE, noPCB, &noSize);
+	}
+	
+}
+
 void showReady(){
 	char ready[] = "Ready Queue:";
 	int readySize = strlen(ready);
@@ -265,9 +280,21 @@ void showBlocked(){
 	}
 }
 
-void showAll(){
+void showAllProcesses(){
 	showReady();
 	showBlocked();
+}
+
+void showPCB(char *name){
+	char noPCB[] = "There is no PCB with that name.\n";
+	int noSize = strlen(noPCB);
+	pcb* onePCB = findPCB(name);
+	if (onePCB != NULL){
+		printOnePCB(onePCB);
+	}
+	else{
+		sys_req(WRITE, DEFAULT_DEVICE, noPCB, &noSize);
+	}
 }
 
 void printOnePCB(pcb* Pcb){
@@ -348,4 +375,27 @@ void printOnePCB(pcb* Pcb){
 	strcpy(currentPriority, intToAscii(Pcb->priority));
 	currPriSize = strlen(currentPriority);
 	sys_req(WRITE, DEFAULT_DEVICE, currentPriority, &currPriSize);
+}
+void block(pcb* PCB){
+	//finding and checking pcb validity in wrapper		
+	removePCB(PCB);	//Removes PCB from current queue
+	PCB->stateRRB = 2;
+	insertPCB(PCB);	//Inserts PCB into appropriate queue (ie blocked queue)
+
+	char success[] = "PCB has been successfully blocked";
+	int successSize = strlen(success);
+	sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);
+
+}
+void unblock(pcb* PCB){
+	//finding and checking pcb validty in wrapper
+	removePCB(PCB);	//Remove PCB from blocked queue
+	PCB->stateRRB = 0;
+	insertPCB(PCB);	//Inserts PCB into appropriate queue (ie ready queue)
+
+	char success[] = "PCB has been successfully unblocked";
+	int successSize = strlen(success);
+	sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);
+
+
 }

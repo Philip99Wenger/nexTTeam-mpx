@@ -47,13 +47,30 @@ typedef struct Queue{
 
 //! Inserts PCB into the correct queue
 void insertPCB(pcb* Pcb);
+//! Allocates space for the PCB
 pcb* allocatePCB();
+//! Set up the values for a PCB
 pcb* setupPCB(char *name, int classCode, int priorityCode);
+//! Remove the PCB from a queue
 void removePCB(pcb* process);
+//! Change the priority for a PCB and move into the correct queue
+void setPriority(char *name, int priorityNum);
+//! Finds a PCB with the specified name
 pcb* findPCB(char *PcbName);
+//! Show the PCB with the specified name
+void showPCB(char *name);
+//! Show all PCBs in ready queue
 void showReady();
+//! Show all PCBs in blocked queue
 void showBlocked();
-void showAll();
+//! Show all PCBs
+void showAllProcesses();
+//! Print one PCB with a specified name
 void printOnePCB(pcb* Pcb);
+//! Finds a PCB sets it's state to blocked and reinserts it into the right queue
+void block(pcb* PCB);
+//Finds a PCB sets it's state to unblocked and reinserts it into the right queue
+void unblock(pcb* PCB);
+
 
 #endif

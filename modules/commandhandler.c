@@ -232,13 +232,140 @@ void deletePCB(){
 	
 }
 
-/**TODO blockWrapper
 
-**/
+void blockWrapper(){
+	char blockBuffer[100];
+	int bufferSize = 99;
 
-/**TODO unblockWrapper
+	//prompt user for pcb name
+	char prompt[] = "Enter the PCB name:\n";
+	int promptSize = strlen(prompt);
+	char lenError[] = "The name is too long.\n";
+	int lenErrorSize = strlen(lenError);
+	char nameError[] = "There is no PCB by that name.\n";
+	int nameErrorSize = strlen(nameError);
+	pcb* PCB = NULL;
+	
+	sys_req(WRITE, DEFAULT_DEVICE, prompt, &promptSize);
+	memset(blockBuffer, '\0', 100);
+	sys_req(READ, DEFAULT_DEVICE, blockBuffer, &bufferSize);
 
-**/
+	char* name = strtok(NULL, "");
+	while (name != NULL){
+		if(strlen(name) > 8){
+			sys_req(WRITE, DEFAULT_DEVICE, lenError, &lenErrorSize);
+		}else{
+			PCB = findPCB(name);
+			if(PCB == NULL){
+				sys_req(WRITE, DEFAULT_DEVICE, nameError, &nameErrorSize);
+			}else{
+				block(PCB);
+			}
+		}
+	}
+
+}
+
+
+void unblockWrapper(){
+	char blockBuffer[100];
+	int bufferSize = 99;
+
+	//prompt user for pcb name
+	char prompt[] = "Enter the PCB name:\n";
+	int promptSize = strlen(prompt);
+	char lenError[] = "The name is too long.\n";
+	int lenErrorSize = strlen(lenError);
+	char nameError[] = "There is no PCB by that name.\n";
+	int nameErrorSize = strlen(nameError);
+	pcb* PCB = NULL;
+	
+	sys_req(WRITE, DEFAULT_DEVICE, prompt, &promptSize);
+	memset(blockBuffer, '\0', 100);
+	sys_req(READ, DEFAULT_DEVICE, blockBuffer, &bufferSize);
+
+	char* name = strtok(NULL, "");
+	while (name != NULL){
+		if(strlen(name) > 8){
+			sys_req(WRITE, DEFAULT_DEVICE, lenError, &lenErrorSize);
+		}else{
+			PCB = findPCB(name);
+			if(PCB == NULL){
+				sys_req(WRITE, DEFAULT_DEVICE, nameError, &nameErrorSize);
+			}else{
+				unblock(PCB);
+			}
+		}
+	}
+}
+
+void setPriorityWrapper(){
+	char showPCBBuffer[100];
+	int bufferSize = 99;
+	
+	//prompt user for date to set to
+	char prompt[] = "Enter the PCB name:\n";
+	int promptSize = strlen(prompt);
+	char priorityPrompt[] = "Enter the new priority for the PCB:\n";
+	int priorSize = strlen(priorityPrompt);
+	char error[] = "The name is too long.\n";
+	int errSize = strlen(error);
+	char priorError[] = "The priority number is not valid\n";
+	int priorErrSize = strlen(priorError);
+	int priorNum;
+	
+	sys_req(WRITE, DEFAULT_DEVICE, prompt, &promptSize);
+	memset(showPCBBuffer, '\0', 100);
+	sys_req(READ, DEFAULT_DEVICE, showPCBBuffer, &bufferSize);
+
+	char* name = strtok(NULL, "");
+	while (name != NULL){
+		if (strlen(name) > 8){
+			sys_req(WRITE, DEFAULT_DEVICE, error, &errSize);
+		}
+		else{
+			sys_req(WRITE, DEFAULT_DEVICE, priorityPrompt, &priorSize);
+			memset(showPCBBuffer, '\0', 100);
+			sys_req(READ, DEFAULT_DEVICE, showPCBBuffer, &bufferSize);
+			char* token = strtok(NULL, "");
+			while(token != NULL){
+				priorNum = atoi(token);
+				if(priorNum < 0 || priorNum > 9){
+					sys_req(WRITE, DEFAULT_DEVICE, priorError, &priorErrSize);
+				}
+				else{
+					setPriority(name, priorNum);
+				}
+			}
+		}
+	}
+}
+
+void showPCBWrapper(){
+	char showPCBBuffer[100];
+	int bufferSize = 99;
+	
+	//prompt user for date to set to
+	char prompt[] = "Enter the PCB name:\n";
+	int promptSize = strlen(prompt);
+	char error[] = "The name is too long.\n";
+	int errSize = strlen(error);
+
+	sys_req(WRITE, DEFAULT_DEVICE, prompt, &promptSize);
+
+	memset(showPCBBuffer, '\0', 100);
+	sys_req(READ, DEFAULT_DEVICE, showPCBBuffer, &bufferSize);
+
+	char* name = strtok(NULL, "");
+	while (name != NULL){
+		if (strlen(name) > 8){
+			sys_req(WRITE, DEFAULT_DEVICE, error, &errSize);
+		}
+		else{
+			showPCB(name);
+		}
+	}
+}
 
 int comhand(){
 	char cmdBuffer[100];
@@ -254,15 +381,15 @@ int comhand(){
 	//R2 functions -- uncomment as implemented
 	//void (*suspend_ptr)() = &suspendWrapper;
 	//void (*resume_ptr)() = &resumeWrapper;
-	//void (*setPriority_ptr)() = &setPriorityWrapper;
-	//void (*showPCB_ptr)() = &showPCB;
-	//void (*showAllProcess_ptr)() = &showAllProcesses;
-	//void (*showReady_ptr)() = &showReady;
-	//void (*showBlocked)() = &showBlocked;
+	void (*setPriority_ptr)() = &setPriorityWrapper;
+	void (*showPCB_ptr)() = &showPCBWrapper;
+	void (*showAllProcess_ptr)() = &showAllProcesses;
+	void (*showReady_ptr)() = &showReady;
+	void (*showBlocked_ptr)() = &showBlocked;
 	//void (*createPCB)() = &createPCBWrapper;
 	//void (*deletePCB)() = &deletePCBWrapper;
-	//void (*block)() = &blockWrapper;
-	//void (*unblock)() = &unblockWrapper;
+	void (*block)() = &blockWrapper;
+	void (*unblock)() = &unblockWrapper;
 
 	char commands[18][20]={
 		"shutdown", //must keep shutdown at index 0
@@ -293,15 +420,15 @@ int comhand(){
 		*setdate_ptr,
 		//*suspend_ptr,
 		//*resume_ptr,
-		//*setPriority_ptr,
-		//*showPCB_ptr,
-		//*showAllProcess_ptr,
-		//*showReady_ptr,
-		//*showBlocked,
+		*setPriority_ptr,
+		*showPCB_ptr,
+		*showAllProcess_ptr,
+		*showReady_ptr,
+		*showBlocked_ptr,
 		//*createPCB,
 		//*deletePCB,
-		//*block,
-		//*unblock
+		*block,
+		*unblock
 	};
 	//Print fancy menu
 	char nextTeam[] = "\x1B[33mX   X  XXXX  X   X  XXXXX    XXXXX  XXXX    X    X   X\nXX  X  X      X X     X        X    X      X X   XX XX\nX X X  XXX     X      X        X    XXX   X   X  X X X\nX  XX  X      X X     X        X    X     XXXXX  X   X\nX   X  XXXX  X   X    X        X    XXXX  X   X  X   X\n";
