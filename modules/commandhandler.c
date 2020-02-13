@@ -107,8 +107,8 @@ void setdateWrapper(){
 
 **/
 
-//Interface for SetupPCB()
-void createPCB(){
+//Interface for setupPCB
+void createPCBWrapper(){
 	//Variables	
 	char pcbName[8];
 	char *pcbNamePointer = pcbName;
@@ -127,6 +127,7 @@ void createPCB(){
 	char *namePromptPointer = namePrompt;
 	char priorityPrompt[] = "The PCB get's a priority from 0-9, with 9 going first.\nEnter the priority, a single integer from 0 to 9, of the new PCB:\n";
 	char classPrompt[] = "Is this an application or a system process? enter either 'a' for application or 's' for system:\n";
+	int promptSize;
 
 	//Error or Success Messages
 	char classError[] = "\x1B[31mInvalid entry. Please enter either 'a' or 's'.\x1B[37m\n";
@@ -136,7 +137,7 @@ void createPCB(){
 
 
 	//Recieve Name
-	int promptSize = strlen(namePrompt);
+	promptSize = strlen(namePrompt);
 	sys_req(WRITE, DEFAULT_DEVICE, namePromptPointer, &promptSize);
 	memset(pcbName, '\0', 8);
 	sys_req(READ, DEFAULT_DEVICE, pcbNamePointer, &pcbNameSize);
@@ -187,14 +188,13 @@ void createPCB(){
 	insertPCB(newPCB);
 }
 
-//Interface for find/remove/freePCB()
-void deletePCB(){
+//Interface for find, remove, and freePCB
+void deletePCBWrapper(){
 	//Variables
 	char pcbName[8];
 	char *pcbNamePointer = pcbName;
 	int pcbNameSize = 8;
 	pcb* foundPCB;
-	int removeCode;
 
 	//Prompt And Error/Success
 	char namePrompt[] = "Enter the name for the new PCB that's no longer than 8 characters:\n";
@@ -203,14 +203,19 @@ void deletePCB(){
 	char nameSuccess[] = "\x1B[32mFound It!\x1B[37m\n";
 	char removeError[] = "\x1B[31mEither something went wrong, or this PCB has already been removed.\x1B[37m\n";
 	char removeSuccess[] = "\x1B[32mSuccessfully Removed!\x1B[37m\n";
+	/**TODO: Uncomment this when FreePCB is completed
+	char freeError[] = "\x1B[31mThere has been a failure to free memory associated with this PCB.\x1B[37m\n";
+	char freeSuccess[] = "\x1B[32mMemory successfully freed!\x1B[37m\n";
+	**/
+	int promptSize;
 
-	//Revieve Process Name
-	int promptSize = strlen(namePrompt);
+	//Recieve Process Name
+	promptSize = strlen(namePrompt);
 	sys_req(WRITE, DEFAULT_DEVICE, namePromptPointer, &promptSize);
 	memset(pcbName, '\0', 8);
 	sys_req(READ, DEFAULT_DEVICE, pcbNamePointer, &pcbNameSize);
 	foundPCB = findPCB(pcbName);
-	if(sameName==NULL){
+	if(foundPCB==NULL){
 		promptSize = strlen(nameError);
 		sys_req(WRITE, DEFAULT_DEVICE, nameError, &promptSize);
 		return;//Error!
@@ -219,8 +224,7 @@ void deletePCB(){
 	sys_req(WRITE, DEFAULT_DEVICE, nameSuccess, &promptSize);//Success!
 
 	//Remove It!
-	removeCode = removePCB(foundPCB);
-	if(removeCode==-1){
+	if(removePCB(foundPCB)==-1){
 		promptSize = strlen(removeError);
 		sys_req(WRITE, DEFAULT_DEVICE, removeError, &promptSize);
 		return;//Error!
@@ -228,8 +232,17 @@ void deletePCB(){
 	promptSize = strlen(removeSuccess);
 	sys_req(WRITE, DEFAULT_DEVICE, removeSuccess, &promptSize);//Success!
 	
+	/**TODO: Uncomment this when FreePCB is completed	
 	//Free Associated Memory
-	
+	if(FreePCB(foundPCB)==-1){
+		promptSize = strlen(freeError);
+		sys_req(WRITE, DEFAULT_DEVICE, freeError, &promptSize);
+		return;//Error!
+	}
+	promptSize = strlen(freeSuccess);
+	sys_req(WRITE, DEFAULT_DEVICE, freeSuccess, &promptSize);//Success!
+	return;
+	**/
 }
 
 
@@ -386,8 +399,8 @@ int comhand(){
 	void (*showAllProcess_ptr)() = &showAllProcesses;
 	void (*showReady_ptr)() = &showReady;
 	void (*showBlocked_ptr)() = &showBlocked;
-	//void (*createPCB)() = &createPCBWrapper;
-	//void (*deletePCB)() = &deletePCBWrapper;
+	void (*createPCB)() = &createPCBWrapper;
+	void (*deletePCB)() = &deletePCBWrapper;
 	void (*block)() = &blockWrapper;
 	void (*unblock)() = &unblockWrapper;
 
@@ -425,8 +438,8 @@ int comhand(){
 		*showAllProcess_ptr,
 		*showReady_ptr,
 		*showBlocked_ptr,
-		//*createPCB,
-		//*deletePCB,
+		*createPCB,
+		*deletePCB,
 		*block,
 		*unblock
 	};

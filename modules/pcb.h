@@ -52,7 +52,7 @@ pcb* allocatePCB();
 //! Set up the values for a PCB
 pcb* setupPCB(char *name, int classCode, int priorityCode);
 //! Remove the PCB from a queue
-void removePCB(pcb* process);
+int removePCB(pcb* process);
 //! Change the priority for a PCB and move into the correct queue
 void setPriority(char *name, int priorityNum);
 //! Finds a PCB with the specified name

@@ -163,10 +163,9 @@ pcb* findPCB(char *PcbName){
 	
 }
 
-void removePCB(pcb* process) {
-	//char* success[] = "success";
-	//char* error[] = "error";
-	//Queue thisQueue = NULL;
+int removePCB(pcb* process) {
+	int success = 0;
+	int error = -1;
 	
 	//Which Queue?
 	if(process->stateRRB == 0 && process->stateIsSuspended == 0){
@@ -201,22 +200,25 @@ void removePCB(pcb* process) {
 
 	//Remove from Doubly-Linked List
 	if((process->pcbPrev == NULL) && (process->pcbNext == NULL)){
-		;//Do Nothing because this doesn't exist anyway
+		return error;//This PCB already doesn't exist
 	} else if(process->pcbPrev == NULL){//Are we at an end of the list?
 		pcb* next = process->pcbNext;
 		next->pcbPrev = NULL;
+		return success;//Success!
 	} else if(process->pcbNext == NULL){//Are we at an end o the list?
 		pcb* previous = process->pcbPrev;
 		previous->pcbNext = NULL;
+		return success;//Success!
 	} else{//We must be in the middle somewhere
 		pcb* previous = process->pcbPrev;
 		pcb* next = process->pcbNext;
 		previous->pcbNext = next;
 		next->pcbPrev = previous;
+		return success;//Success!
 	}
 	
-	//Complete	
-	return;// success;
+	//If it worked we wouldn't still be here.	
+	return error;// error :/
 }
 
 void setPriority(char *name, int priorityNum){

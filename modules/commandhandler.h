@@ -31,12 +31,10 @@ void settimeWrapper();
 void setdateWrapper();
 //! Processes user input and find the correct function based off user request
 int comhand();
-<<<<<<< HEAD
 //! Allows the user to create a process
-void createPCB();
+void createPCBWrapper();
 //! Allows the user to remove a process
-void deletePCB();
-=======
+void deletePCBWrapper();
 //! Prompts the user for the name and priority value
 void setPriorityWrapper();
 //! Prompts the user for a PCB name
