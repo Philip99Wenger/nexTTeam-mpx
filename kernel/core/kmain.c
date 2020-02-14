@@ -21,53 +21,7 @@
 #include "modules/polling.h"
 #include "modules/commandhandler.h"
 #include "modules/date.h"
-
-
-
-//STRUCTS
-
-//This is a process//
-typedef struct{ 
-	char processName[8];		//The name of the process
-	char *namePtr;	//Pointer to the name
-	int priority;			//0-9 ranking of importance, with 9 going first
-	int stateRRB;			//Ready(0)/Running(1)/Blocked(3)
-	int stateIsSuspended;		//Suspended(1)/Not-Suspended(0)
-	int classIsApp;			//Application(1)/System-Process(0)
-	unsigned char* pcbNext;		//Pointer to the start of the next process
-	unsigned char* pcbPrev;		//Pointer to the start of the last process
-
-	//This is the stack//	
-	unsigned char* base;		//Pointer to the base of the process
-	unsigned char* top;		//Pointer to the top of the process, or base + 1024 bytes
-	//1024 Bytes, Every Character should be initialized to null//
-} pcb;
-//This is the ready queue//
-typedef struct{
-	int count;	//Number of processes in the queue
-	pcb *head;	//Pointer to the first pcb in the queue, the first one in order, highest priority
-	pcb *tail;	//Pointer to the last pcb in the queue, the last one in order, lowest priority
-} readyQueue;
-//This is the blocked queue//
-typedef struct{
-	int count;	//Number of processes in the queue
-	pcb *head;	//Pointer to the first pcb in the queue, the first one in order
-	pcb *tail;	//Pointer to the last pcb in the queue, the last one in order
-} blockedQueue;
-//This is the suspended-ready queue//
-typedef struct{
-	int count;	//Number of processes in the queue
-	pcb *head;	//Pointer to the first pcb in the queue, the first one in order, highest priority
-	pcb *tail;	//Pointer to the last pcb in the queue, the last one in order, lowest priority
-} suspendReadyQueue;
-//This is the suspended-blocked queue//
-typedef struct{
-	int count;	//Number of processes in the queue
-	pcb *head;	//Pointer to the first pcb in the queue, the first one in order
-	pcb *tail;	//Pointer to the last pcb in the queue, the last one in order
-} suspendBlockedQueue;
-
-
+#include "modules/pcb.h"
 
 
 void kmain(void)
@@ -90,7 +44,7 @@ void kmain(void)
 init_serial(0x3f8);
 set_serial_out(0x3f8);
 set_serial_in(0x3f8);
-mpx_init(MODULE_R1);
+mpx_init(MODULE_R2);
  	
    // 2) Check that the boot was successful and correct when using grub
    // Comment this when booting the kernel directly using QEMU, etc.
