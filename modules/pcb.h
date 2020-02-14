@@ -27,7 +27,7 @@ typedef struct pcb{
 	char processName[8];		//The name of the process
 	char *namePtr;	//Pointer to the name
 	int priority;			//0-9 ranking of importance, with 9 going first
-	int stateRRB;			//Ready(0)/Running(1)/Blocked(3)
+	int stateRRB;			//Ready(0)/Running(1)/Blocked(2)
 	int stateIsSuspended;		//Suspended(1)/Not-Suspended(0)
 	int classIsApp;			//Application(1)/System-Process(0)
 	struct pcb* pcbNext;		//Pointer to the start of the next process
