@@ -238,19 +238,13 @@ int removePCB(pcb* process) {
 	return error;// error :/
 }
 
-void setPriority(char *name, int priorityNum){
-	char noPCB[] = "There is no PCB with that name.\n";
+void setPriority(pcb* priorityPCB, int priorityNum){
+	char noPCB[] = "Priority has successfully been changed.\n";
 	int noSize = strlen(noPCB);
-	pcb* priorityPCB = findPCB(name);
-	if (priorityPCB != NULL){
 		priorityPCB->priority = priorityNum;
 		removePCB(priorityPCB);
 		insertPCB(priorityPCB);
-	}
-	else{
 		sys_req(WRITE, DEFAULT_DEVICE, noPCB, &noSize);
-	}
-	
 }
 
 void showReady(){

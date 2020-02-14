@@ -398,6 +398,8 @@ void setPriorityWrapper(){
 	char error[] = "The name is too long.\n";
 	int errSize = strlen(error);
 	char priorError[] = "The priority number is not valid\n";
+	char nameError[] = "There is no PCB by that name.\n";
+	int nameErrorSize = strlen(nameError);
 	int priorErrSize = strlen(priorError);
 	int priorNum;
 	
@@ -411,17 +413,22 @@ void setPriorityWrapper(){
 			sys_req(WRITE, DEFAULT_DEVICE, error, &errSize);
 		}
 		else{
+			pcb* priorityPCB = findPCB(name);
+			if (priorityPCB == NULL){
+				sys_req(WRITE, DEFAULT_DEVICE, nameError, &nameErrorSize);
+			}
+			else {
 			sys_req(WRITE, DEFAULT_DEVICE, priorityPrompt, &priorSize);
 			memset(showPCBBuffer, '\0', 100);
 			sys_req(READ, DEFAULT_DEVICE, showPCBBuffer, &bufferSize);
-			char* token = strtok(NULL, "");
-			while(token != NULL){
+			char* token = strtok(showPCBBuffer, "");
+			//while(token != NULL){
 				priorNum = atoi(token);
 				if(priorNum < 0 || priorNum > 9){
 					sys_req(WRITE, DEFAULT_DEVICE, priorError, &priorErrSize);
 				}
 				else{
-					setPriority(name, priorNum);
+					setPriority(priorityPCB, priorNum);
 				}
 			}
 		}

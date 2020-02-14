@@ -54,7 +54,7 @@ pcb* setupPCB(char *name, int classCode, int priorityCode);
 //! Remove the PCB from a queue
 int removePCB(pcb* process);
 //! Change the priority for a PCB and move into the correct queue
-void setPriority(char *name, int priorityNum);
+void setPriority(pcb* Pcb, int priorityNum);
 //! Finds a PCB with the specified name
 pcb* findPCB(char *PcbName);
 //! Show the PCB with the specified name
