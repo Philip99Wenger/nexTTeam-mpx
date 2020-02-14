@@ -134,7 +134,8 @@ pcb* allocatePCB(){
 
 pcb* setupPCB(char *PcbName, int classCode, int priorityCode){
 	pcb * newPCB = allocatePCB();
-	strcpy(newPCB->namePtr, PcbName);
+	newPCB->namePtr = newPCB->processName;	
+	newPCB->namePtr = strcpy(newPCB->namePtr, PcbName);
 	newPCB->priority = priorityCode;
 	newPCB->stateRRB = 0;			//Ready(0)
 	newPCB->stateIsSuspended = 0;		//Not-Suspended(0)

@@ -256,12 +256,12 @@ void createPCBWrapper(){
 	newPCB = setupPCB(pcbName, atoi(&pcbClass), atoi(pcbPriority));
 	//Insert The PCB
 	insertPCB(newPCB);
-	promptSize = strlen(success);
 	if(findPCB(pcbNamePointer)==NULL){
 		promptSize = strlen(failedToCreateError);
 		sys_req(WRITE, DEFAULT_DEVICE, failedToCreateError, &promptSize);
 		return;//After attempting to insert, it still could not be found
 	}
+	promptSize = strlen(finish);
 	sys_req(WRITE, DEFAULT_DEVICE, finish, &promptSize);//Finished!
 	return;
 }
