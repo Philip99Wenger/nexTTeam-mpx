@@ -176,12 +176,12 @@ void createPCBWrapper(){
 	char pcbName[100];
 	char *pcbNamePointer = pcbName;
 	int pcbNameSize = 100;
-	char pcbPriority[1];
+	char pcbPriority[2];
 	char *pcbPriorityPointer = pcbPriority;
-	int pcbPrioritySize = 1;
+	int pcbPrioritySize = 2;
 	char pcbClass;
-	int pcbClassSize = 1;
-	char class[1];
+	int pcbClassSize = 2;
+	char class[2];
 	pcb* newPCB;
 	pcb* sameName;
 
@@ -198,6 +198,7 @@ void createPCBWrapper(){
 	char nameError[] = "\x1B[31mThis name is already taken. Please pick another.\x1B[37m\n";
 	char nameTooLongError[] = "\x1B[31mName Too Long! Keep it no longer than 8 characters.\x1B[37m\n";
 	char success[] = "\x1B[32mValid Entry\x1B[37m\n";
+	char finish[] = "\x1B[32mSuccessfully Finished\x1B[37m\n";
 
 	//Recieve Name
 	promptSize = strlen(namePrompt);
@@ -222,7 +223,7 @@ void createPCBWrapper(){
 	//Recieve Priority
 	promptSize = strlen(priorityPrompt);
 	sys_req(WRITE, DEFAULT_DEVICE, priorityPrompt, &promptSize);
-	memset(&pcbPriority, '\0', 1);
+	memset(&pcbPriority, '\0', 2);
 	sys_req(READ, DEFAULT_DEVICE, pcbPriorityPointer, &pcbPrioritySize);
 	if((*pcbPriority!='0')&&(*pcbPriority!='1')&&(*pcbPriority!='2')&&(*pcbPriority!='3')&&(*pcbPriority!='4')&&(*pcbPriority!='5')&&(*pcbPriority!='6')&&(*pcbPriority!='7')&&(*pcbPriority!='8')&&(*pcbPriority!='9')){
 		promptSize = strlen(priorityError);
@@ -236,7 +237,7 @@ void createPCBWrapper(){
 	//Recieve Class
 	promptSize = strlen(classPrompt);
 	sys_req(WRITE, DEFAULT_DEVICE, classPrompt, &promptSize);
-	memset(class, '\0', 1);
+	memset(class, '\0', 2);
 	sys_req(READ, DEFAULT_DEVICE, class, &pcbClassSize);
 	if(*class=='a'){
 		pcbClass=1;
@@ -254,6 +255,8 @@ void createPCBWrapper(){
 	newPCB = setupPCB(pcbName, atoi(&pcbClass), atoi(pcbPriority));
 	//Insert The PCB
 	insertPCB(newPCB);
+	promptSize = strlen(success);
+	sys_req(WRITE, DEFAULT_DEVICE, finish, &promptSize);//Finished!
 }
 
 //Interface for find, remove, and freePCB
