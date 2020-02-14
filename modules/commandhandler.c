@@ -197,6 +197,7 @@ void createPCBWrapper(){
 	char priorityError[] = "\x1B[31mInvalid entry. Please enter an integer between '1' and '9'.\x1B[37m\n";
 	char nameError[] = "\x1B[31mThis name is already taken. Please pick another.\x1B[37m\n";
 	char nameTooLongError[] = "\x1B[31mName Too Long! Keep it no longer than 8 characters.\x1B[37m\n";
+	char failedToCreateError[] = "\x1B[31mSomething went wrong, failure to create\x1B[37m\n";
 	char success[] = "\x1B[32mValid Entry\x1B[37m\n";
 	char finish[] = "\x1B[32mSuccessfully Finished\x1B[37m\n";
 
@@ -256,7 +257,13 @@ void createPCBWrapper(){
 	//Insert The PCB
 	insertPCB(newPCB);
 	promptSize = strlen(success);
+	if(findPCB(pcbNamePointer)==NULL){
+		promptSize = strlen(failedToCreateError);
+		sys_req(WRITE, DEFAULT_DEVICE, failedToCreateError, &promptSize);
+		return;//After attempting to insert, it still could not be found
+	}
 	sys_req(WRITE, DEFAULT_DEVICE, finish, &promptSize);//Finished!
+	return;
 }
 
 //Interface for find, remove, and freePCB
