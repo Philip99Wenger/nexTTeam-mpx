@@ -43,5 +43,7 @@ void showPCBWrapper();
 void blockWrapper();
 //! Prompts the user for a PCB name (and finds that pcb to verify its valid)
 void unblockWrapper();
+//! Displays the previous ten commands used by the user
+void history();
 
 #endif
