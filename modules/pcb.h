@@ -71,6 +71,11 @@ void printOnePCB(pcb* Pcb);
 void block(pcb* PCB);
 //Finds a PCB sets it's state to unblocked and reinserts it into the right queue
 void unblock(pcb* PCB);
-
+//! Frees space for the PCB
+int freePCB(pcb* PCB);
+//! Frees space for the PCB
+void suspend(pcb* PCB);
+//! Frees space for the PCB
+void resume(pcb* PCB);
 
 #endif

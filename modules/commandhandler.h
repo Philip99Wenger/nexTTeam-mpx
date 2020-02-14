@@ -45,5 +45,9 @@ void blockWrapper();
 void unblockWrapper();
 //! Displays the previous ten commands used by the user
 void history();
+//! Prompts the user for a PCB name than sets it to suspended
+void suspendWrapper();
+//! Prompts the user for a PCB name than sets it to not suspended
+void resumeWrapper();
 
 #endif
