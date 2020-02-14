@@ -179,9 +179,9 @@ void createPCBWrapper(){
 	char pcbPriority[2];
 	char *pcbPriorityPointer = pcbPriority;
 	int pcbPrioritySize = 2;
-	char pcbClass;
-	int pcbClassSize = 2;
 	char class[2];
+	int pcbClass;
+	int pcbClassSize = 2;
 	pcb* newPCB;
 	pcb* sameName;
 
@@ -253,7 +253,7 @@ void createPCBWrapper(){
 	sys_req(WRITE, DEFAULT_DEVICE, success, &promptSize);//Success!
 
 	//Make The PCB
-	newPCB = setupPCB(pcbName, atoi(&pcbClass), atoi(pcbPriority));
+	newPCB = setupPCB(pcbName, pcbClass, atoi(pcbPriority));
 	//Insert The PCB
 	insertPCB(newPCB);
 	if(findPCB(pcbNamePointer)==NULL){
