@@ -1,4 +1,4 @@
-#include "PCB.h"
+#include "pcb.h"
 
 Queue readyQueue;
 Queue blockedQueue;

@@ -5,7 +5,7 @@
 #define READY 0
 #define RUNNING 1
 #define BLOCKED 2
-#define SUSPENED 1
+#define SUSPENDED 1
 #define NOTSUSPENDED 0
 
 #include <stdint.h>
