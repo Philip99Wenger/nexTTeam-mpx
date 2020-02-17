@@ -48,4 +48,8 @@ typedef struct Queue{
 //! Inserts PCB into the correct queue
 void insertPCB(pcb* Pcb);
 
+pcb* allocatePCB();
+
+pcb* setupPCB(char *name, int classCode, int priorityCode);
+
 #endif

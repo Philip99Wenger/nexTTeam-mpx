@@ -31,3 +31,21 @@ void insertPCB(pcb* Pcb){
 		
 	}
 }
+
+pcb* allocatePCB(){
+	pcb * thisPCB = (pcb *) sys_alloc_mem(sizeof(pcb));
+	
+	return thisPCB;
+}
+
+pcb* pcb* setupPCB(char *PcbName, int classCode, int priorityCode){
+	pcb * newPCB = allocatePCB();
+	strcpy(newPCB->name, Pcbname);
+	newPCB->priority = priorityCode;
+	stateRRB = 0;			//Ready(0)
+	stateIsSuspended = 0;		//Not-Suspended(0)
+	classIsApp = classCode;		//Application(1)/System-Process(0)
+
+	return newPCB;
+	
+}
