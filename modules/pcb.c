@@ -10,23 +10,23 @@ void insertPCB(pcb* Pcb){
 		pcb* current = readyQueue.head;
 		pcb* previous;
 		if(Pcb->priority > current->priority){
-				readyQueue.head = pcb;
-				current->pcbPrev = pcb;
-				pcb->pcbNext = current;
+				readyQueue.head = Pcb;
+				current->pcbPrev = Pcb;
+				Pcb->pcbNext = current;
 				readyQueue.count++;
 				return;
 			}
 		while(current){ // place priority where needed in queue
 			if(Pcb->priority > current->priority){
 				previous->pcbNext = current;
-				pcb->pcbPrev = previous;
-				current->pcbPrev = pcb;
-				pcb->pcbNext = current;
+				Pcb->pcbPrev = previous;
+				current->pcbPrev = Pcb;
+				Pcb->pcbNext = current;
 				readyQueue.count++;
 				return;
 			}
 			previous = current;
-			current = current->next
+			current = current->pcbNext;
 		}
 		
 	}
@@ -38,13 +38,13 @@ pcb* allocatePCB(){
 	return thisPCB;
 }
 
-pcb* pcb* setupPCB(char *PcbName, int classCode, int priorityCode){
+pcb* setupPCB(char *PcbName, int classCode, int priorityCode){
 	pcb * newPCB = allocatePCB();
-	strcpy(newPCB->name, Pcbname);
+	strcpy(newPCB->namePtr, PcbName);
 	newPCB->priority = priorityCode;
-	stateRRB = 0;			//Ready(0)
-	stateIsSuspended = 0;		//Not-Suspended(0)
-	classIsApp = classCode;		//Application(1)/System-Process(0)
+	newPCB->stateRRB = 0;			//Ready(0)
+	newPCB->stateIsSuspended = 0;		//Not-Suspended(0)
+	newPCB->classIsApp = classCode;		//Application(1)/System-Process(0)
 
 	return newPCB;
 	
