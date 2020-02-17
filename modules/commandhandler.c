@@ -3,12 +3,12 @@
 
 
 void version(){
-	char version[] = "\x1B[36mVERSION: 1.0\x1B[37m\n";
+	char version[] = "\x1B[36mVERSION: 2.0\x1B[37m\n";
 	int versionSize = strlen(version);
 	sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
 }
 
-void help(){
+void help(){	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!TODO update with new commands !!!!!!!!!!!!!!!!!!!!!!!!!!!
 	char help[] = "NAME\n     version - display current version of NTOS in use.\nDETAIL DESCRIPTION\n     No further description.\n\nNAME\n     getTime - display current time of system.\nDETAIL DESCRIPTION\n     Time will be displayed as hour:minute:second.\n\nNAME\n     setTime - change system's current time.\nDETAIL DESCRIPTION\n     Will prompt user to enter time as hh:mm:ss (i.e. hour:minute:second).\n\nNAME\n     getDate - display current date of system.\nDETAIL DESCRIPTION\n     Date will be displayed as month/day/year.\n\nNAME\n     setDate - change system's current date.\nDETAIL DESCRIPTION\n     Will prompt user to enter date as mm/dd/yy (i.e. month/day/year).\n\nNAME\n     shutdown - shuts down NTOS.\nDETAIL DESCRIPTION\n     Will prompt user to confirm system shut down as yes/no.\n";
 	int helpSize = strlen(help);
 	
@@ -94,6 +94,34 @@ void setdateWrapper(){
 	setDate(parArr[0],parArr[1],parArr[2]);
 }
 
+/**TODO suspendWrapper
+
+**/
+
+/**TODO resumeWrapper
+
+**/
+
+/**TODO setPriorityWrapper
+
+**/
+
+/**TODO createPCBWrapper
+
+**/
+
+/**TODO deletePCBWrapper
+
+
+**/
+/**TODO blockWrapper
+
+**/
+
+/**TODO unblockWrapper
+
+**/
+
 int comhand(){
 	char cmdBuffer[100];
 	int bufferSize;
@@ -105,15 +133,38 @@ int comhand(){
 	void (*settime_ptr)() = &settimeWrapper;
 	void (*getdate_ptr)() = &getdate;
 	void (*setdate_ptr)() = &setdateWrapper;
+	//R2 functions -- uncomment as implemented
+	//void (*suspend_ptr)() = &suspendWrapper;
+	//void (*resume_ptr)() = &resumeWrapper;
+	//void (*setPriority_ptr)() = &setPriorityWrapper;
+	//void (*showPCB_ptr)() = &showPCB;
+	//void (*showAllProcess_ptr)() = &showAllProcesses;
+	//void (*showReady_ptr)() = &showReady;
+	//void (*showBlocked)() = &showBlocked;
+	//void (*createPCB)() = &createPCBWrapper;
+	//void (*deletePCB)() = &deletePCBWrapper;
+	//void (*block)() = &blockWrapper;
+	//void (*unblock)() = &unblockWrapper;
 
-	char commands[7][15]={
+	char commands[18][20]={
+		"shutdown", //must keep shutdown at index 0
 		"version",
 		"help",
 		"getTime",
 		"setTime",
 		"getDate",
 		"setDate",
-		"shutdown"
+		"suspend", //R2 functions vvvvv
+		"resume",
+		"setPriority",
+		"showPCB",
+		"showAllProcesses",
+		"showReady",
+		"showBlocked",
+		"createPCB",
+		"deletePCB",
+		"block",
+		"unblock"
 	};
 	void (*commands_ptrs[])()={
 		*version_ptr,
@@ -121,7 +172,18 @@ int comhand(){
 		*gettime_ptr,
 		*settime_ptr,
 		*getdate_ptr,
-		*setdate_ptr
+		*setdate_ptr,
+		//*suspend_ptr,
+		//*resume_ptr,
+		//*setPriority_ptr,
+		//*showPCB_ptr,
+		//*showAllProcess_ptr,
+		//*showReady_ptr,
+		//*showBlocked,
+		//*createPCB,
+		//*deletePCB,
+		//*block,
+		//*unblock
 	};
 	//Print fancy menu
 	char nextTeam[] = "\x1B[33mX   X  XXXX  X   X  XXXXX    XXXXX  XXXX    X    X   X\nXX  X  X      X X     X        X    X      X X   XX XX\nX X X  XXX     X      X        X    XXX   X   X  X X X\nX  XX  X      X X     X        X    X     XXXXX  X   X\nX   X  XXXX  X   X    X        X    XXXX  X   X  X   X\n";
@@ -136,7 +198,7 @@ int comhand(){
 	int welcomeSize = strlen(welcome);
 	sys_req(WRITE, DEFAULT_DEVICE, welcome, &welcomeSize);	
 		
-	int tempSize = 15;
+	int tempSize = 20;
 	char sloppyTemp[] = "\n";
 	int sloppySize = 2;
 	for(i=0; i<sizeof(commands)/sizeof(commands[0]); i++){
@@ -153,10 +215,10 @@ int comhand(){
 		int shutdownVal;
 		for(i=0; i<sizeof(commands)/sizeof(commands[0]); i++){
 			if(strcmp(cmdBuffer, commands[i])==0){
-				if(i == 6){
+				if(i == 0){
 					shutdownVal = shutdown();
 					if(shutdownVal == 1){quit = 1;}
-				}else{(*commands_ptrs[i])();}	
+				}else{(*commands_ptrs[i-1])();}	
 			}
 		}
 	}
