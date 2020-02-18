@@ -47,10 +47,13 @@ typedef struct Queue{
 
 //! Inserts PCB into the correct queue
 void insertPCB(pcb* Pcb);
-
 pcb* allocatePCB();
-
 pcb* setupPCB(char *name, int classCode, int priorityCode);
 void removePCB(pcb* process);
+pcb* findPCB(char *PcbName);
+void showReady();
+void showBlocked();
+void showAll();
+void printOnePCB(pcb* Pcb);
 
 #endif

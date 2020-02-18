@@ -218,3 +218,134 @@ void removePCB(pcb* process) {
 	//Complete	
 	return;// success;
 }
+
+void showReady(){
+	char ready[] = "Ready Queue:";
+	int readySize = strlen(ready);
+	char suspendReady[] = "Suspend Ready Queue:";
+	int suspendReadySize = strlen(suspendReady);
+
+  	//Print ready queue
+	sys_req(WRITE, DEFAULT_DEVICE, ready, &readySize);
+	pcb* current = readyQueue.head;
+	while (current != NULL){
+		printOnePCB(current);
+		current = current->pcbNext;
+	}
+
+	//Print suspend ready queue
+	sys_req(WRITE, DEFAULT_DEVICE, suspendReady, &suspendReadySize);
+	current = suspendReadyQueue.head;
+	while (current != NULL){
+		printOnePCB(current);
+		current = current->pcbNext;
+	}
+}
+
+void showBlocked(){
+	char blocked[] = "Blocked Queue:";
+	int blockedSize = strlen(blocked);
+	char suspendBlocked[] = "Suspend Blocked Queue:";
+	int suspendBlockedSize = strlen(suspendBlocked);
+
+	//Print blocked queue
+	sys_req(WRITE, DEFAULT_DEVICE, blocked, &blockedSize);
+	pcb* current = blockedQueue.head;
+	while (current != NULL){
+		printOnePCB(current);
+		current = current->pcbNext;
+	}
+
+	//Print suspend ready queue
+	sys_req(WRITE, DEFAULT_DEVICE, suspendBlocked, &suspendBlockedSize);
+	current = suspendedBlockedQueue.head;
+	while (current != NULL){
+		printOnePCB(current);
+		current = current->pcbNext;
+	}
+}
+
+void showAll(){
+	showReady();
+	showBlocked();
+}
+
+void printOnePCB(pcb* Pcb){
+	//Name strings
+	char name[] = "\n\nName: ";
+	int nameSize = strlen(name);
+
+	//class strings
+	char class[] = "\nClass: ";
+	int classSize = strlen(class);
+	char application[] = "Application";
+	int appSize = strlen(application);
+	char system[] = "System-Process";
+	int systemSize = strlen(system);
+
+	//state strings
+	char state[] = "\nState: ";
+	int stateSize = strlen(state);
+	char blocked[] = "Blocked";
+	int blockedSize = strlen(blocked);
+	char running[] = "Running";
+	int runSize = strlen(running);
+	char ready[] = "Ready";
+	int readySize = strlen(ready);
+
+	//suspend state strings
+	char suspend[] = "\nSuspend State: ";
+	int suspendSize = strlen(suspend);
+	char suspended[] = "Suspended";
+	int susSize = strlen(suspended);
+	char notSus[] = "Not Suspended";
+	int notSize = strlen(notSus);
+
+	//priority strings
+	char priorityNum[] = "\nPriority: ";
+	int prioritySize = strlen(priorityNum);
+	char currentPriority[5];
+	int currPriSize;
+	
+	//Print the attributes for one PCB
+	//Print the name
+	sys_req(WRITE, DEFAULT_DEVICE, name, &nameSize);
+	int namePtrSize = strlen(Pcb->namePtr);
+	sys_req(WRITE, DEFAULT_DEVICE, Pcb->namePtr, &namePtrSize);
+
+	//Print the class
+	sys_req(WRITE, DEFAULT_DEVICE, class, &classSize);
+	if(Pcb->classIsApp == 1){
+		sys_req(WRITE, DEFAULT_DEVICE, application, &appSize);
+	}
+	else if(Pcb->classIsApp == 0){
+		sys_req(WRITE, DEFAULT_DEVICE, system, &systemSize);
+	}
+
+	//Print the state
+	sys_req(WRITE, DEFAULT_DEVICE, state, &stateSize);
+	if(Pcb->stateRRB == 2){
+		sys_req(WRITE, DEFAULT_DEVICE, blocked, &blockedSize);
+	}
+	else if(Pcb->stateRRB == 1){
+		sys_req(WRITE, DEFAULT_DEVICE, running, &runSize);
+	}
+	else if(Pcb->stateRRB == 0){
+		sys_req(WRITE, DEFAULT_DEVICE, ready, &readySize);
+	}
+
+	//Print the suspend state
+	sys_req(WRITE, DEFAULT_DEVICE, suspend, &suspendSize);
+	if(Pcb->stateIsSuspended == 1){
+		sys_req(WRITE, DEFAULT_DEVICE, suspended, &susSize);
+	}
+	else if(Pcb->stateIsSuspended == 0){
+		sys_req(WRITE, DEFAULT_DEVICE, notSus, &notSize);
+	}
+
+	//Print the priority
+	sys_req(WRITE, DEFAULT_DEVICE, priorityNum, &prioritySize);
+	strcpy(currentPriority, intToAscii(Pcb->priority));
+	currPriSize = strlen(currentPriority);
+	sys_req(WRITE, DEFAULT_DEVICE, currentPriority, &currPriSize);
+}
