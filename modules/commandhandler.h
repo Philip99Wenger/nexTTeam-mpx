@@ -16,6 +16,7 @@
 #include "mpx_supt.h"
 #include "date.h"
 #include "time.h"
+#include "pcb.h"
 
 //int poll(char * buffer, int * count);
 //! Displays the current version being used for the MPX

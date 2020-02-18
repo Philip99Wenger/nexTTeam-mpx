@@ -123,6 +123,25 @@ void setdateWrapper(){
 
 **/
 
+void showPCBWrapper(){
+	char showPCBBuffer[100];
+	int bufferSize = 99;
+	
+	//prompt user for date to set to
+	char prompt[] = "Enter the PCB name\n";
+	int promptSize = strlen(prompt);
+	sys_req(WRITE, DEFAULT_DEVICE, prompt, &promptSize);
+
+	memset(showPCBBuffer, '\0', 100);
+	sys_req(READ, DEFAULT_DEVICE, showPCBBuffer, &bufferSize);
+
+ 	//change after this
+	char* name = strtok(NULL, " ");
+	if (name != NULL){
+		showPCB(name);
+	}
+}
+
 int comhand(){
 	char cmdBuffer[100];
 	int bufferSize;
@@ -139,9 +158,9 @@ int comhand(){
 	//void (*resume_ptr)() = &resumeWrapper;
 	//void (*setPriority_ptr)() = &setPriorityWrapper;
 	//void (*showPCB_ptr)() = &showPCB;
-	//void (*showAllProcess_ptr)() = &showAllProcesses;
-	//void (*showReady_ptr)() = &showReady;
-	//void (*showBlocked)() = &showBlocked;
+	void (*showAllProcess_ptr)() = &showAllProcesses;
+	void (*showReady_ptr)() = &showReady;
+	void (*showBlocked_ptr)() = &showBlocked;
 	//void (*createPCB)() = &createPCBWrapper;
 	//void (*deletePCB)() = &deletePCBWrapper;
 	//void (*block)() = &blockWrapper;
@@ -178,9 +197,9 @@ int comhand(){
 		//*resume_ptr,
 		//*setPriority_ptr,
 		//*showPCB_ptr,
-		//*showAllProcess_ptr,
-		//*showReady_ptr,
-		//*showBlocked,
+		*showAllProcess_ptr,
+		*showReady_ptr,
+		*showBlocked_ptr,
 		//*createPCB,
 		//*deletePCB,
 		//*block,

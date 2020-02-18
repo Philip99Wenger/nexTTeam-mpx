@@ -265,9 +265,13 @@ void showBlocked(){
 	}
 }
 
-void showAll(){
+void showAllProcesses(){
 	showReady();
 	showBlocked();
+}
+
+void showPCB(char *name){
+	printOnePCB(findPCB(name));
 }
 
 void printOnePCB(pcb* Pcb){

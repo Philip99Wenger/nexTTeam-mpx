@@ -51,9 +51,10 @@ pcb* allocatePCB();
 pcb* setupPCB(char *name, int classCode, int priorityCode);
 void removePCB(pcb* process);
 pcb* findPCB(char *PcbName);
+void showPCB(char *name);
 void showReady();
 void showBlocked();
-void showAll();
+void showAllProcesses();
 void printOnePCB(pcb* Pcb);
 
 #endif
