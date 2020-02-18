@@ -169,9 +169,6 @@ void resumeWrapper(){
 }
 
 
-/**TODO setPriorityWrapper
-
-**/
 
 //Interface for setupPCB
 void createPCBWrapper(){
@@ -200,7 +197,6 @@ void createPCBWrapper(){
 	char priorityError[] = "\x1B[31mInvalid entry. Please enter an integer between '1' and '9'.\x1B[37m\n";
 	char nameError[] = "\x1B[31mThis name is already taken. Please pick another.\x1B[37m\n";
 	char success[] = "\x1B[32mValid Entry\x1B[37m\n";
-
 
 	//Recieve Name
 	promptSize = strlen(namePrompt);
@@ -269,10 +265,8 @@ void deletePCBWrapper(){
 	char nameSuccess[] = "\x1B[32mFound It!\x1B[37m\n";
 	char removeError[] = "\x1B[31mEither something went wrong, or this PCB has already been removed.\x1B[37m\n";
 	char removeSuccess[] = "\x1B[32mSuccessfully Removed!\x1B[37m\n";
-	/**TODO: Uncomment this when FreePCB is completed
 	char freeError[] = "\x1B[31mThere has been a failure to free memory associated with this PCB.\x1B[37m\n";
 	char freeSuccess[] = "\x1B[32mMemory successfully freed!\x1B[37m\n";
-	**/
 	int promptSize;
 
 	//Recieve Process Name
@@ -297,10 +291,9 @@ void deletePCBWrapper(){
 	}
 	promptSize = strlen(removeSuccess);
 	sys_req(WRITE, DEFAULT_DEVICE, removeSuccess, &promptSize);//Success!
-	
-	/**TODO: Uncomment this when FreePCB is completed	
+		
 	//Free Associated Memory
-	if(FreePCB(foundPCB)==-1){
+	if(freePCB(foundPCB)==-1){
 		promptSize = strlen(freeError);
 		sys_req(WRITE, DEFAULT_DEVICE, freeError, &promptSize);
 		return;//Error!
@@ -308,7 +301,6 @@ void deletePCBWrapper(){
 	promptSize = strlen(freeSuccess);
 	sys_req(WRITE, DEFAULT_DEVICE, freeSuccess, &promptSize);//Success!
 	return;
-	**/
 }
 
 
@@ -469,8 +461,8 @@ int comhand(){
 	void (*getdate_ptr)() = &getdate;
 	void (*setdate_ptr)() = &setdateWrapper;
 	//R2 functions -- uncomment as implemented
-	//void (*suspend_ptr)() = &suspendWrapper;
-	//void (*resume_ptr)() = &resumeWrapper;
+	void (*suspend_ptr)() = &suspendWrapper;
+	void (*resume_ptr)() = &resumeWrapper;
 	void (*setPriority_ptr)() = &setPriorityWrapper;
 	void (*showPCB_ptr)() = &showPCBWrapper;
 	void (*showAllProcess_ptr)() = &showAllProcesses;
@@ -510,8 +502,8 @@ int comhand(){
 		*settime_ptr,
 		*getdate_ptr,
 		*setdate_ptr,
-		//*suspend_ptr,
-		//*resume_ptr,
+		*suspend_ptr,
+		*resume_ptr,
 		*setPriority_ptr,
 		*showPCB_ptr,
 		*showAllProcess_ptr,
