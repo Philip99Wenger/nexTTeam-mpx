@@ -31,5 +31,9 @@ void settimeWrapper();
 void setdateWrapper();
 //! Processes user input and find the correct function based off user request
 int comhand();
+//! Prompts the user for the name and priority value
+void setPriorityWrapper();
+//! Prompts the user for a PCB name
+void showPCBWrapper();
 
 #endif

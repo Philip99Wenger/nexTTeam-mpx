@@ -219,6 +219,21 @@ void removePCB(pcb* process) {
 	return;// success;
 }
 
+void setPriority(char *name, int priorityNum){
+	char noPCB[] = "There is no PCB with that name.\n";
+	int noSize = strlen(noPCB);
+	pcb* priorityPCB = findPCB(name);
+	if (priorityPCB != NULL){
+		priorityPCB->priority = priorityNum;
+		removePCB(priorityPCB);
+		insertPCB(priorityPCB);
+	}
+	else{
+		sys_req(WRITE, DEFAULT_DEVICE, noPCB, &noSize);
+	}
+	
+}
+
 void showReady(){
 	char ready[] = "Ready Queue:";
 	int readySize = strlen(ready);
@@ -271,7 +286,15 @@ void showAllProcesses(){
 }
 
 void showPCB(char *name){
-	printOnePCB(findPCB(name));
+	char noPCB[] = "There is no PCB with that name.\n";
+	int noSize = strlen(noPCB);
+	pcb* onePCB = findPCB(name);
+	if (onePCB != NULL){
+		printOnePCB(onePCB);
+	}
+	else{
+		sys_req(WRITE, DEFAULT_DEVICE, noPCB, &noSize);
+	}
 }
 
 void printOnePCB(pcb* Pcb){

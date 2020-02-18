@@ -122,23 +122,71 @@ void setdateWrapper(){
 /**TODO unblockWrapper
 
 **/
+void setPriorityWrapper(){
+	char showPCBBuffer[100];
+	int bufferSize = 99;
+	
+	//prompt user for date to set to
+	char prompt[] = "Enter the PCB name:\n";
+	int promptSize = strlen(prompt);
+	char priorityPrompt[] = "Enter the new priority for the PCB:\n";
+	int priorSize = strlen(priorityPrompt);
+	char error[] = "The name is too long.\n";
+	int errSize = strlen(error);
+	char priorError[] = "The priority number is not valid\n";
+	int priorErrSize = strlen(priorError);
+	int priorNum;
+	
+	sys_req(WRITE, DEFAULT_DEVICE, prompt, &promptSize);
+	memset(showPCBBuffer, '\0', 100);
+	sys_req(READ, DEFAULT_DEVICE, showPCBBuffer, &bufferSize);
+
+	char* name = strtok(NULL, "");
+	while (name != NULL){
+		if (strlen(name) > 8){
+			sys_req(WRITE, DEFAULT_DEVICE, error, &errSize);
+		}
+		else{
+			sys_req(WRITE, DEFAULT_DEVICE, priorityPrompt, &priorSize);
+			memset(showPCBBuffer, '\0', 100);
+			sys_req(READ, DEFAULT_DEVICE, showPCBBuffer, &bufferSize);
+			char* token = strtok(NULL, "");
+			while(token != NULL){
+				priorNum = atoi(token);
+				if(priorNum < 0 || priorNum > 9){
+					sys_req(WRITE, DEFAULT_DEVICE, priorError, &priorErrSize);
+				}
+				else{
+					setPriority(name, priorNum);
+				}
+			}
+		}
+	}
+}
 
 void showPCBWrapper(){
 	char showPCBBuffer[100];
 	int bufferSize = 99;
 	
 	//prompt user for date to set to
-	char prompt[] = "Enter the PCB name\n";
+	char prompt[] = "Enter the PCB name:\n";
 	int promptSize = strlen(prompt);
+	char error[] = "The name is too long.\n";
+	int errSize = strlen(error);
+
 	sys_req(WRITE, DEFAULT_DEVICE, prompt, &promptSize);
 
 	memset(showPCBBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, showPCBBuffer, &bufferSize);
 
- 	//change after this
-	char* name = strtok(NULL, " ");
-	if (name != NULL){
-		showPCB(name);
+	char* name = strtok(NULL, "");
+	while (name != NULL){
+		if (strlen(name) > 8){
+			sys_req(WRITE, DEFAULT_DEVICE, error, &errSize);
+		}
+		else{
+			showPCB(name);
+		}
 	}
 }
 
@@ -156,8 +204,8 @@ int comhand(){
 	//R2 functions -- uncomment as implemented
 	//void (*suspend_ptr)() = &suspendWrapper;
 	//void (*resume_ptr)() = &resumeWrapper;
-	//void (*setPriority_ptr)() = &setPriorityWrapper;
-	//void (*showPCB_ptr)() = &showPCB;
+	void (*setPriority_ptr)() = &setPriorityWrapper;
+	void (*showPCB_ptr)() = &showPCBWrapper;
 	void (*showAllProcess_ptr)() = &showAllProcesses;
 	void (*showReady_ptr)() = &showReady;
 	void (*showBlocked_ptr)() = &showBlocked;
@@ -195,8 +243,8 @@ int comhand(){
 		*setdate_ptr,
 		//*suspend_ptr,
 		//*resume_ptr,
-		//*setPriority_ptr,
-		//*showPCB_ptr,
+		*setPriority_ptr,
+		*showPCB_ptr,
 		*showAllProcess_ptr,
 		*showReady_ptr,
 		*showBlocked_ptr,
