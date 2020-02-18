@@ -9,7 +9,7 @@ void insertPCB(pcb* Pcb){
 	if(Pcb->stateRRB == READY && Pcb->stateIsSuspended == NOTSUSPENDED){
 		pcb* current = readyQueue.head;
 		pcb* previous;
-		if(Pcb->priority > current->priority){
+		if(Pcb->priority < current->priority){ //if head priority value is higher than pcb priority, place at the head
 				readyQueue.head = Pcb;
 				current->pcbPrev = Pcb;
 				Pcb->pcbNext = current;
@@ -17,7 +17,7 @@ void insertPCB(pcb* Pcb){
 				return;
 			}
 		while(current){ // place priority where needed in queue
-			if(Pcb->priority > current->priority){
+			if(Pcb->priority < current->priority){
 				previous->pcbNext = current;
 				Pcb->pcbPrev = previous;
 				current->pcbPrev = Pcb;
@@ -40,7 +40,7 @@ void insertPCB(pcb* Pcb){
 	else if(Pcb->stateRRB == READY && Pcb->stateIsSuspended == SUSPENDED){
 		pcb* current = suspendReadyQueue.head;
 		pcb* previous;
-		if(Pcb->priority > current->priority){
+		if(Pcb->priority < current->priority){
 				suspendReadyQueue.head = Pcb;
 				current->pcbPrev = Pcb;
 				Pcb->pcbNext = current;
@@ -48,7 +48,7 @@ void insertPCB(pcb* Pcb){
 				return;
 			}
 		while(current){ // place priority where needed in queue
-			if(Pcb->priority > current->priority){
+			if(Pcb->priority < current->priority){
 				previous->pcbNext = current;
 				Pcb->pcbPrev = previous;
 				current->pcbPrev = Pcb;
