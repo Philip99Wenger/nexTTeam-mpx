@@ -16,6 +16,9 @@ int poll(char * buffer, int * count){
 	char tempLetAr[2]={'\0','\0'};
 	int doPrint;
 	//char temp[1]={0};
+
+
+	serial_print("\x1B[47m\x1B[31m>>>\x1B[2m\x1B[30m");
 	
 	while(flag){
 		if (inb(COM1+5)&1){
@@ -29,6 +32,8 @@ int poll(char * buffer, int * count){
 				
 				if (sublet==51){
 					doPrint=0;
+					tempLetAr[0]=27;
+					serial_print(tempLetAr);
 					serial_print("\[K");
 					if (position<totalChars){
 						for (i=position+1;i<totalChars;i++){
@@ -56,18 +61,28 @@ int poll(char * buffer, int * count){
 					if(position==totalChars){
 						buffer[position]=' ';
 						totalChars=totalChars+1;
+						tempLetAr[0]=32;
+						serial_print(tempLetAr);
 
+					}
+					else{
+						tempLetAr[0]=27;
+						serial_print(tempLetAr);
+						serial_print("\[1C");
 					}
 					
 					position=position+1;
-					serial_print("\[1C");
+					
 				}
 				else if(sublet==68){
 					doPrint=0;
 					if (position > 0){
 						position=position-1;
+						tempLetAr[0]=27;
+						serial_print(tempLetAr);
+						serial_print("\[1D");
 					}
-					serial_print("\[1D");
+					
 
 				}
 				/*else{
@@ -112,10 +127,13 @@ int poll(char * buffer, int * count){
 
 				//serial_print(buffer);
 				//tempLetAr[0]=totalChars+'0';
-				serial_print("\n ");
+				serial_print("\x1B[0m\n");
 				*count=totalChars;
 				return 1;
 
+				break;
+			case 27:
+				doPrint=0;
 				break;
 			default:
 				if (position < *count && letter>31 && letter<127){

@@ -128,6 +128,41 @@ pcb* setupPCB(char *PcbName, int classCode, int priorityCode){
 	
 }
 
+pcb* findPCB(char *PcbName){
+	pcb* current = readyQueue.head;
+	while(current){ // loops through looking for name
+		if(strcmp(PcbName , current->namePtr)==0){
+			return current;
+		}
+		current = current->pcbNext;
+	}
+	current = blockedQueue.head;
+	while(current){ // loops through looking for name
+		if(strcmp(PcbName , current->namePtr)==0){
+			return current;
+		}
+		current = current->pcbNext;
+	}
+	current = suspendReadyQueue.head;
+	while(current){ // loops through looking for name
+		if(strcmp(PcbName , current->namePtr)==0){
+			return current;
+		}
+		current = current->pcbNext;
+	}
+	current = suspendedBlockedQueue.head;
+	while(current){ // loops through looking for name
+		if(strcmp(PcbName , current->namePtr)==0){
+			return current;
+		}
+		current = current->pcbNext;
+	}
+	return NULL;
+	
+	
+	
+}
+
 void removePCB(pcb* process) {
 	//char* success[] = "success";
 	//char* error[] = "error";
