@@ -403,21 +403,21 @@ void unblock(pcb* PCB){
 }
 
 int freePCB(pcb* PCB){
-	sys_free_mem(PCB->processName);		//The name of the process
-	sys_free_mem(PCB->namePtr);	//Pointer to the name
-	sys_free_mem(PCB->priority);			//0-9 ranking of importance, with 9 going first
-	sys_free_mem(PCB->stateRRB);			//Ready(0)/Running(1)/Blocked(2)
-	sys_free_mem(PCB->stateIsSuspended);		//Suspended(1)/Not-Suspended(0)
-	sys_free_mem(PCB->classIsApp);			//Application(1)/System-Process(0)
-	sys_free_mem(PCB-> pcbNext);		//Pointer to the start of the next process
-	sys_free_mem(PCB-> pcbPrev);		//Pointer to the start of the last process
+	sys_free_mem((PCB->processName));		//The name of the process
+	sys_free_mem((PCB->namePtr));	//Pointer to the name
+	sys_free_mem(&(PCB->priority));			//0-9 ranking of importance, with 9 going first
+	sys_free_mem(&(PCB->stateRRB));			//Ready(0)/Running(1)/Blocked(2)
+	sys_free_mem(&(PCB->stateIsSuspended));		//Suspended(1)/Not-Suspended(0)
+	sys_free_mem(&(PCB->classIsApp));			//Application(1)/System-Process(0)
+	sys_free_mem((PCB-> pcbNext));		//Pointer to the start of the next process
+	sys_free_mem((PCB-> pcbPrev));		//Pointer to the start of the last process
 		
-	sys_free_mem(PCB-> base);		//Pointer to the base of the process
-	sys_free_mem(PCB-> top);
+	sys_free_mem((PCB-> base));		//Pointer to the base of the process
+	sys_free_mem((PCB-> top));
 
 	sys_free_mem(PCB);
 
-	return 0
+	return 0;
 
 }
 
