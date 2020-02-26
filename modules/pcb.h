@@ -67,5 +67,10 @@ void showBlocked();
 void showAllProcesses();
 //! Print one PCB with a specified name
 void printOnePCB(pcb* Pcb);
+//! Finds a PCB sets it's state to blocked and reinserts it into the right queue
+void block(pcb* PCB);
+//Finds a PCB sets it's state to unblocked and reinserts it into the right queue
+void unblock(pcb* PCB);
+
 
 #endif

@@ -376,3 +376,26 @@ void printOnePCB(pcb* Pcb){
 	currPriSize = strlen(currentPriority);
 	sys_req(WRITE, DEFAULT_DEVICE, currentPriority, &currPriSize);
 }
+void block(pcb* PCB){
+	//finding and checking pcb validity in wrapper		
+	removePCB(PCB);	//Removes PCB from current queue
+	PCB->stateRRB = 2;
+	insertPCB(PCB);	//Inserts PCB into appropriate queue (ie blocked queue)
+
+	char success[] = "PCB has been successfully blocked";
+	int successSize = strlen(success);
+	sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);
+
+}
+void unblock(pcb* PCB){
+	//finding and checking pcb validty in wrapper
+	removePCB(PCB);	//Remove PCB from blocked queue
+	PCB->stateRRB = 0;
+	insertPCB(PCB);	//Inserts PCB into appropriate queue (ie ready queue)
+
+	char success[] = "PCB has been successfully unblocked";
+	int successSize = strlen(success);
+	sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);
+
+
+}

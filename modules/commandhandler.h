@@ -35,5 +35,9 @@ int comhand();
 void setPriorityWrapper();
 //! Prompts the user for a PCB name
 void showPCBWrapper();
+//! Prompts the user for a PCB name (and finds that pcb to verify its valid)
+void blockWrapper();
+//! Prompts the user for a PCB name (and finds that pcb to verify its valid)
+void unblockWrapper();
 
 #endif

@@ -115,13 +115,73 @@ void setdateWrapper(){
 
 **/
 
-/**TODO blockWrapper
 
-**/
+void blockWrapper(){
+	char blockBuffer[100];
+	int bufferSize = 99;
 
-/**TODO unblockWrapper
+	//prompt user for pcb name
+	char prompt[] = "Enter the PCB name:\n";
+	int promptSize = strlen(prompt);
+	char lenError[] = "The name is too long.\n";
+	int lenErrorSize = strlen(lenError);
+	char nameError[] = "There is no PCB by that name.\n";
+	int nameErrorSize = strlen(nameError);
+	pcb* PCB = NULL;
+	
+	sys_req(WRITE, DEFAULT_DEVICE, prompt, &promptSize);
+	memset(blockBuffer, '\0', 100);
+	sys_req(READ, DEFAULT_DEVICE, blockBuffer, &bufferSize);
 
-**/
+	char* name = strtok(NULL, "");
+	while (name != NULL){
+		if(strlen(name) > 8){
+			sys_req(WRITE, DEFAULT_DEVICE, lenError, &lenErrorSize);
+		}else{
+			PCB = findPCB(name);
+			if(PCB == NULL){
+				sys_req(WRITE, DEFAULT_DEVICE, nameError, &nameErrorSize);
+			}else{
+				block(PCB);
+			}
+		}
+	}
+
+}
+
+
+void unblockWrapper(){
+	char blockBuffer[100];
+	int bufferSize = 99;
+
+	//prompt user for pcb name
+	char prompt[] = "Enter the PCB name:\n";
+	int promptSize = strlen(prompt);
+	char lenError[] = "The name is too long.\n";
+	int lenErrorSize = strlen(lenError);
+	char nameError[] = "There is no PCB by that name.\n";
+	int nameErrorSize = strlen(nameError);
+	pcb* PCB = NULL;
+	
+	sys_req(WRITE, DEFAULT_DEVICE, prompt, &promptSize);
+	memset(blockBuffer, '\0', 100);
+	sys_req(READ, DEFAULT_DEVICE, blockBuffer, &bufferSize);
+
+	char* name = strtok(NULL, "");
+	while (name != NULL){
+		if(strlen(name) > 8){
+			sys_req(WRITE, DEFAULT_DEVICE, lenError, &lenErrorSize);
+		}else{
+			PCB = findPCB(name);
+			if(PCB == NULL){
+				sys_req(WRITE, DEFAULT_DEVICE, nameError, &nameErrorSize);
+			}else{
+				unblock(PCB);
+			}
+		}
+	}
+}
+
 void setPriorityWrapper(){
 	char showPCBBuffer[100];
 	int bufferSize = 99;
@@ -211,8 +271,8 @@ int comhand(){
 	void (*showBlocked_ptr)() = &showBlocked;
 	//void (*createPCB)() = &createPCBWrapper;
 	//void (*deletePCB)() = &deletePCBWrapper;
-	//void (*block)() = &blockWrapper;
-	//void (*unblock)() = &unblockWrapper;
+	void (*block)() = &blockWrapper;
+	void (*unblock)() = &unblockWrapper;
 
 	char commands[18][20]={
 		"shutdown", //must keep shutdown at index 0
@@ -250,8 +310,8 @@ int comhand(){
 		*showBlocked_ptr,
 		//*createPCB,
 		//*deletePCB,
-		//*block,
-		//*unblock
+		*block,
+		*unblock
 	};
 	//Print fancy menu
 	char nextTeam[] = "\x1B[33mX   X  XXXX  X   X  XXXXX    XXXXX  XXXX    X    X   X\nXX  X  X      X X     X        X    X      X X   XX XX\nX X X  XXX     X      X        X    XXX   X   X  X X X\nX  XX  X      X X     X        X    X     XXXXX  X   X\nX   X  XXXX  X   X    X        X    XXXX  X   X  X   X\n";
