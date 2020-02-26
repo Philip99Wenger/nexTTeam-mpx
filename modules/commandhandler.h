@@ -43,5 +43,10 @@ void showPCBWrapper();
 void blockWrapper();
 //! Prompts the user for a PCB name (and finds that pcb to verify its valid)
 void unblockWrapper();
+//! Prompts the user for a PCB name than sets it to suspended
+void suspendWrapper();
+//! Prompts the user for a PCB name than sets it to not suspended
+void resumeWrapper();
+
 
 #endif

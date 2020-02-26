@@ -95,13 +95,74 @@ void setdateWrapper(){
 }
 
 
-/**TODO suspendWrapper
+void suspendWrapper(){
+	char suspendBuffer[100];
+	int bufferSize = 99;
 
-**/
+	//prompt user for pcb name
+	char prompt[] = "Enter the PCB name:\n";
+	int promptSize = strlen(prompt);
+	char lenError[] = "The name is too long.\n";
+	int lenErrorSize = strlen(lenError);
+	char nameError[] = "There is no PCB by that name.\n";
+	int nameErrorSize = strlen(nameError);
+	pcb* PCB = NULL;
+	
+	sys_req(WRITE, DEFAULT_DEVICE, prompt, &promptSize);
+	memset(suspendBuffer, '\0', 100);
+	sys_req(READ, DEFAULT_DEVICE, suspendBuffer, &bufferSize);
 
-/**TODO resumeWrapper
+	char* name = strtok(NULL, "");
+	while (name != NULL){
+		if(strlen(name) > 8){
+			sys_req(WRITE, DEFAULT_DEVICE, lenError, &lenErrorSize);
+		}else{
+			PCB = findPCB(name);
+			if(PCB == NULL){
+				sys_req(WRITE, DEFAULT_DEVICE, nameError, &nameErrorSize);
+			}else{
+				suspend(PCB);
+			}
+		}
+	}
 
-**/
+}
+
+
+
+void resumeWrapper(){
+	char suspendBuffer[100];
+	int bufferSize = 99;
+
+	//prompt user for pcb name
+	char prompt[] = "Enter the PCB name:\n";
+	int promptSize = strlen(prompt);
+	char lenError[] = "The name is too long.\n";
+	int lenErrorSize = strlen(lenError);
+	char nameError[] = "There is no PCB by that name.\n";
+	int nameErrorSize = strlen(nameError);
+	pcb* PCB = NULL;
+	
+	sys_req(WRITE, DEFAULT_DEVICE, prompt, &promptSize);
+	memset(suspendBuffer, '\0', 100);
+	sys_req(READ, DEFAULT_DEVICE, suspendBuffer, &bufferSize);
+
+	char* name = strtok(NULL, "");
+	while (name != NULL){
+		if(strlen(name) > 8){
+			sys_req(WRITE, DEFAULT_DEVICE, lenError, &lenErrorSize);
+		}else{
+			PCB = findPCB(name);
+			if(PCB == NULL){
+				sys_req(WRITE, DEFAULT_DEVICE, nameError, &nameErrorSize);
+			}else{
+				resume(PCB);
+			}
+		}
+	}
+
+}
+
 
 /**TODO setPriorityWrapper
 
