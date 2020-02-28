@@ -346,7 +346,9 @@ void printOnePCB(pcb* Pcb){
 	int prioritySize = strlen(priorityNum);
 	char currentPriority[5];
 	int currPriSize;
-	
+	char newLine[] = "\n";
+	int newlineSize = strlen(newLine);	
+
 	//Print the attributes for one PCB
 	//Print the name
 	sys_req(WRITE, DEFAULT_DEVICE, name, &nameSize);
@@ -388,6 +390,7 @@ void printOnePCB(pcb* Pcb){
 	strcpy(currentPriority, intToAscii(Pcb->priority));
 	currPriSize = strlen(currentPriority);
 	sys_req(WRITE, DEFAULT_DEVICE, currentPriority, &currPriSize);
+	sys_req(WRITE, DEFAULT_DEVICE, newLine, &newlineSize);
 }
 void block(pcb* PCB){
 	//finding and checking pcb validity in wrapper		
