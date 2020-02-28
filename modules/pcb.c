@@ -7,6 +7,14 @@ Queue suspendedBlockedQueue;
 
 void insertPCB(pcb* Pcb){
 	if(Pcb->stateRRB == READY && Pcb->stateIsSuspended == NOTSUSPENDED){
+		if(readyQueue.count==0){
+			readyQueue.head = Pcb;
+			readyQueue.tail = readyQueue.head;
+			Pcb->pcbPrev = NULL;
+			Pcb->pcbNext = NULL;
+			readyQueue.count++;
+			return;
+		}
 		pcb* current = readyQueue.head;
 		pcb* previous;
 		if(Pcb->priority < current->priority){ //if head priority value is higher than pcb priority, place at the head
@@ -38,6 +46,14 @@ void insertPCB(pcb* Pcb){
 		return;
 	}
 	else if(Pcb->stateRRB == READY && Pcb->stateIsSuspended == SUSPENDED){
+		if(suspendReadyQueue.count==0){
+			suspendReadyQueue.head = Pcb;
+			suspendReadyQueue.tail = suspendReadyQueue.head;
+			Pcb->pcbPrev = NULL;
+			Pcb->pcbNext = NULL;
+			readyQueue.count++;
+			return;
+		}
 		pcb* current = suspendReadyQueue.head;
 		pcb* previous;
 		if(Pcb->priority < current->priority){
@@ -118,7 +134,8 @@ pcb* allocatePCB(){
 
 pcb* setupPCB(char *PcbName, int classCode, int priorityCode){
 	pcb * newPCB = allocatePCB();
-	strcpy(newPCB->namePtr, PcbName);
+	newPCB->namePtr = newPCB->processName;	
+	newPCB->namePtr = strcpy(newPCB->namePtr, PcbName);
 	newPCB->priority = priorityCode;
 	newPCB->stateRRB = 0;			//Ready(0)
 	newPCB->stateIsSuspended = 0;		//Not-Suspended(0)
@@ -237,9 +254,9 @@ void setPriority(char *name, int priorityNum){
 }
 
 void showReady(){
-	char ready[] = "Ready Queue:";
+	char ready[] = "\nReady Queue:\n";
 	int readySize = strlen(ready);
-	char suspendReady[] = "Suspend Ready Queue:";
+	char suspendReady[] = "\nSuspend Ready Queue:\n";
 	int suspendReadySize = strlen(suspendReady);
 
   	//Print ready queue
@@ -260,9 +277,9 @@ void showReady(){
 }
 
 void showBlocked(){
-	char blocked[] = "Blocked Queue:";
+	char blocked[] = "\nBlocked Queue:\n";
 	int blockedSize = strlen(blocked);
-	char suspendBlocked[] = "Suspend Blocked Queue:";
+	char suspendBlocked[] = "\nSuspend Blocked Queue:\n";
 	int suspendBlockedSize = strlen(suspendBlocked);
 
 	//Print blocked queue
@@ -301,7 +318,7 @@ void showPCB(char *name){
 
 void printOnePCB(pcb* Pcb){
 	//Name strings
-	char name[] = "\n\nName: ";
+	char name[] = "\nName: ";
 	int nameSize = strlen(name);
 
 	//class strings
