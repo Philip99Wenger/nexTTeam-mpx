@@ -580,7 +580,7 @@ int comhand(){
 		bufferSize = 99; //reset size before each call to read
 		sys_req(READ, DEFAULT_DEVICE, cmdBuffer, &bufferSize);
 		
-<<<<<<< HEAD
+
 		
 		strcpy(thisHistory[index], cmdBuffer);//put the called command into history
 		
@@ -590,9 +590,9 @@ int comhand(){
 		
 
 		//pass
-=======
+
 		//
->>>>>>> 31558aa2a448cf561e22643f34ad2f7b9abd8637
+
 		int shutdownVal;
 		for(i=0; i<sizeof(commands)/sizeof(commands[0]); i++){
 			if(strcmp(cmdBuffer, commands[i])==0){
