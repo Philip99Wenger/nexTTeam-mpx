@@ -337,8 +337,8 @@ void blockWrapper(){
 	memset(blockBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, blockBuffer, &bufferSize);
 
-	char* name = strtok(NULL, "");
-	while (name != NULL){
+	char* name = strtok(blockBuffer, "");
+	//while (name != NULL){
 		if(strlen(name) > 8){
 			sys_req(WRITE, DEFAULT_DEVICE, lenError, &lenErrorSize);
 		}else{
@@ -349,7 +349,7 @@ void blockWrapper(){
 				block(PCB);
 			}
 		}
-	}
+	//}
 
 }
 
@@ -371,8 +371,8 @@ void unblockWrapper(){
 	memset(blockBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, blockBuffer, &bufferSize);
 
-	char* name = strtok(NULL, "");
-	while (name != NULL){
+	char* name = strtok(blockBuffer, "");
+	//while (name != NULL){
 		if(strlen(name) > 8){
 			sys_req(WRITE, DEFAULT_DEVICE, lenError, &lenErrorSize);
 		}else{
@@ -383,7 +383,7 @@ void unblockWrapper(){
 				unblock(PCB);
 			}
 		}
-	}
+	//}
 }
 
 void setPriorityWrapper(){
@@ -405,8 +405,8 @@ void setPriorityWrapper(){
 	memset(showPCBBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, showPCBBuffer, &bufferSize);
 
-	char* name = strtok(NULL, "");
-	while (name != NULL){
+	char* name = strtok(showPCBBuffer, "");
+	//while (name != NULL){
 		if (strlen(name) > 8){
 			sys_req(WRITE, DEFAULT_DEVICE, error, &errSize);
 		}
@@ -425,7 +425,7 @@ void setPriorityWrapper(){
 				}
 			}
 		}
-	}
+	//}
 }
 
 void showPCBWrapper(){
@@ -443,15 +443,15 @@ void showPCBWrapper(){
 	memset(showPCBBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, showPCBBuffer, &bufferSize);
 
-	char* name = strtok(NULL, "");
-	while (name != NULL){
+	char* name = strtok(showPCBBuffer, "");
+	//while (name != NULL){
 		if (strlen(name) > 8){
 			sys_req(WRITE, DEFAULT_DEVICE, error, &errSize);
 		}
 		else{
 			showPCB(name);
 		}
-	}
+	//}
 }
 
 void historyWrapper(){
