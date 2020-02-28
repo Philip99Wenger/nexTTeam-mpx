@@ -46,7 +46,7 @@ void insertPCB(pcb* Pcb){
 		return;
 	}
 	else if(Pcb->stateRRB == READY && Pcb->stateIsSuspended == SUSPENDED){
-		if(suspendReadyQueue.count==0){
+		if(suspendReadyQueue.head==NULL){
 			suspendReadyQueue.head = Pcb;
 			suspendReadyQueue.tail = suspendReadyQueue.head;
 			Pcb->pcbPrev = NULL;
