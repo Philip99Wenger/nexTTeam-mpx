@@ -7,7 +7,7 @@ Queue suspendedBlockedQueue;
 
 void insertPCB(pcb* Pcb){
 	if(Pcb->stateRRB == READY && Pcb->stateIsSuspended == NOTSUSPENDED){
-		if(readyQueue.count==0){
+		if(readyQueue.head==NULL){
 			readyQueue.head = Pcb;
 			readyQueue.tail = readyQueue.head;
 			Pcb->pcbPrev = NULL;
