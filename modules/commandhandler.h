@@ -44,7 +44,7 @@ void blockWrapper();
 //! Prompts the user for a PCB name (and finds that pcb to verify its valid)
 void unblockWrapper();
 //! Displays the previous ten commands used by the user
-void history();
+void historyWrapper();
 //! Prompts the user for a PCB name than sets it to suspended
 void suspendWrapper();
 //! Prompts the user for a PCB name than sets it to not suspended

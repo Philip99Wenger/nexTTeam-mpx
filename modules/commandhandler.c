@@ -3,9 +3,9 @@
 
 
 //History Variables
-char* thisHistory[10];//This contains 10 most recent commands
+char thisHistory[10][100];//This contains 10 most recent commands
 int index = 0;//This is a placeholder for history
-char** historyArray = thisHistory;//this points to history
+//char** historyArray = thisHistory;//this points to history
 
 void version(){
 	char version[] = "\x1B[36mVERSION: 2.0\x1B[37m\n";
@@ -446,12 +446,21 @@ void showPCBWrapper(){
 
 void historyWrapper(){
 	int i;
+	int textSize;//size of this command
+	char printingTemp[100];
+	char printingTempNL[]="\n";
 	for(i=0; i<10; i++){//only print out ten commands
-		int textSize = strlen(thisHistory[index]);//size of this command
-		sys_req(WRITE, DEFAULT_DEVICE, thisHistory[index], &textSize);//print out this command	
-		index++;//increment the placeholder
+		strcpy(printingTemp, thisHistory[index]);
+		if(!(printingTemp[0]=='\0')){
+
+			textSize= strlen(printingTemp);//size of this command
+			sys_req(WRITE, DEFAULT_DEVICE, printingTemp , &textSize);//print out this command	
+			textSize= strlen(printingTempNL);//size of this command
+			sys_req(WRITE, DEFAULT_DEVICE, printingTempNL , &textSize);//print out this command	
+			//This will print out ten commands, from oldest to most recent.
+		}
+		index=index+1;//increment the placeholder
 		if(index>=10){index=0;}//loop back to the beginning of the array if at the end
-		//This will print out ten commands, from oldest to most recent.
 	}
 }
 
@@ -543,8 +552,16 @@ int comhand(){
 	}	
 
 	//Set History to Null
-	for(index = 0; index < 10; index++){thisHistory[index]= '\0';}
+	int j;
+	for(index = 0; index < 10; index++){
+		for(j = 0; j < 100; j++){
+
+			thisHistory[index][j]= '\0';
+		}
+	}
 	index = 0; //Set the history placeholder
+	//char printingTemp[]="\0";
+	
 	
 	while(!quit){
 		//get a command
@@ -552,11 +569,15 @@ int comhand(){
 		bufferSize = 99; //reset size before each call to read
 		sys_req(READ, DEFAULT_DEVICE, cmdBuffer, &bufferSize);
 		
-		//history
-		thisHistory[index] = cmdBuffer;//put the called command into history
-		if(index>=9){index=0;}else{index++;}//increment the history placeholder
 		
-		//
+		strcpy(thisHistory[index], cmdBuffer);//put the called command into history
+		
+		index=index+1;
+		if(index>=10){index=0;}//increment the history placeholder
+
+		
+
+		//pass
 		int shutdownVal;
 		for(i=0; i<sizeof(commands)/sizeof(commands[0]); i++){
 			if(strcmp(cmdBuffer, commands[i])==0){

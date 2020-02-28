@@ -76,6 +76,6 @@ int freePCB(pcb* PCB);
 //! Frees space for the PCB
 void suspend(pcb* PCB);
 //! Frees space for the PCB
-void resume(pcb* PCB);inse
+void resume(pcb* PCB);
 
 #endif
