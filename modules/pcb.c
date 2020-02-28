@@ -401,7 +401,7 @@ void block(pcb* PCB){
 	PCB->stateRRB = 2;
 	insertPCB(PCB);	//Inserts PCB into appropriate queue (ie blocked queue)
 
-	char success[] = "PCB has been successfully blocked";
+	char success[] = "PCB has been successfully blocked\n";
 	int successSize = strlen(success);
 	sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);
 
@@ -412,7 +412,7 @@ void unblock(pcb* PCB){
 	PCB->stateRRB = 0;
 	insertPCB(PCB);	//Inserts PCB into appropriate queue (ie ready queue)
 
-	char success[] = "PCB has been successfully unblocked";
+	char success[] = "PCB has been successfully unblocked\n";
 	int successSize = strlen(success);
 	sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);
 
@@ -444,7 +444,7 @@ void suspend(pcb* PCB){
 	PCB->stateIsSuspended = 1;
 	insertPCB(PCB);	//Inserts PCB into appropriate queue 
 
-	char success[] = "PCB has been successfully suspended";
+	char success[] = "PCB has been successfully suspended\n";
 	int successSize = strlen(success);
 	sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);
 
@@ -455,7 +455,7 @@ void resume(pcb* PCB){
 	PCB->stateIsSuspended = 0;
 	insertPCB(PCB);	//Inserts PCB into appropriate queue 
 
-	char success[] = "PCB has been successfully resumed";
+	char success[] = "PCB has been successfully resumed\n";
 	int successSize = strlen(success);
 	sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);
 
