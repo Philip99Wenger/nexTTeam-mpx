@@ -117,8 +117,8 @@ void suspendWrapper(){
 	memset(suspendBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, suspendBuffer, &bufferSize);
 
-	char* name = strtok(NULL, "");
-	while (name != NULL){
+	char* name = strtok(suspendBuffer, "");
+	//while (name != NULL){
 		if(strlen(name) > 8){
 			sys_req(WRITE, DEFAULT_DEVICE, lenError, &lenErrorSize);
 		}else{
@@ -129,7 +129,7 @@ void suspendWrapper(){
 				suspend(PCB);
 			}
 		}
-	}
+	//}
 
 }
 
@@ -152,8 +152,8 @@ void resumeWrapper(){
 	memset(suspendBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, suspendBuffer, &bufferSize);
 
-	char* name = strtok(NULL, "");
-	while (name != NULL){
+	char* name = strtok(suspendBuffer, "");
+	//while (name != NULL){
 		if(strlen(name) > 8){
 			sys_req(WRITE, DEFAULT_DEVICE, lenError, &lenErrorSize);
 		}else{
@@ -164,7 +164,7 @@ void resumeWrapper(){
 				resume(PCB);
 			}
 		}
-	}
+	//}
 
 }
 
