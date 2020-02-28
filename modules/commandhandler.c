@@ -476,7 +476,7 @@ void historyWrapper(){
 
 int comhand(){
 	char cmdBuffer[100];
-	char *cmdBufferPtr = cmdBuffer;
+	//char *cmdBufferPtr = cmdBuffer;
 	int bufferSize;
 	int quit=0;
 	unsigned int i;
@@ -596,14 +596,6 @@ int comhand(){
 		int shutdownVal;
 		for(i=0; i<sizeof(commands)/sizeof(commands[0]); i++){
 			if(strcmp(cmdBuffer, commands[i])==0){
-
-				//history
-				char his[7] = "history";
-				if(cmdBufferPtr!=his){
-					thisHistory[index] = cmdBufferPtr;//put called command into history
-				}
-				if(index>=9){index=0;}else{index++;}//increment the history placeholder
-
 				if(i == 0){
 					shutdownVal = shutdown();
 					if(shutdownVal == 1){quit = 1;}
