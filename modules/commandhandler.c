@@ -389,6 +389,8 @@ void unblockWrapper(){
 void setPriorityWrapper(){
 	char showPCBBuffer[100];
 	int bufferSize = 99;
+	char numBuffer[100];
+	int numBufferSize = 99;
 	
 	//prompt user for date to set to
 	char prompt[] = "Enter the PCB name:\n";
@@ -419,9 +421,9 @@ void setPriorityWrapper(){
 			}
 			else {
 			sys_req(WRITE, DEFAULT_DEVICE, priorityPrompt, &priorSize);
-			memset(showPCBBuffer, '\0', 100);
-			sys_req(READ, DEFAULT_DEVICE, showPCBBuffer, &bufferSize);
-			char* token = strtok(showPCBBuffer, "");
+			memset(numBuffer, '\0', 100);
+			sys_req(READ, DEFAULT_DEVICE, numBuffer, &numBufferSize);
+			char* token = strtok(numBuffer, "");
 			//while(token != NULL){
 				priorNum = atoi(token);
 				if(priorNum < 0 || priorNum > 9){

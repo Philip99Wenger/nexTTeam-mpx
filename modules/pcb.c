@@ -24,9 +24,11 @@ void insertPCB(pcb* Pcb){
 				readyQueue.count++;
 				return;
 			}
+		previous = readyQueue.head;
 		while(current){ // place priority where needed in queue
 			if(Pcb->priority < current->priority){
-				previous->pcbNext = current;
+				previous = current->pcbPrev;
+				previous->pcbNext = Pcb;
 				Pcb->pcbPrev = previous;
 				current->pcbPrev = Pcb;
 				Pcb->pcbNext = current;
@@ -63,9 +65,11 @@ void insertPCB(pcb* Pcb){
 				suspendReadyQueue.count++;
 				return;
 			}
+		previous=suspendReadyQueue.head;
 		while(current){ // place priority where needed in queue
 			if(Pcb->priority < current->priority){
-				previous->pcbNext = current;
+				previous = current->pcbPrev;
+				previous->pcbNext = Pcb;
 				Pcb->pcbPrev = previous;
 				current->pcbPrev = Pcb;
 				Pcb->pcbNext = current;
