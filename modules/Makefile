@@ -15,7 +15,8 @@ mpx_supt.o \
 polling.o\
 commandhandler.o\
 date.o\
-time.o
+time.o\
+pcb.o
 
 .c.s:
 	$(CC) $(CFLAGS) -S -o $@ $<

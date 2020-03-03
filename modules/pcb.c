@@ -144,7 +144,8 @@ pcb* setupPCB(char *PcbName, int classCode, int priorityCode){
 	newPCB->stateRRB = 0;			//Ready(0)
 	newPCB->stateIsSuspended = 0;		//Not-Suspended(0)
 	newPCB->classIsApp = classCode;		//Application(1)/System-Process(0)
-	newPCB->base = base + 1024 - sizeof(struct context);
+	//BELOW NEEDS UNCOMMENTED
+	//newPCB->top = newPCB->base + 1024 - sizeof(struct context);
 
 	return newPCB;
 	
@@ -462,6 +463,10 @@ void resume(pcb* PCB){
 	sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);
 
 
+}
+
+pcb* getReadyQueueHead(){
+	return readyQueue.head;
 }
 
 

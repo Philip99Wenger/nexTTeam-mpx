@@ -26,6 +26,12 @@ typedef unsigned char  u8int;
 typedef unsigned short u16int;
 typedef unsigned long  u32int;
 
+typedef struct context{
+	u32int gs, fs, es, ds;
+	u32int edi, esi, ebp, esp, ebx, edx, ecx, eax;
+	u32int eip, cs, eflags;
+} context;
+
 /* Time */
 typedef struct {
   int sec;
