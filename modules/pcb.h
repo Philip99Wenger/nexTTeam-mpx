@@ -18,6 +18,7 @@
 #include <core/interrupts.h>
 #include <mem/heap.h>
 #include <mem/paging.h>
+#include <core/context.h>
 
 #include "mpx_supt.h"
 #include "date.h"

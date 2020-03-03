@@ -19,7 +19,9 @@
 #include "pcb.h"
 
 //int poll(char * buffer, int * count);
-//! Displays the current version being used for the MPX
+/**
+* Displays the current version being used for the MPX
+*/
 void version();
 //! Displays instructions for how to use each command
 void help();

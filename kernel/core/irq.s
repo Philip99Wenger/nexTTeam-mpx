@@ -120,4 +120,32 @@ coprocessor:
 ;;; access the registers. The C handler returns the address of the
 ;;; new processes stack top/pointer.
 sys_call_isr:
+	; push all general purpose registers
+	pusha
+	
+	; push segment register values
+	push ds
+	push es
+	push fs
+	push gs
+
+	; push stack pointer
+	push esp;
+
+	; call sys_call BELOW NEEDS TO BE UNCOMMENTED
+	;call sys_call;
+
+	; set new stack pointer
+	mov esp, eax
+
+	; pop segment registers
+	pop gs
+	pop fs
+	pop es
+	pop ds
+
+	; pop general pupose
+	popa
+
+	; return out of interrupt
 	iret
