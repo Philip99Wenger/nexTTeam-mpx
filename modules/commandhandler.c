@@ -14,7 +14,7 @@ void version(){
 }
 
 void help(){	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!TODO update with new commands !!!!!!!!!!!!!!!!!!!!!!!!!!!
-	char help[] = "NAME\n     version - display current version of NTOS in use.\nDETAIL DESCRIPTION\n     No further description.\n\nNAME\n     getTime - display current time of system.\nDETAIL DESCRIPTION\n     Time will be displayed as hour:minute:second.\n\nNAME\n     setTime - change system's current time.\nDETAIL DESCRIPTION\n     Will prompt user to enter time as hh:mm:ss (i.e. hour:minute:second).\n\nNAME\n     getDate - display current date of system.\nDETAIL DESCRIPTION\n     Date will be displayed as month/day/year.\n\nNAME\n     setDate - change system's current date.\nDETAIL DESCRIPTION\n     Will prompt user to enter date as mm/dd/yy (i.e. month/day/year).\n\nNAME\n     shutdown - shuts down NTOS.\nDETAIL DESCRIPTION\n     Will prompt user to confirm system shut down as yes/no.\n\nNAME\n     suspend - places PCB in suspended state.\nDETAIL DESCRIPTION\n     Will prompt user for a process name and will set to suspended state and move to the appropriate queue.\n\nNAME\n     resume - places PCB in not suspended state.\nDETAIL DESCRIPTION\n     Will prompt user for a process name and will set to not suspended state and move to the appropriate queue.\n\nNAME\n     setPriority - sets PCB priority.\nDETAIL DESCRIPTION\n     Will prompt user for a process name and ask for new priority and will set to new priority and move to the appropriate queue.\n\nNAME\n     showPCB - display info for a PCB.\nDETAIL DESCRIPTION\n     Will ask for a process name and display the process name, class, state, suspended status, and priority for a PCB.\n\nNAME\n     showAllProcesses - display all PCBs.\nDETAIL DESCRIPTION\n     Will display the process name, class, state, suspended status, and priority for all PCBs.\n\nNAME\n     showReady - display all ready PCBs.\nDETAIL DESCRIPTION\n     Will display the process name, class, state, suspended status, and priority for all ready queue PCBs.\n\nNAME\n     showBlocked - display all blocked PCBs.\nDETAIL DESCRIPTION\n     Will display the process name, class, state, suspended status, and priority for all blocked PCBs.\n\nNAME\n     createPCB - create a new process.\nDETAIL DESCRIPTION\n     Will setup a PCB and insert in the appropriate queue.\n\nNAME\n     deletePCB - remove a PCB.\nDETAIL DESCRIPTION\n     Will find PCB, remove it from the queue, and free it.\n\nNAME\n     block - block a PCB.\nDETAIL DESCRIPTION\n     Will ask for a PCB name, block the process, and reinsert into the correct queue.\n\nNAME\n     unblock - unblock a PCB.\nDETAIL DESCRIPTION\n     Will ask for a PCB, unblock the process, and reinsert into the correct queue.\n\nNAME\n     history - print command history.\nDETAIL DESCRIPTION\n     Will display the user's ten previous commands.\n";
+	char help[] = "NAME\n     version - display current version of NTOS in use.\nDETAIL DESCRIPTION\n     No further description.\n\nNAME\n     getTime - display current time of system.\nDETAIL DESCRIPTION\n     Time will be displayed as hour:minute:second.\n\nNAME\n     setTime - change system's current time.\nDETAIL DESCRIPTION\n     Will prompt user to enter time as hh:mm:ss (i.e. hour:minute:second).\n\nNAME\n     getDate - display current date of system.\nDETAIL DESCRIPTION\n     Date will be displayed as month/day/year.\n\nNAME\n     setDate - change system's current date.\nDETAIL DESCRIPTION\n     Will prompt user to enter date as mm/dd/yy (i.e. month/day/year).\n\nNAME\n     shutdown - shuts down NTOS.\nDETAIL DESCRIPTION\n     Will prompt user to confirm system shut down as yes/no.\n\nNAME\n     suspend - places PCB in suspended state.\nDETAIL DESCRIPTION\n     Will prompt user for a process name and will set to suspended state and move to the appropriate queue.\n\nNAME\n     resume - places PCB in not suspended state.\nDETAIL DESCRIPTION\n     Will prompt user for a process name and will set to not suspended state and move to the appropriate queue.\n\nNAME\n     setPriority - sets PCB priority.\nDETAIL DESCRIPTION\n     Will prompt user for a process name and ask for new priority and will set to new priority and move to the appropriate queue.\n\nNAME\n     showPCB - display info for a PCB.\nDETAIL DESCRIPTION\n     Will ask for a process name and display the process name, class, state, suspended status, and priority for a PCB.\n\nNAME\n     showAllProcesses - display all PCBs.\nDETAIL DESCRIPTION\n     Will display the process name, class, state, suspended status, and priority for all PCBs.\n\nNAME\n     showReady - display all ready PCBs.\nDETAIL DESCRIPTION\n     Will display the process name, class, state, suspended status, and priority for all ready queue PCBs.\n\nNAME\n     showBlocked - display all blocked PCBs.\nDETAIL DESCRIPTION\n     Will display the process name, class, state, suspended status, and priority for all blocked PCBs.\n\nNAME\n     createPCB - create a new process.\nDETAIL DESCRIPTION\n     Will setup a PCB and insert in the appropriate queue.\n\nNAME\n     deletePCB - remove a PCB.\nDETAIL DESCRIPTION\n     Will find PCB, remove it from the queue, and free it.\n\nNAME\n     block - block a PCB.\nDETAIL DESCRIPTION\n     Will ask for a PCB name, block the process, and reinsert into the correct queue.\n\nNAME\n     unblock - unblock a PCB.\nDETAIL DESCRIPTION\n     Will ask for a PCB, unblock the process, and reinsert into the correct queue.\n\nNAME\n     history - print command history.\nDETAIL DESCRIPTION\n     Will display the user's ten previous commands.\n\nNAME\n     yield - forces commandhandler to yield to other processes.\nDETAIL DESCRIPTION\n     No further description.\n\nNAME\n     loadr3 - loads processes in proc3.c.\nDETAIL DESCRIPTION\n     Create PCBs for new processes and sets them to Suspend-Ready\n";
 	int helpSize = strlen(help);
 	
 	sys_req(WRITE, DEFAULT_DEVICE, help, &helpSize);
@@ -508,6 +508,8 @@ int comhand(){
 	void (*block)() = &blockWrapper;
 	void (*unblock)() = &unblockWrapper;
 	void (*history)() = &historyWrapper;
+	void (*yeild)() = &yield;
+	void (*loadr3)() = &loadr3;
 
 	char commands[19][20]={
 		"shutdown", //must keep shutdown at index 0
@@ -528,7 +530,9 @@ int comhand(){
 		"deletePCB",
 		"block",
 		"unblock",
-		"history"
+		"history",
+		"yield",
+		"loadr3"
 	};
 	void (*commands_ptrs[])()={
 		*version_ptr,
@@ -548,7 +552,9 @@ int comhand(){
 		*deletePCB,
 		*block,
 		*unblock,
-		*history
+		*history,
+		*yield,
+		*loadr3
 	};
 	//Print fancy menu
 	char nextTeam[] = "\x1B[33mX   X  XXXX  X   X  XXXXX    XXXXX  XXXX    X    X   X\nXX  X  X      X X     X        X    X      X X   XX XX\nX X X  XXX     X      X        X    XXX   X   X  X X X\nX  XX  X      X X     X        X    X     XXXXX  X   X\nX   X  XXXX  X   X    X        X    XXXX  X   X  X   X\n";
