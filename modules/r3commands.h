@@ -13,6 +13,8 @@
 #include <mem/heap.h>
 #include <mem/paging.h>
 
+#include "pcb.h"
+
 //! makes command handler yield to other processes
 void yield();
 //! loads processes in given proc3.c file as suspend-ready

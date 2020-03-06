@@ -16,7 +16,8 @@ polling.o\
 commandhandler.o\
 date.o\
 time.o\
-pcb.o
+pcb.o\
+r3commands.o
 
 .c.s:
 	$(CC) $(CFLAGS) -S -o $@ $<
