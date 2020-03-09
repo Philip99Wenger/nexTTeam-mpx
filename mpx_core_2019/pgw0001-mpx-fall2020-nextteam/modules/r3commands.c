@@ -27,9 +27,9 @@ void loadr3(){
 
 	suspend(proc1pcb);	//set to suspended ready
 
-	context * cp = (context*)(proc1pcb -> stack_top);
+	context * cp = (context*)(proc1pcb -> top);
 
-	memeset(cp, 0, sizeof(context));
+	memset(cp, 0, sizeof(context));
 
 	cp -> fs = 0 x10;
 
@@ -43,7 +43,7 @@ void loadr3(){
 
 	cp -> ebp (u32int)(proc1pcb -> stack);
 
-	cp -> esp (u32int)(proc1pcb -> stack_top);
+	cp -> esp (u32int)(proc1pcb -> top);
 
 	cp -> eip (u32int)proc1;//The function correlating to the process, ie. Proc1
 
@@ -62,9 +62,9 @@ void loadr3(){
 
 	proc2pcb->top = (proc2pcb->base) + 1024 - sizeof(struct context);
 
-	context * cp = (context*)(proc2pcb -> stack_top);
+	context * cp = (context*)(proc2pcb -> top);
 
-	memeset(cp, 0, sizeof(context));
+	memset(cp, 0, sizeof(context));
 
 	cp -> fs = 0 x10;
 
@@ -78,7 +78,7 @@ void loadr3(){
 
 	cp -> ebp (u32int)(proc2pcb -> stack);
 
-	cp -> esp (u32int)(proc2pcb -> stack_top);
+	cp -> esp (u32int)(proc2pcb -> top);
 
 	cp -> eip (u32int)proc2;
 
@@ -97,9 +97,9 @@ void loadr3(){
 
 	proc3pcb->top = (proc3pcb->base) + 1024 - sizeof(struct context);
 
-	context * cp = (context*)(proc3pcb -> stack_top);
+	context * cp = (context*)(proc3pcb -> top);
 
-	memeset(cp, 0, sizeof(context));
+	memset(cp, 0, sizeof(context));
 
 	cp -> fs = 0 x10;
 
@@ -113,7 +113,7 @@ void loadr3(){
 
 	cp -> ebp (u32int)(proc3pcb -> stack);
 
-	cp -> esp (u32int)(proc3pcb -> stack_top);
+	cp -> esp (u32int)(proc3pcb -> top);
 
 	cp -> eip (u32int)proc3;
 
@@ -132,9 +132,9 @@ void loadr3(){
 
 	proc4pcb->top = (proc4pcb->base) + 1024 - sizeof(struct context);
 
-	context * cp = (context*)(proc4pcb -> stack_top);
+	context * cp = (context*)(proc4pcb -> top);
 
-	memeset(cp, 0, sizeof(context));
+	memset(cp, 0, sizeof(context));
 
 	cp -> fs = 0 x10;
 
@@ -148,7 +148,7 @@ void loadr3(){
 
 	cp -> ebp (u32int)(proc4pcb -> stack);
 
-	cp -> esp (u32int)(proc4pcb -> stack_top);
+	cp -> esp (u32int)(proc4pcb -> top);
 
 	cp -> eip (u32int)proc4;
 
@@ -167,9 +167,9 @@ void loadr3(){
 
 	proc5pcb->top = (proc5pcb->base) + 1024 - sizeof(struct context);
 
-	context * cp = (context*)(proc5pcb -> stack_top);
+	context * cp = (context*)(proc5pcb -> top);
 
-	memeset(cp, 0, sizeof(context));
+	memset(cp, 0, sizeof(context));
 
 	cp -> fs = 0 x10;
 
@@ -183,7 +183,7 @@ void loadr3(){
 
 	cp -> ebp (u32int)(proc5pcb -> stack);
 
-	cp -> esp (u32int)(proc5pcb -> stack_top);
+	cp -> esp (u32int)(proc5pcb -> top);
 
 	cp -> eip (u32int)proc5;
 

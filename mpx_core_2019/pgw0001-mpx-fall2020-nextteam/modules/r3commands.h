@@ -15,6 +15,7 @@
 
 #include "pcb.h"
 #include "procsr3.h"
+#include "context.h"
 
 
 //! makes command handler yield to other processes
