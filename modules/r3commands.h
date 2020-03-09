@@ -19,5 +19,4 @@
 void yield();
 //! loads processes in given proc3.c file as suspend-ready
 void loadr3();
-
 #endif

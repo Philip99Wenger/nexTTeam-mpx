@@ -136,7 +136,7 @@ pcb* allocatePCB(){
 	return thisPCB;
 }
 
-pcb* setupPCB(char *PcbName, int classCode, int priorityCode){
+pcb* setupPCB(char *PcbName, int classCode, int priorityCode){	//NOTE FOR FUTURE: MAY NEED TO ADD ADDITIONAL PARAMENTER FOR SIZE OF STACK TO MAKE
 	pcb * newPCB = allocatePCB();
 	newPCB->namePtr = newPCB->processName;	
 	newPCB->namePtr = strcpy(newPCB->namePtr, PcbName);
@@ -144,8 +144,9 @@ pcb* setupPCB(char *PcbName, int classCode, int priorityCode){
 	newPCB->stateRRB = 0;			//Ready(0)
 	newPCB->stateIsSuspended = 0;		//Not-Suspended(0)
 	newPCB->classIsApp = classCode;		//Application(1)/System-Process(0)
-	//BELOW NEEDS UNCOMMENTED
-	//newPCB->top = newPCB->base + 1024 - sizeof(struct context);
+	//!!!!!!!!!!Needs review for base and top!!!!!!!!!!!!!!!!!!!
+	//newPCB->base = sys_alloc_mem();
+	//newPCB->top = (newPCB->base) + 1024 - sizeof(struct context);
 
 	return newPCB;
 	

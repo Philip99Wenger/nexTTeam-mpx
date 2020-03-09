@@ -508,8 +508,9 @@ int comhand(){
 	void (*block)() = &blockWrapper;
 	void (*unblock)() = &unblockWrapper;
 	void (*history)() = &historyWrapper;
-	void (*yeild)() = &yield;
-	void (*loadr3)() = &loadr3;
+	//R3 functions -- 
+	//void (*yeild)() = &yield;
+	//void (*loadr3)() = &loadr3;
 
 	char commands[19][20]={
 		"shutdown", //must keep shutdown at index 0
@@ -530,9 +531,9 @@ int comhand(){
 		"deletePCB",
 		"block",
 		"unblock",
-		"history",
-		"yield",
-		"loadr3"
+		"history"//,
+		//"yield",
+		//"loadr3"
 	};
 	void (*commands_ptrs[])()={
 		*version_ptr,
@@ -553,8 +554,8 @@ int comhand(){
 		*block,
 		*unblock,
 		*history,
-		*yield,
-		*loadr3
+		//*yield,
+		//*loadr3
 	};
 	//Print fancy menu
 	char nextTeam[] = "\x1B[33mX   X  XXXX  X   X  XXXXX    XXXXX  XXXX    X    X   X\nXX  X  X      X X     X        X    X      X X   XX XX\nX X X  XXX     X      X        X    XXX   X   X  X X X\nX  XX  X      X X     X        X    X     XXXXX  X   X\nX   X  XXXX  X   X    X        X    XXXX  X   X  X   X\n";
