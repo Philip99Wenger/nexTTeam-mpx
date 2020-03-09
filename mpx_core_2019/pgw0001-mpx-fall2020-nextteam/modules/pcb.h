@@ -82,4 +82,6 @@ void resume(pcb* PCB);
 
 pcb* getReadyQueueHead();
 
+pcb* nextProcess();
+
 #endif

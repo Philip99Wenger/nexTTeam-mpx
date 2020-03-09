@@ -18,7 +18,7 @@ void loadr3(){
 	pcb * proc1pcb = setupPCB(proc1Name, 1, 9);	//char *PcbName, int classCode, int priorityCode
 	proc1pcb->base = sys_alloc_mem(stack_size);
 	proc1pcb->top = (proc1pcb->base) + 1024 - sizeof(struct context);
-	suspend(proc1pcb);	//set to suspended ready
+	//suspend(proc1pcb);	//set to suspended ready
 
 	context * cp1 = (context*)(proc1pcb -> top);
 	memset(cp1, 0, sizeof(context));
@@ -28,11 +28,12 @@ void loadr3(){
 	cp1 -> ds = 0x10;
 	cp1 -> es = 0x10;
 	cp1 -> cs = 0x8;
-	cp1 -> ebp = (u32int)(proc1pcb -> base);
+	cp1 -> ebp = (u32int)(proc1pcb -> stack);
 	cp1 -> esp = (u32int)(proc1pcb -> top);
 	cp1 -> eip = (u32int)proc1;//The function correlating to the process, ie. Proc1
 	cp1 -> eflags = 0x202;
 
+	suspend(proc1pcb);	//set to suspended ready
 
 	//create new pcb for PROCESS 2
 	char * proc2Name = "Proc2";
