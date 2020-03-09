@@ -1,4 +1,4 @@
-#ifndef R3COMMANDS_H_
+#i#ifndef R3COMMANDS_H_
 
 #define R3COMMAND_H_
 
@@ -16,7 +16,6 @@
 #include "pcb.h"
 #include "procsr3.h"
 #include "context.h"
-
 
 //! makes command handler yield to other processes
 void yield();

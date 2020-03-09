@@ -31,15 +31,15 @@ void loadr3(){
 
 	memset(cp, 0, sizeof(context));
 
-	cs -> fs = 0 x10;
+	cp -> fs = 0x10;
 
-	cp -> gs = 0 x10;
+	cp -> gs = 0x10;
 
-	cp -> ds = 0 x10;
+	cp -> ds = 0x10;
 
-	cp -> es = 0 x10;
+	cp -> es = 0x10;
 
-	cp -> cs = 0 x8;
+	cp -> cs = 0x8;
 
 	cp -> ebp (u32int)(proc1pcb -> base);
 
@@ -66,15 +66,15 @@ void loadr3(){
 
 	memset(cp, 0, sizeof(context));
 
-	cp -> fs = 0 x10;
+	cp -> fs = 0x10;
 
-	cp -> gs = 0 x10;
+	cp -> gs = 0x10;
 
-	cp -> ds = 0 x10;
+	cp -> ds = 0x10;
 
-	cp -> es = 0 x10;
+	cp -> es = 0x10;
 
-	cp -> cs = 0 x8;
+	cp -> cs = 0x8;
 
 	cp -> ebp (u32int)(proc2pcb -> base);
 
@@ -101,15 +101,15 @@ void loadr3(){
 
 	memset(cp, 0, sizeof(context));
 
-	cp -> fs = 0 x10;
+	cp -> fs = 0x10;
 
-	cp -> gs = 0 x10;
+	cp -> gs = 0x10;
 
-	cp -> ds = 0 x10;
+	cp -> ds = 0x10;
 
-	cp -> es = 0 x10;
+	cp -> es = 0x10;
 
-	cp -> cs = 0 x8;
+	cp -> cs = 0x8;
 
 	cp -> ebp (u32int)(proc3pcb -> base);
 
@@ -136,15 +136,15 @@ void loadr3(){
 
 	memset(cp, 0, sizeof(context));
 
-	cp -> fs = 0 x10;
+	cp -> fs = 0x10;
 
-	cp -> gs = 0 x10;
+	cp -> gs = 0x10;
 
-	cp -> ds = 0 x10;
+	cp -> ds = 0x10;
 
-	cp -> es = 0 x10;
+	cp -> es = 0x10;
 
-	cp -> cs = 0 x8;
+	cp -> cs = 0x8;
 
 	cp -> ebp (u32int)(proc4pcb -> base);
 
@@ -171,15 +171,15 @@ void loadr3(){
 
 	memset(cp, 0, sizeof(context));
 
-	cp -> fs = 0 x10;
+	cp -> fs = 0x10;
 
-	cp -> gs = 0 x10;
+	cp -> gs = 0x10;
 
-	cp -> ds = 0 x10;
+	cp -> ds = 0x10;
 
-	cp -> es = 0 x10;
+	cp -> es = 0x10;
 
-	cp -> cs = 0 x8;
+	cp -> cs = 0x8;
 
 	cp -> ebp (u32int)(proc5pcb -> base);
 
