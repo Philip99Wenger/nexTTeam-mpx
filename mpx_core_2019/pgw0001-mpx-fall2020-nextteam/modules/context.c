@@ -21,6 +21,7 @@ u32int* sys_call(context *registers){
 	if (currentPcb != NULL){
 		cop = currentPcb;
 		removePCB(currentPcb);
+		outb(0x20, 0x20);
 		return (u32int*) cop->top;
 	}
 	else{
