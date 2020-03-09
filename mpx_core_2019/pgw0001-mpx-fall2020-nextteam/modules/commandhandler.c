@@ -8,7 +8,7 @@ int index = 0;//This is a placeholder for history
 //char** historyArray = thisHistory;//this points to history
 
 void version(){
-	char version[] = "\x1B[36mVERSION: 2.0\x1B[37m\n";
+	char version[] = "\x1B[36mVERSION: 3.0\x1B[37m\n";
 	int versionSize = strlen(version);
 	sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
 }
@@ -508,8 +508,10 @@ int comhand(){
 	void (*block)() = &blockWrapper;
 	void (*unblock)() = &unblockWrapper;
 	void (*history)() = &historyWrapper;
+	void (*yield_ptr)()= &yield;
+	void (*loadr3_ptr)() = &loadr3;
 
-	char commands[19][20]={
+	char commands[21][20]={
 		"shutdown", //must keep shutdown at index 0
 		"version",
 		"help",
@@ -528,7 +530,9 @@ int comhand(){
 		"deletePCB",
 		"block",
 		"unblock",
-		"history"
+		"history",
+		"yield",
+		"loadr3"
 	};
 	void (*commands_ptrs[])()={
 		*version_ptr,
@@ -548,7 +552,9 @@ int comhand(){
 		*deletePCB,
 		*block,
 		*unblock,
-		*history
+		*history,
+		*yield_ptr,
+		*loadr3_ptr
 	};
 	//Print fancy menu
 	char nextTeam[] = "\x1B[33mX   X  XXXX  X   X  XXXXX    XXXXX  XXXX    X    X   X\nXX  X  X      X X     X        X    X      X X   XX XX\nX X X  XXX     X      X        X    XXX   X   X  X X X\nX  XX  X      X X     X        X    X     XXXXX  X   X\nX   X  XXXX  X   X    X        X    XXXX  X   X  X   X\n";
