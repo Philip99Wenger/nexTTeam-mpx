@@ -135,8 +135,11 @@ sys_call_isr:
 	; push stack pointer
 	push esp;
 
-	; call sys_call UNCOMMENT THE BOTTOM
+	; call sys_call
 	call sys_call
+
+	;set stack pointer from sys_call
+	mov eax, esp
 
 	; set new pointer
 	pop gs
