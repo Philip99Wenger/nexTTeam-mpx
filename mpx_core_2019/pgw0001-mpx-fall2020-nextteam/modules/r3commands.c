@@ -31,7 +31,7 @@ void loadr3(){
 
 	memset(cp, 0, sizeof(context));
 
-	cp -> fs = 0 x10;
+	cs -> fs = 0 x10;
 
 	cp -> gs = 0 x10;
 
@@ -41,13 +41,13 @@ void loadr3(){
 
 	cp -> cs = 0 x8;
 
-	cp -> ebp (u32int)(proc1pcb -> stack);
+	cp -> ebp (u32int)(proc1pcb -> base);
 
 	cp -> esp (u32int)(proc1pcb -> top);
 
 	cp -> eip (u32int)proc1;//The function correlating to the process, ie. Proc1
 
-	cp -> eflags
+	cp -> eflags = 0x202;
 
 
 	//create new pcb for PROCESS 2
@@ -76,13 +76,13 @@ void loadr3(){
 
 	cp -> cs = 0 x8;
 
-	cp -> ebp (u32int)(proc2pcb -> stack);
+	cp -> ebp (u32int)(proc2pcb -> base);
 
 	cp -> esp (u32int)(proc2pcb -> top);
 
 	cp -> eip (u32int)proc2;
 
-	cp -> eflags
+	cp -> eflags = 0x202;
 
 
 	//create new pcb for PROCESS 3
@@ -111,13 +111,13 @@ void loadr3(){
 
 	cp -> cs = 0 x8;
 
-	cp -> ebp (u32int)(proc3pcb -> stack);
+	cp -> ebp (u32int)(proc3pcb -> base);
 
 	cp -> esp (u32int)(proc3pcb -> top);
 
 	cp -> eip (u32int)proc3;
 
-	cp -> eflags
+	cp -> eflags = 0x202;
 
 
 	//create new pcb for PROCESS 4
@@ -146,13 +146,13 @@ void loadr3(){
 
 	cp -> cs = 0 x8;
 
-	cp -> ebp (u32int)(proc4pcb -> stack);
+	cp -> ebp (u32int)(proc4pcb -> base);
 
 	cp -> esp (u32int)(proc4pcb -> top);
 
 	cp -> eip (u32int)proc4;
 
-	cp -> eflags
+	cp -> eflags = 0x202;
 
 
 	//create new pcb for PROCESS 5
@@ -181,13 +181,13 @@ void loadr3(){
 
 	cp -> cs = 0 x8;
 
-	cp -> ebp (u32int)(proc5pcb -> stack);
+	cp -> ebp (u32int)(proc5pcb -> base);
 
 	cp -> esp (u32int)(proc5pcb -> top);
 
 	cp -> eip (u32int)proc5;
 
-	cp -> eflags
+	cp -> eflags = 0x202;
 
 }
 
