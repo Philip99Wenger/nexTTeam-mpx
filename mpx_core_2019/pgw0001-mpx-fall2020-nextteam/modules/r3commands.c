@@ -41,11 +41,11 @@ void loadr3(){
 
 	cp -> cs = 0x8;
 
-	cp -> ebp (u32int)(proc1pcb -> base);
+	cp -> ebp = (u32int)(proc1pcb -> base);
 
-	cp -> esp (u32int)(proc1pcb -> top);
+	cp -> esp = (u32int)(proc1pcb -> top);
 
-	cp -> eip (u32int)proc1;//The function correlating to the process, ie. Proc1
+	cp -> eip = (u32int)proc1;//The function correlating to the process, ie. Proc1
 
 	cp -> eflags = 0x202;
 
@@ -76,11 +76,11 @@ void loadr3(){
 
 	cp -> cs = 0x8;
 
-	cp -> ebp (u32int)(proc2pcb -> base);
+	cp -> ebp = (u32int)(proc2pcb -> base);
 
-	cp -> esp (u32int)(proc2pcb -> top);
+	cp -> esp = (u32int)(proc2pcb -> top);
 
-	cp -> eip (u32int)proc2;
+	cp -> eip = (u32int)proc2;
 
 	cp -> eflags = 0x202;
 
@@ -111,11 +111,11 @@ void loadr3(){
 
 	cp -> cs = 0x8;
 
-	cp -> ebp (u32int)(proc3pcb -> base);
+	cp -> ebp = (u32int)(proc3pcb -> base);
 
-	cp -> esp (u32int)(proc3pcb -> top);
+	cp -> esp = (u32int)(proc3pcb -> top);
 
-	cp -> eip (u32int)proc3;
+	cp -> eip = (u32int)proc3;
 
 	cp -> eflags = 0x202;
 
@@ -146,11 +146,11 @@ void loadr3(){
 
 	cp -> cs = 0x8;
 
-	cp -> ebp (u32int)(proc4pcb -> base);
+	cp -> ebp = (u32int)(proc4pcb -> base);
 
-	cp -> esp (u32int)(proc4pcb -> top);
+	cp -> esp = (u32int)(proc4pcb -> top);
 
-	cp -> eip (u32int)proc4;
+	cp -> eip = (u32int)proc4;
 
 	cp -> eflags = 0x202;
 
@@ -181,11 +181,11 @@ void loadr3(){
 
 	cp -> cs = 0x8;
 
-	cp -> ebp (u32int)(proc5pcb -> base);
+	cp -> ebp = (u32int)(proc5pcb -> base);
 
-	cp -> esp (u32int)(proc5pcb -> top);
+	cp -> esp = (u32int)(proc5pcb -> top);
 
-	cp -> eip (u32int)proc5;
+	cp -> eip = (u32int)proc5;
 
 	cp -> eflags = 0x202;
 
