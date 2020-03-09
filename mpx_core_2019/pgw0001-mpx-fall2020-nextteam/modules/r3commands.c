@@ -27,27 +27,27 @@ void loadr3(){
 
 	suspend(proc1pcb);	//set to suspended ready
 
-	context * cp = (context*)(proc1pcb -> top);
+	context * cp1 = (context*)(proc1pcb -> top);
 
-	memset(cp, 0, sizeof(context));
+	memset(cp1, 0, sizeof(context));
 
-	cp -> fs = 0x10;
+	cp1 -> fs = 0x10;
 
-	cp -> gs = 0x10;
+	cp1 -> gs = 0x10;
 
-	cp -> ds = 0x10;
+	cp1 -> ds = 0x10;
 
-	cp -> es = 0x10;
+	cp1 -> es = 0x10;
 
-	cp -> cs = 0x8;
+	cp1 -> cs = 0x8;
 
-	cp -> ebp = (u32int)(proc1pcb -> base);
+	cp1 -> ebp = (u32int)(proc1pcb -> base);
 
-	cp -> esp = (u32int)(proc1pcb -> top);
+	cp1 -> esp = (u32int)(proc1pcb -> top);
 
-	cp -> eip = (u32int)proc1;//The function correlating to the process, ie. Proc1
+	cp1 -> eip = (u32int)proc1;//The function correlating to the process, ie. Proc1
 
-	cp -> eflags = 0x202;
+	cp1 -> eflags = 0x202;
 
 
 	//create new pcb for PROCESS 2
@@ -62,27 +62,27 @@ void loadr3(){
 
 	proc2pcb->top = (proc2pcb->base) + 1024 - sizeof(struct context);
 
-	context * cp = (context*)(proc2pcb -> top);
+	context * cp2 = (context*)(proc2pcb -> top);
 
-	memset(cp, 0, sizeof(context));
+	memset(cp2, 0, sizeof(context));
 
-	cp -> fs = 0x10;
+	cp2 -> fs = 0x10;
 
-	cp -> gs = 0x10;
+	cp2 -> gs = 0x10;
 
-	cp -> ds = 0x10;
+	cp2 -> ds = 0x10;
 
-	cp -> es = 0x10;
+	cp2 -> es = 0x10;
 
-	cp -> cs = 0x8;
+	cp2 -> cs = 0x8;
 
-	cp -> ebp = (u32int)(proc2pcb -> base);
+	cp2 -> ebp = (u32int)(proc2pcb -> base);
 
-	cp -> esp = (u32int)(proc2pcb -> top);
+	cp2 -> esp = (u32int)(proc2pcb -> top);
 
-	cp -> eip = (u32int)proc2;
+	cp2 -> eip = (u32int)proc2;
 
-	cp -> eflags = 0x202;
+	cp2 -> eflags = 0x202;
 
 
 	//create new pcb for PROCESS 3
@@ -97,27 +97,27 @@ void loadr3(){
 
 	proc3pcb->top = (proc3pcb->base) + 1024 - sizeof(struct context);
 
-	context * cp = (context*)(proc3pcb -> top);
+	context * cp3 = (context*)(proc3pcb -> top);
 
-	memset(cp, 0, sizeof(context));
+	memset(cp3, 0, sizeof(context));
 
-	cp -> fs = 0x10;
+	cp3 -> fs = 0x10;
 
-	cp -> gs = 0x10;
+	cp3 -> gs = 0x10;
 
-	cp -> ds = 0x10;
+	cp3 -> ds = 0x10;
 
-	cp -> es = 0x10;
+	cp3 -> es = 0x10;
 
-	cp -> cs = 0x8;
+	cp3 -> cs = 0x8;
 
-	cp -> ebp = (u32int)(proc3pcb -> base);
+	cp3 -> ebp = (u32int)(proc3pcb -> base);
 
-	cp -> esp = (u32int)(proc3pcb -> top);
+	cp3 -> esp = (u32int)(proc3pcb -> top);
 
-	cp -> eip = (u32int)proc3;
+	cp3 -> eip = (u32int)proc3;
 
-	cp -> eflags = 0x202;
+	cp3 -> eflags = 0x202;
 
 
 	//create new pcb for PROCESS 4
@@ -132,27 +132,27 @@ void loadr3(){
 
 	proc4pcb->top = (proc4pcb->base) + 1024 - sizeof(struct context);
 
-	context * cp = (context*)(proc4pcb -> top);
+	context * cp4 = (context*)(proc4pcb -> top);
 
-	memset(cp, 0, sizeof(context));
+	memset(cp4, 0, sizeof(context));
 
-	cp -> fs = 0x10;
+	cp4 -> fs = 0x10;
 
-	cp -> gs = 0x10;
+	cp4 -> gs = 0x10;
 
-	cp -> ds = 0x10;
+	cp4 -> ds = 0x10;
 
-	cp -> es = 0x10;
+	cp4 -> es = 0x10;
 
-	cp -> cs = 0x8;
+	cp4 -> cs = 0x8;
 
-	cp -> ebp = (u32int)(proc4pcb -> base);
+	cp4 -> ebp = (u32int)(proc4pcb -> base);
 
-	cp -> esp = (u32int)(proc4pcb -> top);
+	cp4 -> esp = (u32int)(proc4pcb -> top);
 
-	cp -> eip = (u32int)proc4;
+	cp4 -> eip = (u32int)proc4;
 
-	cp -> eflags = 0x202;
+	cp4 -> eflags = 0x202;
 
 
 	//create new pcb for PROCESS 5
@@ -167,27 +167,27 @@ void loadr3(){
 
 	proc5pcb->top = (proc5pcb->base) + 1024 - sizeof(struct context);
 
-	context * cp = (context*)(proc5pcb -> top);
+	context * cp5 = (context*)(proc5pcb -> top);
 
-	memset(cp, 0, sizeof(context));
+	memset(cp5, 0, sizeof(context));
 
-	cp -> fs = 0x10;
+	cp5 -> fs = 0x10;
 
-	cp -> gs = 0x10;
+	cp5 -> gs = 0x10;
 
-	cp -> ds = 0x10;
+	cp5 -> ds = 0x10;
 
-	cp -> es = 0x10;
+	cp5 -> es = 0x10;
 
-	cp -> cs = 0x8;
+	cp5 -> cs = 0x8;
 
-	cp -> ebp = (u32int)(proc5pcb -> base);
+	cp5 -> ebp = (u32int)(proc5pcb -> base);
 
-	cp -> esp = (u32int)(proc5pcb -> top);
+	cp5 -> esp = (u32int)(proc5pcb -> top);
 
-	cp -> eip = (u32int)proc5;
+	cp5 -> eip = (u32int)proc5;
 
-	cp -> eflags = 0x202;
+	cp5 -> eflags = 0x202;
 
 }
 
