@@ -139,7 +139,7 @@ sys_call_isr:
 	call sys_call
 
 	;set stack pointer from sys_call
-	mov eax, esp
+	mov esp, eax
 
 	; set new pointer
 	pop gs
