@@ -77,23 +77,24 @@ init_paging();
 	//int count=100;
 
 
-	//comhand();
+	comhand();
 	//asm volatile("int $60");
+	loadr3();
 	char comhandprocess[] = "comhand";
-	load(comhandprocess, &comhand,9);
+	load(comhandprocess, &comhand,0);
 	pcb * comhandPCB = findPCB(comhandprocess);
 	char repeat[] = "pos alpha.\n";
 	int repeatSize = strlen(repeat);
 	sys_req(WRITE, DEFAULT_DEVICE, repeat, &repeatSize);
-	comhandPCB->stateIsSuspended = 0;
+	resume(comhandPCB);
 	char idleprocess[] = "idle";
-	load(idleprocess, &idle,0);
-	//pcb * comhandPCB = findPCB(comhandprocess);
-	//removePCB(comhandPCB);
+	load(idleprocess, &idle,9);
+	pcb * idlePCB = findPCB(idleprocess);
+	resume(idlePCB);
 	char repeat2[] = "pos beta.\n";
 	int repeatSize2 = strlen(repeat2);
 	sys_req(WRITE, DEFAULT_DEVICE, repeat2, &repeatSize2);
-	showAllProcesses();
+	//showAllProcesses();
 	asm volatile("int $60");
 
 
