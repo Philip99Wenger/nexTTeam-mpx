@@ -18,6 +18,7 @@
 #include "time.h"
 #include "pcb.h"
 #include "r3commands.h"
+#include "r4commands.h"
 
 //int poll(char * buffer, int * count);
 //! Displays the current version being used for the MPX
@@ -30,6 +31,8 @@ int shutdown();
 void settimeWrapper();
 //! Prompts the user for date input and sets the date
 void setdateWrapper();
+//! Prompts the user for alarm input and sets an alarm
+void setalarmWrapper();
 //! Processes user input and find the correct function based off user request
 int comhand();
 //! Allows the user to create a process
