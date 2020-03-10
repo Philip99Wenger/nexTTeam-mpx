@@ -34,7 +34,7 @@ void setdateWrapper();
 //! Prompts the user for alarm input and sets an alarm
 void setalarmWrapper();
 //! Processes user input and find the correct function based off user request
-int comhand();
+void comhand();
 //! Allows the user to create a process
 void createPCBWrapper();
 //! Allows the user to remove a process
