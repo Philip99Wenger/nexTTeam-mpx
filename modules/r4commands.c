@@ -173,5 +173,10 @@ void alarmProcess(){
 }
 
 void infinite(){
-
+	char success[] = "\x1B[32mInfinite Process Is Still Infinite \x1B[37m\n";
+	int successSize = strlen(success);
+	sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);//Success
+	while(1){
+		sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);//She loves a good break.
+	}
 }
