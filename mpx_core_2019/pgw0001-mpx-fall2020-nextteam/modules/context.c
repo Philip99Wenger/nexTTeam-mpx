@@ -11,10 +11,10 @@ u32int* sys_call(context *registers){
 	}
 	else {
 		if (getOpCode() == EXIT){
-			cop -> stateRRB = 0;	//Ready state
 			freePCB(cop);
 		}
 		if (getOpCode() == IDLE){
+			cop -> stateRRB = 0;	//Ready state
 			cop->top = (unsigned char*)registers;
 			insertPCB(cop);
 		}
@@ -23,7 +23,6 @@ u32int* sys_call(context *registers){
 		currentPcb -> stateRRB = 1;	//Running state
 		cop = currentPcb;
 		removePCB(currentPcb);
-		outb(0x20, 0x20);
 		return (u32int*) cop->top;
 	}
 	else{
