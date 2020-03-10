@@ -1,18 +1,18 @@
 #include "r4commands.h"
 
 int possibleAlarms = 100;//This contains the total alarms possible
-char alarmList[possibleAlarms][100];//This contains all the active alarms
-char alarmMessages[possibleAlarms][100];//This contains all the messages of the active alarms
+char alarmList[100][100];//This contains all the active alarms
+char alarmMessages[100][100];//This contains all the messages of the active alarms
 int totalAlarms = 0;//This contains the amount of active alarms
 
-void setAlarm(char timeStatement[], char message[]){
+void setAlarm(char* timeStatement[], char* message[]){
 	//Error & Success Messages	
 	char incorrectHours[100] = "\x1B[31mInvalid Hours\x1B[37m\n";
 	char incorrectMinutes[100] = "\x1B[31mInvalid Minutes\x1B[37m\n";
 	char incorrectSeconds[100] = "\x1B[31mInvalid Seconds\x1B[37m\n";
 	char success[] = "\x1B[32mSuccessfully set the alarm. \x1B[37m\n";
 	int successSize = strlen(success);
-	int falseHoursSize = strlen(incorrecthours);
+	int falseHoursSize = strlen(incorrectHours);
 	int falseMinutesSize = strlen(incorrectMinutes);
 	int falseSecondsSize = strlen(incorrectSeconds);
 	//Variables
@@ -22,7 +22,7 @@ void setAlarm(char timeStatement[], char message[]){
 	int i=0;
 	
 	//Divide time statement into components
-	char* token = strtok(timeStatement, ":");
+	char* token = strtok(*timeStatement, ":");
 	while (token != NULL){
 		parArr[i] = atoi(token);
 		token = strtok(NULL, ":");
@@ -49,7 +49,7 @@ void setAlarm(char timeStatement[], char message[]){
 	
 	//Reset Alarm Slots & Start the Alarm Process
 	if(totalAlarms==0){
-		load(alarmPcbName, &alarmProcess);//Start the alarm process if it hasn't already started
+		load(alarmPcbName, &alarmProcess, 6);//Start the alarm process if it hasn't already started
 		//Empty Alarm List
 		int j, k;
 		for(k = 0; k < 100; k++){
@@ -61,8 +61,13 @@ void setAlarm(char timeStatement[], char message[]){
 	}
 	//Fill Alarm
 	while(alarmList[nextIndex]!=NULL){nextIndex++;}//Index of the the next empty slot for an alarm
-	alarmList[nextIndex] = timeStatement;
-	alarmMessages[nextIndex] = message;
+	int h;
+	for(h=0; h<100; h++){
+		alarmList[nextIndex][h] = *timeStatement[h];
+	}
+	for(h=0; h<100; h++){
+		alarmMessages[nextIndex][h] = *message[h];
+	}
 	totalAlarms++;
 	sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);//Success
 }
@@ -72,20 +77,20 @@ void alarmProcess(){
 	char incorrectHours[100] = "\x1B[31mSome junk in the alarms list. I cleared it for you.\x1B[37m\n";
 	char incorrectMinutes[100] = "\x1B[31mSome junk in the alarms list. I cleared it for you.\x1B[37m\n";
 	char incorrectSeconds[100] = "\x1B[31mSome junk in the alarms list. I cleared it for you.\x1B[37m\n";
-	int falseHoursSize = strlen(incorrecthours);
+	int falseHoursSize = strlen(incorrectHours);
 	int falseMinutesSize = strlen(incorrectMinutes);
 	int falseSecondsSize = strlen(incorrectSeconds);	
 	//Set Variables
-	int i;
-	char thisAlarm[100];
+	int i, h;
 	int currentHour;
 	int currentMinute;
 	int currentSecond;
 	char message[200];
+	int parArr[3];
 	
 	//check alarms
-	for(i=0, i<possibleAlarms, i++){
-		if(alarmList[i]!=NULL){
+	for(i=0; i<possibleAlarms; i++){
+		if(alarmList[i][0]!=NULL){
 			//Alarm Message
 			strcpy(message, "Alarm Completed: ");
 			strcpy(message, alarmMessages[i]);
@@ -104,19 +109,19 @@ void alarmProcess(){
 			//hours
 			if(parArr[0] < 1 || parArr[0] > 24){
 				sys_req(WRITE, DEFAULT_DEVICE, incorrectHours, &falseHoursSize);
-				alarmList[i]='\0';//Clean the slot
+				for(h=0; h<100; h++){alarmList[i][h]=NULL;}//Clean the slot
 				totalAlarms--;
 			}
 			//minutes
 			if(parArr[1] < 0 || parArr[1] > 59){
 				sys_req(WRITE, DEFAULT_DEVICE, incorrectMinutes, &falseMinutesSize);
-				alarmList[i]='\0';//Clean the slot
+				for(h=0; h<100; h++){alarmList[i][h]=NULL;}//Clean the slot
 				totalAlarms--;
 			}
 			//seconds
 			if(parArr[2] < 0 || parArr[2] > 59){
 				sys_req(WRITE, DEFAULT_DEVICE, incorrectSeconds, &falseSecondsSize);
-				alarmList[i]='\0';//Clean the slot
+				for(h=0; h<100; h++){alarmList[i][h]=NULL;}//Clean the slot
 				totalAlarms--;
 			}
 			
@@ -131,17 +136,17 @@ void alarmProcess(){
 			//Are we there yet?
 			if(parArr[0]<currentHour){//Display Message:
 				sys_req(WRITE, DEFAULT_DEVICE, message, &messageSize);
-				alarmList[i] = '\0';
+				for(h=0; h<100; h++){alarmList[i][h]=NULL;}//Clean the slot
 				totalAlarms--;
-			} else if(parArray[0]==currentHour){
-				if(parArray[1]<currentMinute){//Display Message:
+			} else if(parArr[0]==currentHour){
+				if(parArr[1]<currentMinute){//Display Message:
 					sys_req(WRITE, DEFAULT_DEVICE, message, &messageSize);
-					alarmList[i] = '\0';
+					for(h=0; h<100; h++){alarmList[i][h]=NULL;}//Clean the slot
 					totalAlarms--;
-				} else if(parArray[1]==currentMinute){
-					if(parArray[2]<=currentSecond){//Display Message:
+				} else if(parArr[1]==currentMinute){
+					if(parArr[2]<=currentSecond){//Display Message:
 						sys_req(WRITE, DEFAULT_DEVICE, message, &messageSize);
-						alarmList[i] = '\0';
+						for(h=0; h<100; h++){alarmList[i][h]=NULL;}//Clean the slot
 						totalAlarms--;
 					}
 				}

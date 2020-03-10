@@ -124,7 +124,7 @@ void setalarmWrapper(){
 	sys_req(READ, DEFAULT_DEVICE, messageBuffer, &messageBufferSize);
 
 	//Set The Alarm
-	setAlarm(alarmPoint, messagePoint);
+	setAlarm(&alarmPoint, &messagePoint);
 }
 
 
