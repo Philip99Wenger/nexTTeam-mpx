@@ -607,16 +607,24 @@ int comhand(){
 		//pass
 
 		//
+		char noCommand[] = "There is no matching command. Commands are case-sensitive.\n";
+		int noCommandSize = strlen(noCommand);
+		int matchFlag = 0;
 
 		int shutdownVal;
 		for(i=0; i<sizeof(commands)/sizeof(commands[0]); i++){
 			if(strcmp(cmdBuffer, commands[i])==0){
 				if(i == 0){
 					shutdownVal = shutdown();
+					matchFlag = 1;
 					if(shutdownVal == 1){quit = 1;}
-				}else{(*commands_ptrs[i-1])();}	
+				}else{
+					(*commands_ptrs[i-1])();
+					matchFlag = 1;
+				}	
 			}
 		}
+		if(matchFlag == 0){sys_req(WRITE, DEFAULT_DEVICE, noCommand, &noCommandSize);}
 	}
 	
 	return 1;
