@@ -97,12 +97,14 @@ void alarmProcess(){
 	int parArr[3];
 	
 	//check alarms
+	while(1){	
 	for(i=0; i<possibleAlarms; i++){
+	
 		if(alarmList[i]!=NULL){
 			//Alarm Message
-			strcpy(message, "Alarm Completed: ");
-			strcpy(message, alarmMessages[i]);
-			strcpy(message, "\n ");
+			strcat(message, "Alarm Completed: ");
+			strcat(message, alarmMessages[i]);
+			strcat(message, "\n ");
 			int messageSize = strlen(message);
 			
 			//Divide time statement into components
@@ -147,17 +149,20 @@ void alarmProcess(){
 			//Are we there yet?
 			if(parArr[0]<currentHour){//Display Message:
 				sys_req(WRITE, DEFAULT_DEVICE, message, &messageSize);
-				for(h=0; h<100; h++){alarmList[i][h]=NULL;}//Clean the slot
+				strcpy(alarmList[i],"");//Clean the slot
 				totalAlarms--;
+				
 			} else if(parArr[0]==currentHour){
 				if(parArr[1]<currentMinute){//Display Message:
 					sys_req(WRITE, DEFAULT_DEVICE, message, &messageSize);
-					for(h=0; h<100; h++){alarmList[i][h]=NULL;}//Clean the slot
+					//for(h=0; h<100; h++){alarmList[i][h]=NULL;}//Clean the slot
+					strcpy(alarmList[i],"");
 					totalAlarms--;
 				} else if(parArr[1]==currentMinute){
 					if(parArr[2]<=currentSecond){//Display Message:
 						sys_req(WRITE, DEFAULT_DEVICE, message, &messageSize);
-						for(h=0; h<100; h++){alarmList[i][h]=NULL;}//Clean the slot
+						//for(h=0; h<100; h++){alarmList[i][h]=NULL;}//Clean the slot
+						strcpy(alarmList[i],"");
 						totalAlarms--;
 					}
 				}
@@ -167,16 +172,19 @@ void alarmProcess(){
 	if(totalAlarms==0){
 		sys_req(EXIT, DEFAULT_DEVICE, NULL, NULL);//Oop you're out of alarms! Time to die
 	} else {
+		char here[] = "HERE I AM!!!\n";
+		int hereSize = strlen(here);
+		sys_req(WRITE, DEFAULT_DEVICE, here, &hereSize);
 		sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);//Every alarm has been checked. Idle now.
 	}
-
+	}
 }
 
 void infinite(){
-	char success[] = "\x1B[32mInfinite Process Is Still Infinite \x1B[37m\n";
-	int successSize = strlen(success);
-	sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);//Success
 	while(1){
+		char success[] = "\x1B[32mInfinite Process Is Still Infinite \x1B[37m\n";
+		int successSize = strlen(success);
+		sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);//Success
 		sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);//She loves a good break.
 	}
 }
