@@ -34,9 +34,9 @@ u32int* sys_call(context *registers){
 			freePCB(cop);
 		}
 		else if (params.op_code == IDLE){
-			strcpy(version," \n");
+			/*strcpy(version," \n");
 			int versionSize = strlen(version);
-			sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
+			sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);*/
 			cop->top = (unsigned char*)registers;
 			//testing one line below
 			cop -> stateRRB = 0;
