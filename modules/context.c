@@ -7,8 +7,7 @@ u32int* sys_call(context *registers){
 	//char version[] = "\npos 1\n";
 	//int versionSize = strlen(version);
 	//sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
-	pcb *currentPcb;
-	currentPcb = getReadyQueueHead();
+	
 	if (cop == NULL){
 		currentContext = registers;
 		/*strcpy(version,"pos 2\n");
@@ -52,7 +51,8 @@ u32int* sys_call(context *registers){
 	}
 
 	//cop = nextProcess();	
-
+	pcb *currentPcb;
+	currentPcb = getReadyQueueHead();
 	if (currentPcb != NULL){
 		/*strcpy(version,"pos 5\n");
 		int versionSize = strlen(version);
