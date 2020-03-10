@@ -68,6 +68,8 @@ void setAlarm(char* timeStatement[], char* message[]){
 	for(h=0; h<100; h++){
 		alarmMessages[nextIndex][h] = *message[h];
 	}
+	strcpy(alarmList[nextIndex], *timeStatement);
+	strcpy(alarmMessages[nextIndex], *message);
 	totalAlarms++;
 	sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);//Success
 }
@@ -90,7 +92,7 @@ void alarmProcess(){
 	
 	//check alarms
 	for(i=0; i<possibleAlarms; i++){
-		if(alarmList[i][0]!=NULL){
+		if(alarmList[i]!=NULL){
 			//Alarm Message
 			strcpy(message, "Alarm Completed: ");
 			strcpy(message, alarmMessages[i]);
@@ -110,18 +112,21 @@ void alarmProcess(){
 			if(parArr[0] < 1 || parArr[0] > 24){
 				sys_req(WRITE, DEFAULT_DEVICE, incorrectHours, &falseHoursSize);
 				for(h=0; h<100; h++){alarmList[i][h]=NULL;}//Clean the slot
+				strcpy(alarmList[i], "");//Clean the slot
 				totalAlarms--;
 			}
 			//minutes
 			if(parArr[1] < 0 || parArr[1] > 59){
 				sys_req(WRITE, DEFAULT_DEVICE, incorrectMinutes, &falseMinutesSize);
 				for(h=0; h<100; h++){alarmList[i][h]=NULL;}//Clean the slot
+				strcpy(alarmList[i], "");//Clean the slot
 				totalAlarms--;
 			}
 			//seconds
 			if(parArr[2] < 0 || parArr[2] > 59){
 				sys_req(WRITE, DEFAULT_DEVICE, incorrectSeconds, &falseSecondsSize);
 				for(h=0; h<100; h++){alarmList[i][h]=NULL;}//Clean the slot
+				strcpy(alarmList[i],"");//Clean the slot
 				totalAlarms--;
 			}
 			
