@@ -1,10 +1,10 @@
 #include "context.h"
-
+extern param params;
 pcb *cop;
 context *currentContext;
 
 u32int* sys_call(context *registers){
-	char version[] = "pos 1\n";
+	char version[] = "\npos 1\n";
 	int versionSize = strlen(version);
 	sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
 	pcb *currentPcb;
@@ -16,35 +16,42 @@ u32int* sys_call(context *registers){
 		sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
 	}
 	else {
-		if (getOpCode() == EXIT){
+		if (params.op_code == EXIT){
 			strcpy(version,"pos 3\n");
 			int versionSize = strlen(version);
 			sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
 			cop -> stateRRB = 0;	//Ready state
 			//testing one line below
-			removePCB(cop);	
+				
 			freePCB(cop);
 		}
-		if (getOpCode() == IDLE){
+		else if (params.op_code == IDLE){
 			strcpy(version,"pos 4\n");
 			int versionSize = strlen(version);
 			sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
 			cop->top = (unsigned char*)registers;
 			//testing one line below
-			removePCB(cop);
+			cop -> stateRRB = 0;
+			
 			insertPCB(cop);
+		}
+		else{
+			strcpy(version,"pos 4.5\n");
+			int versionSize = strlen(version);
+			sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
 		}
 	}
 
-	cop = nextProcess();	
+	//cop = nextProcess();	
 
 	if (currentPcb != NULL){
 		strcpy(version,"pos 5\n");
 		int versionSize = strlen(version);
 		sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
+		removePCB(currentPcb);
 		currentPcb -> stateRRB = 1;	//Running state
 		cop = currentPcb;
-		removePCB(currentPcb);
+		
 		return (u32int*) cop->top;
 	}
 	else{
