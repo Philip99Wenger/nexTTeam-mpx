@@ -19,7 +19,8 @@ time.o\
 pcb.o\
 context.o\
 procsr3.o\
-r3commands.o
+r3commands.o\
+r4commands.o
 
 .c.s:
 	$(CC) $(CFLAGS) -S -o $@ $<
