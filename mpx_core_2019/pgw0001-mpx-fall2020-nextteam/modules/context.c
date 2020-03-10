@@ -11,6 +11,7 @@ u32int* sys_call(context *registers){
 	}
 	else {
 		if (getOpCode() == EXIT){
+			cop -> stateRRB = 0;	//Ready state
 			freePCB(cop);
 		}
 		if (getOpCode() == IDLE){
@@ -19,6 +20,7 @@ u32int* sys_call(context *registers){
 		}
 	}
 	if (currentPcb != NULL){
+		currentPcb -> stateRRB = 1;	//Running state
 		cop = currentPcb;
 		removePCB(currentPcb);
 		outb(0x20, 0x20);
