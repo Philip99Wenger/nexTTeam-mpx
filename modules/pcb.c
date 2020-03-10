@@ -152,9 +152,12 @@ pcb* setupPCB(char *PcbName, int classCode, int priorityCode){
 		newPCB->stateIsSuspended = 0;		//Not-Suspended(0)
 		newPCB->classIsApp = classCode;		//Application(1)/System-Process(0)
 	
-		memset(newPCB->stack, '\0', 2048);
-		newPCB->base = newPCB->stack;
-		newPCB->top = newPCB->stack + 2048; // - sizeof(context);
+		newPCB->base = &(newPCB->stack[0]);
+		newPCB->top = &(newPCB->stack[1024-sizeof(context)]);
+		int i;
+		for(i=0; i<(newPCB->top-newPCB->base); i++){
+			newPCB->stack[i]=NULL;
+		}
 
 		return newPCB;
 	}
