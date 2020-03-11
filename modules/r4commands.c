@@ -100,7 +100,7 @@ void alarmProcess(){
 	while(1){	
 	for(i=0; i<possibleAlarms; i++){
 	
-		if(alarmList[i]!=NULL){
+		if(alarmList[i][0]!=NULL){
 			//Alarm Message
 			strcat(message, "Alarm Completed: ");
 			strcat(message, alarmMessages[i]);
@@ -149,20 +149,17 @@ void alarmProcess(){
 			//Are we there yet?
 			if(parArr[0]<currentHour){//Display Message:
 				sys_req(WRITE, DEFAULT_DEVICE, message, &messageSize);
-				strcpy(alarmList[i],"");//Clean the slot
+				for(h=0; h<100; h++){alarmList[i][h]=NULL;}//Clean the slot
 				totalAlarms--;
-				
 			} else if(parArr[0]==currentHour){
 				if(parArr[1]<currentMinute){//Display Message:
 					sys_req(WRITE, DEFAULT_DEVICE, message, &messageSize);
-					//for(h=0; h<100; h++){alarmList[i][h]=NULL;}//Clean the slot
-					strcpy(alarmList[i],"");
+					for(h=0; h<100; h++){alarmList[i][h]=NULL;}//Clean the slot
 					totalAlarms--;
 				} else if(parArr[1]==currentMinute){
 					if(parArr[2]<=currentSecond){//Display Message:
 						sys_req(WRITE, DEFAULT_DEVICE, message, &messageSize);
-						//for(h=0; h<100; h++){alarmList[i][h]=NULL;}//Clean the slot
-						strcpy(alarmList[i],"");
+						for(h=0; h<100; h++){alarmList[i][h]=NULL;}//Clean the slot
 						totalAlarms--;
 					}
 				}
@@ -172,9 +169,6 @@ void alarmProcess(){
 	if(totalAlarms==0){
 		sys_req(EXIT, DEFAULT_DEVICE, NULL, NULL);//Oop you're out of alarms! Time to die
 	} else {
-		char here[] = "HERE I AM!!!\n";
-		int hereSize = strlen(here);
-		sys_req(WRITE, DEFAULT_DEVICE, here, &hereSize);
 		sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);//Every alarm has been checked. Idle now.
 	}
 	}

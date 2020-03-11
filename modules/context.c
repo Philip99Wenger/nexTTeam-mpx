@@ -4,7 +4,7 @@ pcb *cop;
 context *currentContext;
 
 u32int* sys_call(context *registers){
-	char version[] = "\npos 1\n";
+	//char version[] = "\npos 1\n";
 	//int versionSize = strlen(version);
 	//sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
 	
