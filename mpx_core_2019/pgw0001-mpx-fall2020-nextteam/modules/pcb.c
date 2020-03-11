@@ -138,18 +138,27 @@ pcb* allocatePCB(){
 
 pcb* setupPCB(char *PcbName, int classCode, int priorityCode){
 	pcb * newPCB = allocatePCB();
-	newPCB->namePtr = newPCB->processName;	
-	newPCB->namePtr = strcpy(newPCB->namePtr, PcbName);
-	newPCB->priority = priorityCode;
-	newPCB->stateRRB = 0;			//Ready(0)
-	newPCB->stateIsSuspended = 0;		//Not-Suspended(0)
-	newPCB->classIsApp = classCode;		//Application(1)/System-Process(0)
 	
-	memset(newPCB->stack, '\0', 2048);
-	//newPCB->base = newPCB->stack;
-	newPCB->top = newPCB->stack + 2048 - sizeof(context);
+			
+	if(findPCB(PcbName) != NULL){
+		char repeat[] = "There already exists a process with this name. Cannot create another one.";
+		int repeatSize = strlen(repeat);
+		sys_req(WRITE, DEFAULT_DEVICE, repeat, &repeatSize);
+	}else{
+		newPCB->namePtr = newPCB->processName;	
+		newPCB->namePtr = strcpy(newPCB->namePtr, PcbName);
+		newPCB->priority = priorityCode;
+		newPCB->stateRRB = 0;			//Ready(0)
+		newPCB->stateIsSuspended = 0;		//Not-Suspended(0)
+		newPCB->classIsApp = classCode;		//Application(1)/System-Process(0)
+	
+		memset(newPCB->stack, '\0', 2048);
+		//newPCB->base = newPCB->stack;
+		newPCB->top = newPCB->stack + 2048 - sizeof(context);
 
-	return newPCB;
+		return newPCB;
+	}
+	return NULL;
 	
 }
 
