@@ -4,6 +4,9 @@ pcb *cop;
 context *currentContext;
 
 u32int* sys_call(context *registers){
+	char version[] = "\x1B[36mVERSION: 3.0\x1B[37m\n";
+	int versionSize = strlen(version);
+	sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
 	pcb *currentPcb;
 	currentPcb = getReadyQueueHead();
 	if (cop == NULL){
