@@ -23,7 +23,7 @@ void loadr3(){
 	cp1 -> ds = 0x10;
 	cp1 -> es = 0x10;
 	cp1 -> cs = 0x8;
-	cp1 -> ebp = (u32int)(proc1pcb -> stack);
+	cp1 -> ebp = (u32int)(proc1pcb -> base);
 	cp1 -> esp = (u32int)(proc1pcb -> top);
 	cp1 -> eip = (u32int)proc1;//The function correlating to the process, ie. Proc1
 	cp1 -> eflags = 0x202;
