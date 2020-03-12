@@ -61,7 +61,7 @@ void setAlarm(char timeStatement[], char message[]){
 	}
 	//Fill Alarm
 	while(alarmList[nextIndex]!=NULL){nextIndex++;}//Index of the the next empty slot for an alarm
-	alarmList[nextIndex] = timeStatement;
+	strcpy(alarmList[nextIndex], timeStatement);
 	strcpy(alarmMessages[nextIndex], message);
 	totalAlarms++;
 	sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);//Success
@@ -72,7 +72,7 @@ void alarmProcess(){
 	char incorrectHours[100] = "\x1B[31mSome junk in the alarms list. I cleared it for you.\x1B[37m\n";
 	char incorrectMinutes[100] = "\x1B[31mSome junk in the alarms list. I cleared it for you.\x1B[37m\n";
 	char incorrectSeconds[100] = "\x1B[31mSome junk in the alarms list. I cleared it for you.\x1B[37m\n";
-	int falseHoursSize = strlen(incorrecthours);
+	int falseHoursSize = strlen(incorrectHours);
 	int falseMinutesSize = strlen(incorrectMinutes);
 	int falseSecondsSize = strlen(incorrectSeconds);	
 	//Set Variables
@@ -82,9 +82,10 @@ void alarmProcess(){
 	int currentMinute;
 	int currentSecond;
 	char message[200];
+	int parrArr[3];
 	
 	//check alarms
-	for(i=0, i<possibleAlarms, i++){
+	for(i=0; i<possibleAlarms; i++){
 		if(alarmList[i]!=NULL){
 			//Alarm Message
 			strcpy(message, "Alarm Completed: ");
