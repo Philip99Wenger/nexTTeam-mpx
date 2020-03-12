@@ -105,19 +105,19 @@ void alarmProcess(){
 			//hours
 			if(parArr[0] < 1 || parArr[0] > 24){
 				sys_req(WRITE, DEFAULT_DEVICE, incorrectHours, &falseHoursSize);
-				alarmList[i]='\0';//Clean the slot
+				strcpy(alarmList[i], "");//Clean the slot
 				totalAlarms--;
 			}
 			//minutes
 			if(parArr[1] < 0 || parArr[1] > 59){
 				sys_req(WRITE, DEFAULT_DEVICE, incorrectMinutes, &falseMinutesSize);
-				alarmList[i]='\0';//Clean the slot
+				strcpy(alarmList[i], "");//Clean the slot
 				totalAlarms--;
 			}
 			//seconds
 			if(parArr[2] < 0 || parArr[2] > 59){
 				sys_req(WRITE, DEFAULT_DEVICE, incorrectSeconds, &falseSecondsSize);
-				alarmList[i]='\0';//Clean the slot
+				strcpy(alarmList[i],"");//Clean the slot
 				totalAlarms--;
 			}
 			
