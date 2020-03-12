@@ -12,7 +12,7 @@ void setAlarm(char timeStatement[], char message[]){
 	char incorrectSeconds[100] = "\x1B[31mInvalid Seconds\x1B[37m\n";
 	char success[] = "\x1B[32mSuccessfully set the alarm. \x1B[37m\n";
 	int successSize = strlen(success);
-	int falseHoursSize = strlen(incorrecthours);
+	int falseHoursSize = strlen(incorrectHours);
 	int falseMinutesSize = strlen(incorrectMinutes);
 	int falseSecondsSize = strlen(incorrectSeconds);
 	//Variables
@@ -62,7 +62,7 @@ void setAlarm(char timeStatement[], char message[]){
 	//Fill Alarm
 	while(alarmList[nextIndex]!=NULL){nextIndex++;}//Index of the the next empty slot for an alarm
 	alarmList[nextIndex] = timeStatement;
-	alarmMessages[nextIndex] = message;
+	strcpy(alarmMessages[nextIndex], message);
 	totalAlarms++;
 	sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);//Success
 }
