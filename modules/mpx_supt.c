@@ -194,3 +194,7 @@ void idle()
     sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);
   }
 }
+
+int getOpCode() {
+	return params.op_code;
+}

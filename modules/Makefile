@@ -16,7 +16,10 @@ commandhandler.o\
 polling.o\
 date.o\
 time.o\
-pcb.o
+pcb.o\
+context.o\
+procsr3.o\
+r3commands.o
 
 .c.s:
 	$(CC) $(CFLAGS) -S -o $@ $<

@@ -24,9 +24,11 @@ void insertPCB(pcb* Pcb){
 				readyQueue.count++;
 				return;
 			}
+		previous = readyQueue.head;
 		while(current){ // place priority where needed in queue
 			if(Pcb->priority < current->priority){
-				previous->pcbNext = current;
+				previous = current->pcbPrev;
+				previous->pcbNext = Pcb;
 				Pcb->pcbPrev = previous;
 				current->pcbPrev = Pcb;
 				Pcb->pcbNext = current;
@@ -63,9 +65,11 @@ void insertPCB(pcb* Pcb){
 				suspendReadyQueue.count++;
 				return;
 			}
+		previous=suspendReadyQueue.head;
 		while(current){ // place priority where needed in queue
 			if(Pcb->priority < current->priority){
-				previous->pcbNext = current;
+				previous = current->pcbPrev;
+				previous->pcbNext = Pcb;
 				Pcb->pcbPrev = previous;
 				current->pcbPrev = Pcb;
 				Pcb->pcbNext = current;
@@ -134,14 +138,27 @@ pcb* allocatePCB(){
 
 pcb* setupPCB(char *PcbName, int classCode, int priorityCode){
 	pcb * newPCB = allocatePCB();
-	newPCB->namePtr = newPCB->processName;	
-	newPCB->namePtr = strcpy(newPCB->namePtr, PcbName);
-	newPCB->priority = priorityCode;
-	newPCB->stateRRB = 0;			//Ready(0)
-	newPCB->stateIsSuspended = 0;		//Not-Suspended(0)
-	newPCB->classIsApp = classCode;		//Application(1)/System-Process(0)
+	
+			
+	if(findPCB(PcbName) != NULL){
+		char repeat[] = "There already exists a process with this name. Cannot create another one.";
+		int repeatSize = strlen(repeat);
+		sys_req(WRITE, DEFAULT_DEVICE, repeat, &repeatSize);
+	}else{
+		newPCB->namePtr = newPCB->processName;	
+		newPCB->namePtr = strcpy(newPCB->namePtr, PcbName);
+		newPCB->priority = priorityCode;
+		newPCB->stateRRB = 0;			//Ready(0)
+		newPCB->stateIsSuspended = 0;		//Not-Suspended(0)
+		newPCB->classIsApp = classCode;		//Application(1)/System-Process(0)
+	
+		memset(newPCB->stack, '\0', 2048);
+		newPCB->base = newPCB->stack;
+		newPCB->top = newPCB->stack + 2048; // - sizeof(context);
 
-	return newPCB;
+		return newPCB;
+	}
+	return NULL;
 	
 }
 
@@ -459,5 +476,17 @@ void resume(pcb* PCB){
 
 }
 
+pcb* getReadyQueueHead(){
+	return readyQueue.head;
+}
+
+pcb* nextProcess(){
+	pcb* next = readyQueue.head;
+	while (next != NULL){
+		next = next->pcbNext;
+	}
+
+	return next;
+}
 
 

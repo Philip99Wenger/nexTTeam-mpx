@@ -22,6 +22,7 @@
 #include "mpx_supt.h"
 #include "date.h"
 #include "time.h"
+#include "context.h"
 
 typedef struct pcb{ 
 	char processName[8];		//The name of the process
@@ -34,6 +35,7 @@ typedef struct pcb{
 	struct pcb* pcbPrev;		//Pointer to the start of the last process
 
 	//This is the stack//	
+	unsigned char stack[2048];      //this is the stack
 	unsigned char* base;		//Pointer to the base of the process
 	unsigned char* top;		//Pointer to the top of the process, or base + 1024 bytes
 	//1024 Bytes, Every Character should be initialized to null//
@@ -77,5 +79,9 @@ int freePCB(pcb* PCB);
 void suspend(pcb* PCB);
 //! Frees space for the PCB
 void resume(pcb* PCB);
+
+pcb* getReadyQueueHead();
+
+pcb* nextProcess();
 
 #endif

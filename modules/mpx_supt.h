@@ -94,4 +94,6 @@ int sys_free_mem(void *ptr);
 */
 void idle();
 
+int getOpCode();
+
 #endif
