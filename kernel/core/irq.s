@@ -125,7 +125,6 @@ coprocessor:
 sys_call_isr:
 	; push all general purpose registers
 	pusha
-
 	; push segment register values
 	push ds
 	push es
@@ -142,12 +141,13 @@ sys_call_isr:
 	mov esp, eax
 
 	; set new pointer
+
 	pop gs
 	pop fs
 	pop es
 	pop ds
 
-	; pop general purpose
+	; pop general pupose
 	popa
 
 	; return out of interrupt

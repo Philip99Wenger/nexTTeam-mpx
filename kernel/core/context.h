@@ -13,7 +13,10 @@
 #include <mem/paging.h>
 
 #include "mpx_supt.h"
+<<<<<<< HEAD
 #include "pcb.h"
+=======
+>>>>>>> 21ec8a7f158fdb4c98e46b990bd2c6a68a337328
 
 typedef struct context{
 	u32int gs, fs, es, ds;

@@ -30,3 +30,4 @@ void kpanic(const char *msg)
   klogv(logmsg);
   hlt(); //halt
 }
+
