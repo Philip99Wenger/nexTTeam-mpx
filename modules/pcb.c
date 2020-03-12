@@ -139,6 +139,9 @@ pcb* allocatePCB(){
 pcb* setupPCB(char *PcbName, int classCode, int priorityCode){
 	pcb * newPCB = allocatePCB();
 	
+	//Testing if name came in okay (results were as expected)
+	//int nameSize = strlen(PcbName);
+	//sys_req(WRITE, DEFAULT_DEVICE, PcbName, &nameSize);
 			
 	if(findPCB(PcbName) != NULL){
 		char repeat[] = "There already exists a process with this name. Cannot create another one.";
@@ -158,6 +161,10 @@ pcb* setupPCB(char *PcbName, int classCode, int priorityCode){
 		for(i=0; i<(newPCB->top-newPCB->base); i++){
 			newPCB->stack[i]=NULL;
 		}
+
+		//Testing if name came in okay (results were as expected)
+		//int nameSize = strlen(newPCB -> namePtr);
+		//sys_req(WRITE, DEFAULT_DEVICE, newPCB -> namePtr, &nameSize);
 
 		return newPCB;
 	}
