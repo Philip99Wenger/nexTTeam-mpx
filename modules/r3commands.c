@@ -7,7 +7,7 @@ void yield(){
 
 }
 
-void load(char * name, void (*procfunc)()){
+void load(char * name, void (*procfunc)(), int priority){
 
 	if(findPCB(name) == NULL){	//i.e. This process is not already loaded in
 
@@ -15,7 +15,7 @@ void load(char * name, void (*procfunc)()){
 		//int nameSize = strlen(name);
 		//sys_req(WRITE, DEFAULT_DEVICE, name, &nameSize);
 
-		pcb * procPCB = setupPCB(name, 1, 9);	//char *PcbName, int classCode, int priorityCode
+		pcb * procPCB = setupPCB(name, 1, priority);	//char *PcbName, int classCode, int priorityCode
 		suspend(procPCB);
 	
 		context * cp = (context*)(procPCB -> top);
@@ -28,7 +28,7 @@ void load(char * name, void (*procfunc)()){
 		cp -> cs = 0x8;
 		cp -> ebp = (u32int)(procPCB -> base);
 		cp -> esp = (u32int)(procPCB -> top);
-		cp -> eip = (u32int)&procfunc; //The function correlating to the process, ie. Proc1
+		cp -> eip = (u32int)procfunc; //The function correlating to the process, ie. Proc1
 		cp -> eflags = 0x202; 
 	}else{
 		char repeat[] = "There already exists a process with this name. Cannot create another one.\n";
@@ -48,11 +48,11 @@ void loadr3(){
 	char proc5name[] = "Proc5";
 
 	//loading in processes
-	load(proc1name, &proc1);
-	load(proc2name, &proc2);
-	load(proc3name, &proc3);
-	load(proc4name, &proc4);
-	load(proc5name, &proc5);
+	load(proc1name, &proc1,5);
+	load(proc2name, &proc2,5);
+	load(proc3name, &proc3,5);
+	load(proc4name, &proc4,5);
+	load(proc5name, &proc5,5);
 
 	//create new pcb for PROCESS 1
 //	char * proc1Name = "Proc1";

@@ -20,7 +20,7 @@
 //! makes command handler yield to other processes
 void yield();
 //! loads 1 process at a time
-void load(char * name, void (*procfunc)());
+void load(char * name, void (*procfunc)(), int priority);
 //! loads processes in given proc3.c file as suspend-ready
 void loadr3();
 #endif
