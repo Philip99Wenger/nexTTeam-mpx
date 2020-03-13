@@ -17,7 +17,7 @@
 #include "mpx_supt.h"
 
 //! Initializes an Alarm PCB
-void setAlarm(char* timeStatement[], char* message[]);
+void setAlarm(char * timeStatement, char * message);
 //! Checks to see if it has passed a certain time
 void alarmProcess();
 //! Idles indefinitely

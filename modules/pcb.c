@@ -211,6 +211,17 @@ int removePCB(pcb* process) {
 	int success = 0;
 	int error = -1;
 	
+	//check for infinite
+	char heyStop[100] = "\x1B[31mHey, Stop! That's supposed to be infinite. Don't delete.\x1B[37m\n";
+	int stopSize = strlen(heyStop);
+	char infiniteName[] = "infinite";
+	pcb* isItInfinite = findPCB(infiniteName);
+	if((isItInfinite!=NULL)&&(process==isItInfinite)&&(process->stateIsSuspended==0)){
+		sys_req(WRITE, DEFAULT_DEVICE, heyStop, &stopSize);		
+		return error;
+	}
+
+
 	//Which Queue?
 	if(process->stateRRB == 0 && process->stateIsSuspended == 0){
 		if(readyQueue.head == process){//Is this a queue's head?

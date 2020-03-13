@@ -5,7 +5,7 @@ char alarmList[100][100];//This contains all the active alarms
 char alarmMessages[100][100];//This contains all the messages of the active alarms
 int totalAlarms = 0;//This contains the amount of active alarms
 
-void setAlarm(char* timeStatement[], char* message[]){
+void setAlarm(char * timeStatement, char * message){
 	//Error & Success Messages	
 	char incorrectHours[100] = "\x1B[31mInvalid Hours\x1B[37m\n";
 	char incorrectMinutes[100] = "\x1B[31mInvalid Minutes\x1B[37m\n";
@@ -22,7 +22,7 @@ void setAlarm(char* timeStatement[], char* message[]){
 	int i=0;
 	
 	//Divide time statement into components
-	char* token = strtok(*timeStatement, ":");
+	char* token = strtok(timeStatement, ":");
 	while (token != NULL){
 		parArr[i] = atoi(token);
 		token = strtok(NULL, ":");
@@ -46,7 +46,7 @@ void setAlarm(char* timeStatement[], char* message[]){
 		sys_req(WRITE, DEFAULT_DEVICE, incorrectSeconds, &falseSecondsSize);
 		return;
 	}
-	
+
 	//Reset Alarm Slots & Start the Alarm Process
 	if(totalAlarms==0){
 		load(alarmPcbName, &alarmProcess, 6);//Start the alarm process if it hasn't already started
@@ -58,20 +58,26 @@ void setAlarm(char* timeStatement[], char* message[]){
 				alarmMessages[k][j]='\0';
 			}
 		}
-	}
+	}	
+
 	//Fill Alarm
-	while(alarmList[nextIndex]!=NULL){nextIndex++;}//Index of the the next empty slot for an alarm
-	int h;
-	for(h=0; h<100; h++){
-		alarmList[nextIndex][h] = *timeStatement[h];
+	while(alarmList[nextIndex][0]!=NULL){nextIndex++;}//Index of the the next empty slot for an alarm
+	int h=0;
+	while(timeStatement[h]!=NULL){
+		alarmList[nextIndex][h] = timeStatement[h];
+		h++;
 	}
 	for(h=0; h<100; h++){
-		alarmMessages[nextIndex][h] = *message[h];
+		alarmMessages[nextIndex][h] = message[h];
 	}
-	strcpy(alarmList[nextIndex], *timeStatement);
-	strcpy(alarmMessages[nextIndex], *message);
+	
+	strcpy(alarmList[nextIndex], timeStatement);
+	strcpy(alarmMessages[nextIndex], message);
 	totalAlarms++;
+	pcb* thisPCB = findPCB(alarmPcbName);
+	resume(thisPCB);
 	sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);//Success
+	return;
 }
 
 void alarmProcess(){
@@ -167,5 +173,10 @@ void alarmProcess(){
 }
 
 void infinite(){
-
+	char success[] = "\x1B[32mInfinite Process Is Still Infinite \x1B[37m\n";
+	int successSize = strlen(success);
+	sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);//Success
+	while(1){
+		sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);//She loves a good break.
+	}
 }

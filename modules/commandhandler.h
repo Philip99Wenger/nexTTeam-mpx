@@ -33,6 +33,8 @@ void settimeWrapper();
 void setdateWrapper();
 //! Prompts the user for alarm input and sets an alarm
 void setalarmWrapper();
+//! Creates a process that sits idle forever
+void infiniteWrapper();
 //! Processes user input and find the correct function based off user request
 void comhand();
 //! Allows the user to create a process
