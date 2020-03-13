@@ -13,8 +13,8 @@ void yield(){
 	char repeat2[] = "pos beta.\n";
 	int repeatSize2 = strlen(repeat);
 	sys_req(WRITE, DEFAULT_DEVICE, repeat2, &repeatSize2);*/
-	sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);
-	//asm volatile("int $60");
+	//sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);
+	asm volatile("int $60");
 
 }
 
