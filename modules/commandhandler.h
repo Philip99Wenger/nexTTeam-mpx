@@ -33,17 +33,17 @@ void setdateWrapper();
 //! Processes user input and find the correct function based off user request
 int comhand();
 //! Allows the user to create a process
-void createPCBWrapper();
+//void createPCBWrapper();
 //! Allows the user to remove a process
-void deletePCBWrapper();
+//void deletePCBWrapper();
 //! Prompts the user for the name and priority value
 void setPriorityWrapper();
 //! Prompts the user for a PCB name
 void showPCBWrapper();
 //! Prompts the user for a PCB name (and finds that pcb to verify its valid)
-void blockWrapper();
+//void blockWrapper();
 //! Prompts the user for a PCB name (and finds that pcb to verify its valid)
-void unblockWrapper();
+//void unblockWrapper();
 //! Displays the previous ten commands used by the user
 void historyWrapper();
 //! Prompts the user for a PCB name than sets it to suspended
