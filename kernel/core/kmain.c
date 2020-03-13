@@ -22,6 +22,8 @@
 #include "modules/commandhandler.h"
 #include "modules/date.h"
 #include "modules/pcb.h"
+#include "modules/r3commands.h"
+#include "modules/context.h"
 
 
 void kmain(void)
@@ -73,7 +75,28 @@ init_paging();
 	sys_set_read(&poll);
 	//char buffer[100];
 	//int count=100;
-	comhand();
+
+
+	//comhand();
+	//asm volatile("int $60");
+	char comhandprocess[] = "comhand";
+	load(comhandprocess, &comhand,9);
+	pcb * comhandPCB = findPCB(comhandprocess);
+	char repeat[] = "pos alpha.\n";
+	int repeatSize = strlen(repeat);
+	sys_req(WRITE, DEFAULT_DEVICE, repeat, &repeatSize);
+	comhandPCB->stateIsSuspended = 0;
+	char idleprocess[] = "idle";
+	load(idleprocess, &idle,0);
+	//pcb * comhandPCB = findPCB(comhandprocess);
+	//removePCB(comhandPCB);
+	char repeat2[] = "pos beta.\n";
+	int repeatSize2 = strlen(repeat2);
+	sys_req(WRITE, DEFAULT_DEVICE, repeat2, &repeatSize2);
+	showAllProcesses();
+	asm volatile("int $60");
+
+
 
 	//sys_req(READ,DEFAULT_DEVICE,buffer,&count);
 

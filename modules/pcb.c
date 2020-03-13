@@ -475,7 +475,11 @@ void suspend(pcb* PCB){
 }
 void resume(pcb* PCB){
 	//finding and checking pcb validty in wrapper
+	
 	removePCB(PCB);	//Remove PCB from blocked queue
+	char repeat[] = "pos alpha.2.\n";
+	int repeatSize = strlen(repeat);
+	sys_req(WRITE, DEFAULT_DEVICE, repeat, &repeatSize);
 	PCB->stateIsSuspended = 0;
 	insertPCB(PCB);	//Inserts PCB into appropriate queue 
 

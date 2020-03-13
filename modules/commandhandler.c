@@ -483,7 +483,10 @@ void historyWrapper(){
 	}
 }
 
-int comhand(){
+void comhand(){
+	char repeat2[] = "pos omega.\n";
+	int repeatSize2 = strlen(repeat2);
+	sys_req(WRITE, DEFAULT_DEVICE, repeat2, &repeatSize2);
 	char cmdBuffer[100];
 	//char *cmdBufferPtr = cmdBuffer;
 	int bufferSize;
@@ -627,7 +630,6 @@ int comhand(){
 		if(matchFlag == 0){sys_req(WRITE, DEFAULT_DEVICE, noCommand, &noCommandSize);}
 	}
 	
-	return 1;
 }
 	
 

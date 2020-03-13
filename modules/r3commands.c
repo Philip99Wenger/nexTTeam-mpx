@@ -2,6 +2,17 @@
 
 
 void yield(){
+	/*char comhandprocess[] = "comhandprocess";
+	load(comhandprocess, &comhand,0);
+	pcb * comhandPCB = findPCB(comhandprocess);
+	char repeat[] = "pos alpha.\n";
+	int repeatSize = strlen(repeat);
+	sys_req(WRITE, DEFAULT_DEVICE, repeat, &repeatSize);
+	comhandPCB->stateIsSuspended = 0;
+	//removePCB(comhandPCB);
+	char repeat2[] = "pos beta.\n";
+	int repeatSize2 = strlen(repeat);
+	sys_req(WRITE, DEFAULT_DEVICE, repeat2, &repeatSize2);*/
 
 	asm volatile("int $60");
 
@@ -16,7 +27,7 @@ void load(char * name, void (*procfunc)(), int priority){
 		//sys_req(WRITE, DEFAULT_DEVICE, name, &nameSize);
 
 		pcb * procPCB = setupPCB(name, 1, priority);	//char *PcbName, int classCode, int priorityCode
-		suspend(procPCB);
+		resume(procPCB);
 	
 		context * cp = (context*)(procPCB -> top);
 		memset(cp, 0, sizeof(context));
@@ -30,6 +41,9 @@ void load(char * name, void (*procfunc)(), int priority){
 		cp -> esp = (u32int)(procPCB -> top);
 		cp -> eip = (u32int)procfunc; //The function correlating to the process, ie. Proc1
 		cp -> eflags = 0x202; 
+		char repeat[] = "got to end of load succesfully.\n";
+		int repeatSize = strlen(repeat);
+		sys_req(WRITE, DEFAULT_DEVICE, repeat, &repeatSize);
 	}else{
 		char repeat[] = "There already exists a process with this name. Cannot create another one.\n";
 		int repeatSize = strlen(repeat);
