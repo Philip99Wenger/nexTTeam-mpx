@@ -5,15 +5,14 @@ context *currentContext;
 
 u32int* sys_call(context *registers){
 	char version[] = "\npos 1\n";
-	int versionSize = strlen(version);
+	//int versionSize = strlen(version);
 	//sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
-	pcb *currentPcb;
-	currentPcb = getReadyQueueHead();
+	
 	if (cop == NULL){
 		currentContext = registers;
-		strcpy(version,"pos 2\n");
+		/*strcpy(version,"pos 2\n");
 		int versionSize = strlen(version);
-		sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
+		sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);*/
 	}
 	else {
 		/*strcpy(version,"params.op_code = ");
@@ -26,16 +25,16 @@ u32int* sys_call(context *registers){
 			versionSize = strlen(version);
 			sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);*/
 		if (params.op_code == EXIT){
-			strcpy(version,"pos 3\n");
+			/*strcpy(version,"pos 3\n");
 			versionSize = strlen(version);
-			sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
+			sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);*/
 			cop -> stateRRB = 0;	//Ready state
 			//testing one line below
 				
 			freePCB(cop);
 		}
 		else if (params.op_code == IDLE){
-			strcpy(version,"pos 4\n");
+			strcpy(version," \n");
 			int versionSize = strlen(version);
 			sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
 			cop->top = (unsigned char*)registers;
@@ -45,31 +44,33 @@ u32int* sys_call(context *registers){
 			insertPCB(cop);
 		}
 		else{
-			strcpy(version,"pos 4.5\n");
+			/*strcpy(version,"pos 4.5\n");
 			int versionSize = strlen(version);
-			sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
+			sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);*/
 		}
 	}
 
-	//cop = nextProcess();	
+	//cop = nextProcess();
+	pcb *currentPcb;
+	currentPcb = getReadyQueueHead();	
 	
 	if (currentPcb != NULL){
-		strcpy(version,"pos 5\n");
+		/*strcpy(version,"pos 5\n");
 		int versionSize = strlen(version);
-		sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
+		sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);*/
 		removePCB(currentPcb);
 		currentPcb -> stateRRB = 1;	//Running state
 		cop = currentPcb;
-		strcpy(version,"pos 5.5\n");
+		/*strcpy(version,"pos 5.5\n");
 			versionSize = strlen(version);
-			sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
-		showAllProcesses();
+			sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);*/
+		//showAllProcesses();
 		return (u32int*) cop->top;
 	}
 	else{
-		strcpy(version,"pos 6\n");
+		/*strcpy(version,"pos 6\n");
 			int versionSize = strlen(version);
-			sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
+			sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);*/
 		return (u32int*) currentContext;
 	}
 }
