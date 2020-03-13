@@ -14,7 +14,7 @@ void version(){
 }
 
 void help(){	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!TODO update with new commands !!!!!!!!!!!!!!!!!!!!!!!!!!!
-	char help[] = "NAME\n     version - display current version of NTOS in use.\nDETAIL DESCRIPTION\n     No further description.\n\nNAME\n     getTime - display current time of system.\nDETAIL DESCRIPTION\n     Time will be displayed as hour:minute:second.\n\nNAME\n     setTime - change system's current time.\nDETAIL DESCRIPTION\n     Will prompt user to enter time as hh:mm:ss (i.e. hour:minute:second).\n\nNAME\n     getDate - display current date of system.\nDETAIL DESCRIPTION\n     Date will be displayed as month/day/year.\n\nNAME\n     setDate - change system's current date.\nDETAIL DESCRIPTION\n     Will prompt user to enter date as mm/dd/yy (i.e. month/day/year).\n\nNAME\n     shutdown - shuts down NTOS.\nDETAIL DESCRIPTION\n     Will prompt user to confirm system shut down as yes/no.\n\nNAME\n     suspend - places PCB in suspended state.\nDETAIL DESCRIPTION\n     Will prompt user for a process name and will set to suspended state and move to the appropriate queue.\n\nNAME\n     resume - places PCB in not suspended state.\nDETAIL DESCRIPTION\n     Will prompt user for a process name and will set to not suspended state and move to the appropriate queue.\n\nNAME\n     setPriority - sets PCB priority.\nDETAIL DESCRIPTION\n     Will prompt user for a process name and ask for new priority and will set to new priority and move to the appropriate queue.\n\nNAME\n     showPCB - display info for a PCB.\nDETAIL DESCRIPTION\n     Will ask for a process name and display the process name, class, state, suspended status, and priority for a PCB.\n\nNAME\n     showAllProcesses - display all PCBs.\nDETAIL DESCRIPTION\n     Will display the process name, class, state, suspended status, and priority for all PCBs.\n\nNAME\n     showReady - display all ready PCBs.\nDETAIL DESCRIPTION\n     Will display the process name, class, state, suspended status, and priority for all ready queue PCBs.\n\nNAME\n     showBlocked - display all blocked PCBs.\nDETAIL DESCRIPTION\n     Will display the process name, class, state, suspended status, and priority for all blocked PCBs.\n\nNAME\n     createPCB - create a new process.\nDETAIL DESCRIPTION\n     Will setup a PCB and insert in the appropriate queue.\n\nNAME\n     deletePCB - remove a PCB.\nDETAIL DESCRIPTION\n     Will find PCB, remove it from the queue, and free it.\n\nNAME\n     block - block a PCB.\nDETAIL DESCRIPTION\n     Will ask for a PCB name, block the process, and reinsert into the correct queue.\n\nNAME\n     unblock - unblock a PCB.\nDETAIL DESCRIPTION\n     Will ask for a PCB, unblock the process, and reinsert into the correct queue.\n\nNAME\n     history - print command history.\nDETAIL DESCRIPTION\n     Will display the user's ten previous commands.\n";
+	char help[] = "NAME\n     version - display current version of NTOS in use.\nDETAIL DESCRIPTION\n     No further description.\n\nNAME\n     getTime - display current time of system.\nDETAIL DESCRIPTION\n     Time will be displayed as hour:minute:second.\n\nNAME\n     setTime - change system's current time.\nDETAIL DESCRIPTION\n     Will prompt user to enter time as hh:mm:ss (i.e. hour:minute:second).\n\nNAME\n     getDate - display current date of system.\nDETAIL DESCRIPTION\n     Date will be displayed as month/day/year.\n\nNAME\n     setDate - change system's current date.\nDETAIL DESCRIPTION\n     Will prompt user to enter date as mm/dd/yy (i.e. month/day/year).\n\nNAME\n     setAlarm - set an alarm.\nDETAIL DESCRIPTION\n     Will prompt user to enter a time as hh:mm:ss (i.e. hour:minute:second). Will also prompt user for a message to display when the alarm goes off.\n\nNAME\n     shutdown - shuts down NTOS.\nDETAIL DESCRIPTION\n     Will prompt user to confirm system shut down as yes/no.\n\nNAME\n     suspend - places PCB in suspended state.\nDETAIL DESCRIPTION\n     Will prompt user for a process name and will set to suspended state and move to the appropriate queue.\n\nNAME\n     resume - places PCB in not suspended state.\nDETAIL DESCRIPTION\n     Will prompt user for a process name and will set to not suspended state and move to the appropriate queue.\n\nNAME\n     setPriority - sets PCB priority.\nDETAIL DESCRIPTION\n     Will prompt user for a process name and ask for new priority and will set to new priority and move to the appropriate queue.\n\nNAME\n     showPCB - display info for a PCB.\nDETAIL DESCRIPTION\n     Will ask for a process name and display the process name, class, state, suspended status, and priority for a PCB.\n\nNAME\n     showAllProcesses - display all PCBs.\nDETAIL DESCRIPTION\n     Will display the process name, class, state, suspended status, and priority for all PCBs.\n\nNAME\n     showReady - display all ready PCBs.\nDETAIL DESCRIPTION\n     Will display the process name, class, state, suspended status, and priority for all ready queue PCBs.\n\nNAME\n     showBlocked - display all blocked PCBs.\nDETAIL DESCRIPTION\n     Will display the process name, class, state, suspended status, and priority for all blocked PCBs.\n\nNAME\n     createPCB - create a new process.\nDETAIL DESCRIPTION\n     Will setup a PCB and insert in the appropriate queue.\n\nNAME\n     deletePCB - remove a PCB.\nDETAIL DESCRIPTION\n     Will find PCB, remove it from the queue, and free it.\n\nNAME\n     block - block a PCB.\nDETAIL DESCRIPTION\n     Will ask for a PCB name, block the process, and reinsert into the correct queue.\n\nNAME\n     unblock - unblock a PCB.\nDETAIL DESCRIPTION\n     Will ask for a PCB, unblock the process, and reinsert into the correct queue.\n\nNAME\n     history - print command history.\nDETAIL DESCRIPTION\n     Will display the user's ten previous commands.\n\nNAME\n     yield - yield command handler.\nDETAIL DESCRIPTION\n     Will temporarily yield in R3.\n\nNAME\n     loadr3 - load the preset processes.\nDETAIL DESCRIPTION\n     Will setup and load the five test processes.\n\nNAME\n     setAlarm - sets a user alaram.\nDETAIL DESCRIPTION\n     Will allow the user to enter hour, minute, and second for an alarm to set.";
 	int helpSize = strlen(help);
 	
 	sys_req(WRITE, DEFAULT_DEVICE, help, &helpSize);
@@ -97,6 +97,34 @@ void setdateWrapper(){
 		i= i+1;
 	}
 	setDate(parArr[0],parArr[1],parArr[2]);
+}
+
+void setalarmWrapper(){
+	char alarmBuffer[100];
+	char messageBuffer[100];
+	int bufferSize = 99;
+	int messageBufferSize = 99;
+	char* alarmPoint = alarmBuffer;
+	char* messagePoint = messageBuffer;
+	
+	//prompt user for time to set the alarm for
+	char prompt[] = "Enter the time for the alarm: hh:mm:ss\n";
+	int promptSize = strlen(prompt);
+	sys_req(WRITE, DEFAULT_DEVICE, prompt, &promptSize);
+	//Input
+	memset(alarmBuffer, '\0', 100);
+	sys_req(READ, DEFAULT_DEVICE, alarmBuffer, &bufferSize);
+	
+	//prompt the user for a message to go with the alarm
+	char promptTwo[] = "Enter a message that's less than 100 characters which you want to display when the alarm goes off\n";
+	int promptSizeTwo = strlen(promptTwo);
+	sys_req(WRITE, DEFAULT_DEVICE, promptTwo, &promptSizeTwo);
+	//Input
+	memset(messageBuffer, '\0', 100);
+	sys_req(READ, DEFAULT_DEVICE, messageBuffer, &messageBufferSize);
+
+	//Set The Alarm
+	setAlarm(&alarmPoint, &messagePoint);
 }
 
 
@@ -498,6 +526,7 @@ void comhand(){
 	void (*settime_ptr)() = &settimeWrapper;
 	void (*getdate_ptr)() = &getdate;
 	void (*setdate_ptr)() = &setdateWrapper;
+	void (*setalarm_ptr)() = &setalarmWrapper;
 	//R2 functions -- uncomment as implemented
 	void (*suspend_ptr)() = &suspendWrapper;
 	void (*resume_ptr)() = &resumeWrapper;
@@ -514,7 +543,7 @@ void comhand(){
 	void (*yield_ptr)()= &yield;
 	void (*loadr3_ptr)() = &loadr3;
 
-	char commands[21][20]={
+	char commands[22][20]={
 		"shutdown", //must keep shutdown at index 0
 		"version",
 		"help",
@@ -522,6 +551,7 @@ void comhand(){
 		"setTime",
 		"getDate",
 		"setDate",
+		"setAlarm",
 		"suspend", //R2 functions vvvvv
 		"resume",
 		"setPriority",
@@ -544,6 +574,7 @@ void comhand(){
 		*settime_ptr,
 		*getdate_ptr,
 		*setdate_ptr,
+		*setalarm_ptr,
 		*suspend_ptr,
 		*resume_ptr,
 		*setPriority_ptr,
