@@ -659,7 +659,8 @@ void comhand(){
 				if(i == 0){
 					shutdownVal = shutdown();
 					matchFlag = 1;
-					if(shutdownVal == 1){quit = 1;}
+					if(shutdownVal == 1)
+						{clearQueues(); sys_req(EXIT, DEFAULT_DEVICE, NULL, 							NULL); quit = 1;}
 				}else{
 					(*commands_ptrs[i-1])();
 					matchFlag = 1;

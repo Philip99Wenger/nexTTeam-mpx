@@ -514,5 +514,20 @@ pcb* nextProcess(){
 	return next;
 }
 
+void clearQueues(){
+	while(readyQueue.head){
+		removePCB(readyQueue.head);
+	}
+	while(suspendReadyQueue.head){
+		removePCB(suspendReadyQueue.head);
+	}
+	while(blockedQueue.head){
+		removePCB(blockedQueue.head);
+	}
+	while(suspendedBlockedQueue.head){
+		removePCB(suspendedBlockedQueue.head);
+	}
+}
+
 
 

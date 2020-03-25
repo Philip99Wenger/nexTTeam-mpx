@@ -84,5 +84,7 @@ pcb* getReadyQueueHead();
 
 pcb* nextProcess();
 
+void clearQueues();
+
 #endif
 
