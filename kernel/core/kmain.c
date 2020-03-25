@@ -77,9 +77,10 @@ init_paging();
 	//int count=100;
 
 
-	comhand();
+	//comhand();
 	//asm volatile("int $60");
 	loadr3();
+	clearQueues();
 	char comhandprocess[] = "comhand";
 	load(comhandprocess, &comhand,0);
 	pcb * comhandPCB = findPCB(comhandprocess);
