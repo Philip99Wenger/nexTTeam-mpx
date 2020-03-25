@@ -541,15 +541,15 @@ void comhand(){
 	void (*showAllProcess_ptr)() = &showAllProcesses;
 	void (*showReady_ptr)() = &showReady;
 	void (*showBlocked_ptr)() = &showBlocked;
-	void (*createPCB)() = &createPCBWrapper;
-	void (*deletePCB)() = &deletePCBWrapper;
-	void (*block)() = &blockWrapper;
-	void (*unblock)() = &unblockWrapper;
+	//void (*createPCB)() = &createPCBWrapper;
+	//void (*deletePCB)() = &deletePCBWrapper;
+	//void (*block)() = &blockWrapper;
+	//void (*unblock)() = &unblockWrapper;
 	void (*history)() = &historyWrapper;
 	void (*yield_ptr)()= &yield;
 	void (*loadr3_ptr)() = &loadr3;
 
-	char commands[23][20]={
+	char commands[19][20]={
 		"shutdown", //must keep shutdown at index 0
 		"version",
 		"help",
@@ -566,10 +566,10 @@ void comhand(){
 		"showAllProcesses",
 		"showReady",
 		"showBlocked",
-		"createPCB",
-		"deletePCB",
-		"block",
-		"unblock",
+		//"createPCB",
+		//"deletePCB",
+		//"block",
+		//"unblock",
 		"history",
 		"yield",
 		"loadr3"
@@ -590,10 +590,10 @@ void comhand(){
 		*showAllProcess_ptr,
 		*showReady_ptr,
 		*showBlocked_ptr,
-		*createPCB,
-		*deletePCB,
-		*block,
-		*unblock,
+		//*createPCB,
+		//*deletePCB,
+		//*block,
+		//*unblock,
 		*history,
 		*yield_ptr,
 		*loadr3_ptr
