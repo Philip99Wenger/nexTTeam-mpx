@@ -161,7 +161,6 @@ pcb* setupPCB(char *PcbName, int classCode, int priorityCode){
 		for(i=0; i<(newPCB->top-newPCB->base); i++){
 			newPCB->stack[i]=NULL;
 		}
-		insertPCB(newPCB);
 
 		//Testing if name came in okay (results were as expected)
 		//int nameSize = strlen(newPCB -> namePtr);

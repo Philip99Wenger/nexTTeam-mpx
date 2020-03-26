@@ -27,6 +27,7 @@ void load(char * name, void (*procfunc)(), int priority){
 		//sys_req(WRITE, DEFAULT_DEVICE, name, &nameSize);
 
 		pcb * procPCB = setupPCB(name, 1, priority);	//char *PcbName, int classCode, int priorityCode
+		insertPCB(procPCB);		
 		suspend(procPCB);
 	
 		context * cp = (context*)(procPCB -> top);
