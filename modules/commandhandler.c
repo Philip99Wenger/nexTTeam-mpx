@@ -668,7 +668,7 @@ void comhand(){
 			}
 		}
 		if(matchFlag == 0){sys_req(WRITE, DEFAULT_DEVICE, noCommand, &noCommandSize);}
-		//sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);
+		sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);
 	}
 	
 }
