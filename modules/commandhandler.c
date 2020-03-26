@@ -660,7 +660,7 @@ void comhand(){
 					shutdownVal = shutdown();
 					matchFlag = 1;
 					if(shutdownVal == 1)
-						{clearQueues(); sys_req(EXIT, DEFAULT_DEVICE, NULL, 							NULL); quit = 1;}
+						{clearQueues(); sys_req(EXIT, DEFAULT_DEVICE, NULL, NULL); quit = 1;}
 				}else{
 					(*commands_ptrs[i-1])();
 					matchFlag = 1;
@@ -668,6 +668,7 @@ void comhand(){
 			}
 		}
 		if(matchFlag == 0){sys_req(WRITE, DEFAULT_DEVICE, noCommand, &noCommandSize);}
+		//sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);
 	}
 	
 }
