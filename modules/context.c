@@ -44,13 +44,13 @@ u32int* sys_call(context *registers){
 			cop->top = (unsigned char*)registers;
 			//testing one line below
 			cop -> stateRRB = 0;
-			char version[] = "\npos 1\n";
-			strcpy(version,"HOWDY BRO \n");
-			int versionSize2 = strlen(version);
-			sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize2);
-			showAllProcesses();
+			//char version[] = "\npos 1\n";
+			//strcpy(version,"HOWDY BRO \n");
+			//int versionSize2 = strlen(version);
+			//sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize2);
+			//showAllProcesses();
 			insertPCB(cop);
-			showAllProcesses();
+			//showAllProcesses();
 		}
 		else{
 			//strcpy(version,"pos 4.5\n");
