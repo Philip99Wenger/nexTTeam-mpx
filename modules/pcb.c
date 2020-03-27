@@ -156,7 +156,7 @@ pcb* setupPCB(char *PcbName, int classCode, int priorityCode){
 		newPCB->classIsApp = classCode;		//Application(1)/System-Process(0)
 	
 		newPCB->base = &(newPCB->stack[0]);
-		newPCB->top = &(newPCB->stack[1024-sizeof(context)]);
+		newPCB->top = &(newPCB->stack[4000-sizeof(context)]);
 		int i;
 		for(i=0; i<(newPCB->top-newPCB->base); i++){
 			newPCB->stack[i]=NULL;
