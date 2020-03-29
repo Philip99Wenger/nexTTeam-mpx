@@ -40,6 +40,9 @@ typedef struct memoryList {
 
 int initializeHeap(int size);
 ucstar getAddress (MCB* mcb);
+void showAllocated();
+void showFree();
+void printOneMCB(MCB* currentMCB);
 
 #endif
 
