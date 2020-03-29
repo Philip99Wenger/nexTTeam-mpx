@@ -496,6 +496,25 @@ void showPCBWrapper(){
 	//}
 }
 
+void initializeHeapWrapper(){
+	char initializeBuffer[100];
+	int bufferSize = 99;
+	int bytesNum;
+
+	//prompt user for date to set to
+	char prompt[] = "Enter the size of the heap in bytes:\n";
+	int promptSize = strlen(prompt);
+
+	sys_req(WRITE, DEFAULT_DEVICE, prompt, &promptSize);
+
+	memset(initializeBuffer, '\0', 100);
+	sys_req(READ, DEFAULT_DEVICE, initializeBuffer, &bufferSize);
+
+	char* name = strtok(initializeBuffer, "");
+	bytesNum = atoi(name);
+	initializeHeap(bytesNum);
+}
+
 void historyWrapper(){
 	int i;
 	int textSize;//size of this command
@@ -548,8 +567,15 @@ void comhand(){
 	void (*history)() = &historyWrapper;
 	void (*yield_ptr)()= &yield;
 	void (*loadr3_ptr)() = &loadr3;
+	//R5 functions- uncomment once implemented
+	void (*initializeheap_ptr)() = &initializeHeapWrapper;
+	//void (*allocatememory_ptr)() = &allocateMemoryWrapper;
+	//void (*freememory_ptr)() = &freeMemoryWrapper;
+	//void (*isempty_ptr)() = &isEmpty;
+	void (*showallocated_ptr)() = &showAllocated;
+	void (*showfree_ptr)() = &showFree;
 
-	char commands[19][20]={
+	char commands[22][25]={
 		"shutdown", //must keep shutdown at index 0
 		"version",
 		"help",
@@ -572,7 +598,13 @@ void comhand(){
 		//"unblock",
 		"history",
 		"yield",
-		"loadr3"
+		"loadr3",
+		"initializeHeap",
+		//"allocateMemory",
+		//"freeMemory",
+		//"isEmpty",
+		"showAllocated"
+		"showFree"
 	};
 	void (*commands_ptrs[])()={
 		*version_ptr,
@@ -596,7 +628,13 @@ void comhand(){
 		//*unblock,
 		*history,
 		*yield_ptr,
-		*loadr3_ptr
+		*loadr3_ptr,
+		*initializeheap_ptr,
+		//*allocatememory_ptr,
+		//*freememory_ptr,
+		//*isempty_ptr,
+		*showallocated_ptr,
+		*showfree_ptr
 	};
 	//Print fancy menu
 	char nextTeam[] = "\x1B[33mX   X  XXXX  X   X  XXXXX    XXXXX  XXXX    X    X   X\nXX  X  X      X X     X        X    X      X X   XX XX\nX X X  XXX     X      X        X    XXX   X   X  X X X\nX  XX  X      X X     X        X    X     XXXXX  X   X\nX   X  XXXX  X   X    X        X    XXXX  X   X  X   X\n";

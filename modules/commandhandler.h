@@ -19,6 +19,7 @@
 #include "pcb.h"
 #include "r3commands.h"
 #include "r4commands.h"
+#include "mcb.h"
 
 //int poll(char * buffer, int * count);
 //! Displays the current version being used for the MPX
@@ -49,6 +50,8 @@ void showPCBWrapper();
 //void blockWrapper();
 //! Prompts the user for a PCB name (and finds that pcb to verify its valid)
 //void unblockWrapper();
+//! Initializes the heap and asks for size
+void initializeHeapWrapper();
 //! Displays the previous ten commands used by the user
 void historyWrapper();
 //! Prompts the user for a PCB name than sets it to suspended
