@@ -20,7 +20,7 @@ void setAlarm(char * timeStatement, char * message){
 	char alarmPcbName[] = "alarm";
 	int parArr[3];
 	int i=0;
-	
+
 	//Divide time statement into components
 	char* token = strtok(timeStatement, ":");
 	while (token != NULL){
@@ -82,6 +82,9 @@ void setAlarm(char * timeStatement, char * message){
 
 void alarmProcess(){
 	//Error & Success Messages	
+	char test[] = "\nHERE IT IS!!!!!!\n\n";
+	int testSize = strlen(test);
+	sys_req(WRITE, DEFAULT_DEVICE, test, &testSize);
 	char incorrectHours[100] = "\x1B[31mSome junk in the alarms list. I cleared it for you.\x1B[37m\n";
 	char incorrectMinutes[100] = "\x1B[31mSome junk in the alarms list. I cleared it for you.\x1B[37m\n";
 	char incorrectSeconds[100] = "\x1B[31mSome junk in the alarms list. I cleared it for you.\x1B[37m\n";
@@ -96,8 +99,9 @@ void alarmProcess(){
 	char message[200];
 	int parArr[3];
 	
+	
 	//check alarms
-	while(1){	
+	//while(1){	
 	for(i=0; i<possibleAlarms; i++){
 	
 		if(alarmList[i][0]!=NULL){
@@ -171,7 +175,7 @@ void alarmProcess(){
 	} else {
 		sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);//Every alarm has been checked. Idle now.
 	}
-	}
+	//}
 }
 
 void infinite(){
