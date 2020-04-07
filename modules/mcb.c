@@ -30,15 +30,15 @@ int initializeHeap(int size){
 	return actualSize;
 }
 
-int freeMem(char* toFree){
+void freeMem(char* toFree){
 	if(allocatedBlocks.head == NULL){	//ERROR CHECK: If allocated list is empty
-		char noAllocatedError[] = "\nCannot free memory. No allocated memory to free.\n";
-		int noAllocatedErrorSize = strlen(noAllocatedError);
-		sys_req(WRITE, DEFAULT_DEVICE, noAllocatedErrorSize, &noAllocatedErrorSize);
+		char error1[] = "\nCannot free memory. No allocated memory to free.\n";
+		int error1Size = strlen(error1);
+		sys_req(WRITE, DEFAULT_DEVICE, error1, &error1Size);
 	}else{
 		MCB* current = allocatedBlocks.head;
 		while (current != NULL){	//ITERATE THROUGH ALLOCATED LIST
-			if(current.pcbName = toFree){
+			if(current->pcbName == toFree){
 				//Logic to free block
 				
 				//TODO unlink AMCB
@@ -48,7 +48,7 @@ int freeMem(char* toFree){
 				
 				
 				//TODO modify MCB
-
+				current->type = 1;	//Changes type to free
 								
 				//TODO link into free list in order by address
 
