@@ -39,6 +39,7 @@ typedef struct memoryList {
 } memoryList;
 
 int initializeHeap(int size);
+int freeMem(char* toFree);
 ucstar getAddress (MCB* mcb);
 void showAllocated();
 void showFree();

@@ -30,6 +30,46 @@ int initializeHeap(int size){
 	return actualSize;
 }
 
+int freeMem(char* toFree){
+	if(allocatedBlocks.head == NULL){	//ERROR CHECK: If allocated list is empty
+		char noAllocatedError[] = "\nCannot free memory. No allocated memory to free.\n";
+		int noAllocatedErrorSize = strlen(noAllocatedError);
+		sys_req(WRITE, DEFAULT_DEVICE, noAllocatedErrorSize, &noAllocatedErrorSize);
+	}else{
+		MCB* current = allocatedBlocks.head;
+		while (current != NULL){	//ITERATE THROUGH ALLOCATED LIST
+			if(current.pcbName = toFree){
+				//Logic to free block
+				
+				//TODO unlink AMCB
+				
+				
+				//TODO create FMCB at start of block
+				
+				
+				//TODO modify MCB
+
+								
+				//TODO link into free list in order by address
+
+
+				
+				//SUCCESS MESSAGE	
+				char success[] = "Memory Block has been freed.";
+				int successSize = strlen(success);
+				sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);
+				
+				//TODO if new linked free block is adjacent to another free block, merge into one
+
+				//BREAK OUT OF SEARCH LOOP
+				break;
+			}else{
+				current = current->next;
+			}
+		}
+	}
+}
+
 ucstar getAddress (MCB* mcb) {
 	int i;
 	ucstar address;
