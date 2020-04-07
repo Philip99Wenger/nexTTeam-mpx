@@ -44,7 +44,8 @@ ucstar getAddress (MCB* mcb);
 void showAllocated();
 void showFree();
 void printOneMCB(MCB* currentMCB);
-int isEmpty();
+//! Checks whether the heap is empty & free or not.
+int checkIfEmpty();
 
 #endif
 

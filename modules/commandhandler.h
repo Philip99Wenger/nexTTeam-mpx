@@ -52,6 +52,8 @@ void showPCBWrapper();
 //void unblockWrapper();
 //! Initializes the heap and asks for size
 void initializeHeapWrapper();
+//! Checks to see if the heap is empty
+void isEmpty();
 //! Displays the previous ten commands used by the user
 void historyWrapper();
 //! Prompts the user for a PCB name than sets it to suspended

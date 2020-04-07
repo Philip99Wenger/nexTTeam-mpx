@@ -123,9 +123,11 @@ void printOneMCB(MCB* currentMCB){
 	sys_req(WRITE, DEFAULT_DEVICE, mcbSize, &mcbSizeSize);
 }
 
-int isEmpty(){
-	int present = 1;
-	if(allocatedBlocks.head!=NULL){present = 0;}
-	return present;
+int checkIfEmpty(){
+	int notPresent = 1;					//1 if empty
+	if(startHeap==NULL){notPresent = 2;} else{		//2 if there is no heap
+		if(allocatedBlocks.head!=NULL){notPresent = 0;}	//0 if NOT empty
+	}
+	return notPresent;
 }
 
