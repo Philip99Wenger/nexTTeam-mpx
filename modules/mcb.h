@@ -43,6 +43,7 @@ ucstar getAddress (MCB* mcb);
 void showAllocated();
 void showFree();
 void printOneMCB(MCB* currentMCB);
+int isEmpty();
 
 #endif
 

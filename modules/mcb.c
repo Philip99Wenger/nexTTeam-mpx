@@ -83,3 +83,9 @@ void printOneMCB(MCB* currentMCB){
 	sys_req(WRITE, DEFAULT_DEVICE, mcbSize, &mcbSizeSize);
 }
 
+int isEmpty(){
+	int present = 1;
+	if(allocatedBlocks.head!=NULL){present = 0;}
+	return present;
+}
+
