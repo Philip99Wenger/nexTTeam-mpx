@@ -34,12 +34,19 @@ typedef struct MCB {
 	
 }MCB;
 
+typedef struct LMCB {
+	int type;
+	int size;
+}LMCB;
+
 typedef struct memoryList {
 	MCB* head;
 } memoryList;
 
 int initializeHeap(int size);
 void freeMem(char* toFree);
+void *allocateMem(int size);
+void sortedInsert(memoryList* curList,MCB* newBlock);
 ucstar getAddress (MCB* mcb);
 void showAllocated();
 void showFree();

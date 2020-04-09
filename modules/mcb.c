@@ -30,6 +30,77 @@ int initializeHeap(int size){
 	return actualSize;
 }
 
+void *allocateMem(int size){
+	int actualSize = size+ sizeof(MCB)+sizeof(LMCB);
+	MCB* curMCB= freeBlocks.head;
+	while(curMCB->size<actualSize){
+		curMCB=curMCB->next;
+		if(curMCB==NULL){
+			return NULL;
+		}
+	}
+	//unlink the MCB from the free list
+	//removeMCB(freeBlocks,curMCB);
+	MCB* allocMCB;
+	LMCB* allocLMCB;
+	allocMCB->type = ALLOCATED;
+	allocMCB->startAddress=curMCB->startAddress;
+	allocMCB->size=actualSize;
+	allocMCB->pcbName= "new allocated block"; //uncertain if this is meant to be a parameter or what
+	allocLMCB->type = ALLOCATED;
+	allocLMCB->size=actualSize;
+
+	MCB* freeMCB;
+	LMCB* freeLMCB;
+	freeMCB->type = FREE;
+	allocMCB->startAddress=curMCB->startAddress+actualSize;
+	allocMCB->size=curMCB->size-actualSize;
+	allocMCB->pcbName= "new free block"; //uncertain if this is meant to be a parameter or what
+	allocLMCB->type = FREE;
+	allocLMCB->size=curMCB->size-actualSize;
+
+	
+	//put the mcb and Lmcb at the front and bottom of the memory blocks ???????????????
+	allocMCB->startAddress-sizeof(MCB)=allocMCB;
+	allocMCB->startAddress+allocMCB->size-sizeof(MCB)-sizeof(LMCB)=allocLMCB;
+
+	freeMCB->startAddress-sizeof(MCB)=freeMCB;
+	freeMCB->startAddress+freeMCB->size-sizeof(MCB)-sizeof(LMCB)=freeLMCB;
+	
+	sortedInsert(&allocatedBlocks,allocMCB); //insert the new block into the allocatedBlocks
+	sortedInsert(&freeBlocks,freeMCB); //insert the free block into the freeBlocks
+	
+
+	return (void*)allocMCB->startAddress;
+}
+
+void sortedInsert(memoryList* curList,MCB* newBlock){
+	if (curList->head==NULL){
+		curList->head=newBlock;
+	}
+	
+	else if ( curList->head->startAddress >= newBlock->startAddress){
+		newBlock->next = curList->head;
+		newBlock->next->previous=newBlock;
+		curList->head= newBlock;
+	}
+	else{
+		MCB* cur = curList->head;
+		while ( cur->next != NULL && cur->next->startAddress < newBlock->startAddress){
+			cur=cur->next;
+		}
+		newBlock->next=cur->next;
+		if(cur->next != NULL){
+			newBlock->next->previous=newBlock;
+		}
+		cur->next=newBlock;
+		newBlock->previous=cur;
+	}
+
+}
+
+
+
 void freeMem(char* toFree){
 	if(allocatedBlocks.head == NULL){	//ERROR CHECK: If allocated list is empty
 		char error1[] = "\nCannot free memory. No allocated memory to free.\n";
