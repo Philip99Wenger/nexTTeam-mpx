@@ -34,10 +34,6 @@ typedef struct MCB {
 	
 }MCB;
 
-typedef struct LMCB {
-	int type;
-	int size;
-}LMCB;
 
 typedef struct memoryList {
 	MCB* head;

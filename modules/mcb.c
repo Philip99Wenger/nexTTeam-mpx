@@ -31,7 +31,7 @@ int initializeHeap(int size){
 }
 
 void *allocateMem(int size){
-	int actualSize = size+ sizeof(MCB)+sizeof(LMCB);
+	int actualSize = size+ sizeof(MCB);
 	MCB* curMCB= freeBlocks.head;
 	while(curMCB->size<actualSize){
 		curMCB=curMCB->next;
@@ -41,32 +41,26 @@ void *allocateMem(int size){
 	}
 	//unlink the MCB from the free list
 	//removeMCB(freeBlocks,curMCB);
-	MCB* allocMCB;
-	LMCB* allocLMCB;
+	MCB* allocMCB=NULL; //unsure how to intialize this properly
 	allocMCB->type = ALLOCATED;
 	allocMCB->startAddress=curMCB->startAddress;
 	allocMCB->size=actualSize;
 	allocMCB->pcbName= "new allocated block"; //uncertain if this is meant to be a parameter or what
-	allocLMCB->type = ALLOCATED;
-	allocLMCB->size=actualSize;
 
-	MCB* freeMCB;
-	LMCB* freeLMCB;
+	MCB* freeMCB=NULL; //unsure how to intialize this properly
 	freeMCB->type = FREE;
 	allocMCB->startAddress=curMCB->startAddress+actualSize;
 	allocMCB->size=curMCB->size-actualSize;
 	allocMCB->pcbName= "new free block"; //uncertain if this is meant to be a parameter or what
-	allocLMCB->type = FREE;
-	allocLMCB->size=curMCB->size-actualSize;
 
 	
-	//put the mcb and Lmcb at the front and bottom of the memory blocks ???????????????
-	allocMCB->startAddress-sizeof(MCB)=allocMCB;
-	allocMCB->startAddress+allocMCB->size-sizeof(MCB)-sizeof(LMCB)=allocLMCB;
+	//put the mcb at the front of the memory blocks ???????????????
+	//allocMCB->startAddress-sizeof(MCB)=allocMCB;
+	//insertMCB(allocMCB);
+	//freeMCB->startAddress-sizeof(MCB)=freeMCB;
+	//insertMCB(freeMCB);
 
-	freeMCB->startAddress-sizeof(MCB)=freeMCB;
-	freeMCB->startAddress+freeMCB->size-sizeof(MCB)-sizeof(LMCB)=freeLMCB;
-	
+
 	sortedInsert(&allocatedBlocks,allocMCB); //insert the new block into the allocatedBlocks
 	sortedInsert(&freeBlocks,freeMCB); //insert the free block into the freeBlocks
 	
