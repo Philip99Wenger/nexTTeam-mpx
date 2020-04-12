@@ -150,7 +150,14 @@ void freeMem(ucstar toFreeAddress){
 				//BREAK OUT OF SEARCH LOOP
 				break;
 			}else{
-				current = current->next;
+				if(current->next != NULL){
+					current = current->next;
+				}else{
+					//ERROR CHECK: If no address matches a MAB in the allocated list
+					char error2[] = "\nThere is no MCB with that start address.\n";
+					int error2Size = strlen(error2);
+					sys_req(WRITE, DEFAULT_DEVICE, error2, &error2Size);
+				}
 			}
 		}
 	}
