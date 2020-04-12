@@ -119,7 +119,16 @@ void freeMem(MCB* toFree){
 				int successSize = strlen(success);
 				sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);
 				
-				//TODO if new linked free block is adjacent to another free block, merge into one
+				//if new linked free block is adjacent to another free block, merge into one
+
+				if(toFree->next != NULL && getAddress(toFree->next) == (getAddress(toFree)+toFree->size)){	//checks if next is adjacent
+					toFree->size = toFree->size + toFree->next->size;
+					removeMCB(toFree->next);
+				}else if(toFree->previous != NULL && getAddress(toFree->previous) == (getAddress(toFree)+toFree->size)){
+					toFree->size = toFree->size + toFree->previous->size;
+					toFree->startAddress = toFree->previous->startAddress;
+					removeMCB(toFree->previous);
+				}
 
 				//BREAK OUT OF SEARCH LOOP
 				break;
