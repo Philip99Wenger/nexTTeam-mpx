@@ -126,8 +126,9 @@ void sortedInsert(memoryList* curList,MCB* newBlock){
 
 
 
-void freeMem(ucstar toFreeAddress){
-
+int freeMem(void *toFree){
+	ucstar toFreeAddress = (ucstar) toFree;
+	
 	char mcbAddress[10];
 	mcbAddress[9] = '\0';
 	strcpy(mcbAddress, intToAscii(toFreeAddress));
@@ -193,8 +194,7 @@ void freeMem(ucstar toFreeAddress){
 				int successSize = strlen(success);
 				sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);
 
-				//BREAK OUT OF SEARCH LOOP
-				break;
+				return 1;
 			}else{
 				
 				//TESTING MESSAGE	
@@ -209,11 +209,12 @@ void freeMem(ucstar toFreeAddress){
 					char error2[] = "\nThere is no MCB with that start address.\n";
 					int error2Size = strlen(error2);
 					sys_req(WRITE, DEFAULT_DEVICE, error2, &error2Size);
-					break;
+					return -1;
 				}
 			}
 		}
 	}
+	return -1;
 }
 
 ucstar getAddress (MCB* mcb) {
