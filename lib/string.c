@@ -205,24 +205,43 @@ char * intToAscii(int integer){
            integer/=10;
            int tens = integer%10;
 	   integer/=10;
-	   int hundreds = integer%10;
-	   integer/=10;
-           int thousands = integer%10;
 
            //Convert to Char
   	  char OnesPlace = ones+'0';
            char TensPlace = tens+'0';
-	   char HundredsPlace = hundreds+'0';
-	   char ThousandsPlace = thousands+'0';
 
-           //Place inside Array
-           char array[6] = {(char) ThousandsPlace, (char) HundredsPlace, (char) TensPlace, (char) OnesPlace, '\0'};
+	   if (integer == 0)
+		{
+			//Place inside Array
+           		char array[4] = {(char) TensPlace, (char) OnesPlace, '\0'};
 
-           //Point to Array
-           char *arrayPoint = array;
+           		//Point to Array
+           		char *arrayPoint = array;
 
-           //Return the Array
-      	   return arrayPoint;
+           		//Return the Array
+      	   		return arrayPoint;
+		}
+	   else
+		{
+	   		int hundreds = integer%10;
+	   		integer/=10;
+           		int thousands = integer%10;
+	   		integer/=10;
+	   		int tenThousands = integer%10;
+
+	   		char HundredsPlace = hundreds+'0';
+	   		char ThousandsPlace = thousands+'0';
+	   		char TenThousandsPlace = tenThousands+'0';
+
+           		//Place inside Array
+           		char array1[7] = {(char) TenThousandsPlace, (char) ThousandsPlace, (char) HundredsPlace, (char) TensPlace, (char) OnesPlace, '\0'};
+
+           		//Point to Array
+           		char *arrayPoint1 = array1;
+
+           		//Return the Array
+      	   		return arrayPoint1;
+		}
 }
        
 

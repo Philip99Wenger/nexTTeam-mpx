@@ -6,7 +6,7 @@ memoryList freeBlocks;
 memoryList allocatedBlocks;
 
 int initializeHeap(int size){
-	int actualSize = size;
+	int actualSize = size + sizeof(MCB);
 
 	startHeap = kmalloc(actualSize);
 	if(!startHeap) {
