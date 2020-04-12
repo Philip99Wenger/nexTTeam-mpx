@@ -113,7 +113,13 @@ void sortedInsert(memoryList* curList,MCB* newBlock){
 
 
 
-void freeMem(ucstar toFreeAddress){	
+void freeMem(ucstar toFreeAddress){
+	char mcbAddress[10];
+	mcbAddress[9] = '\0';
+	strcpy(mcbAddress, intToAscii(toFreeAddress));
+	int addressSize = strlen(mcbAddress);
+	sys_req(WRITE, DEFAULT_DEVICE, mcbAddress, &addressSize);
+	
 	if(allocatedBlocks.head == NULL){	//ERROR CHECK: If allocated list is empty
 		char error1[] = "\nCannot free memory. No allocated memory to free.\n";
 		int error1Size = strlen(error1);
@@ -123,7 +129,7 @@ void freeMem(ucstar toFreeAddress){
 		//Search for MCB that matches address
 		MCB* current = allocatedBlocks.head;
 		while (current != NULL){
-			if(current->startAddress == toFreeAddress){
+			if((current->startAddress) == toFreeAddress){
 				//Logic to free block
 				
 				//unlink from allocated list
@@ -143,10 +149,10 @@ void freeMem(ucstar toFreeAddress){
 				
 				//if new linked free block is adjacent to another free block, merge into one
 
-				if(current->next != NULL && getAddress(current->next) == (getAddress(current)+current->size)){	//checks if next is adjacent
+				if(((current->next) != NULL) && (getAddress(current->next) == (getAddress(current)+(current->size)))){	//checks if next is adjacent
 					current->size = current->size + current->next->size;
 					removeMCB(current->next);
-				}else if(current->previous != NULL && getAddress(current->previous) == (getAddress(current)+current->size)){
+				}else if(((current->previous) != NULL) && (getAddress(current->previous) == (getAddress(current)+(current->size)))){
 					current->size = current->size + current->previous->size;
 					current->startAddress = current->previous->startAddress;
 					removeMCB(current->previous);
@@ -155,13 +161,14 @@ void freeMem(ucstar toFreeAddress){
 				//BREAK OUT OF SEARCH LOOP
 				break;
 			}else{
-				if(current->next != NULL){
+				if((current->next) != NULL){
 					current = current->next;
-				}else{
+				}else{	//if current's next is null then you are at the end of the list
 					//ERROR CHECK: If no address matches a MAB in the allocated list
 					char error2[] = "\nThere is no MCB with that start address.\n";
 					int error2Size = strlen(error2);
 					sys_req(WRITE, DEFAULT_DEVICE, error2, &error2Size);
+					break;
 				}
 			}
 		}
