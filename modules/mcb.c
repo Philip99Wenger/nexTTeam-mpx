@@ -194,3 +194,24 @@ int checkIfEmpty(){
 	return notPresent;
 }
 
+void removeMCB(MCB* mcb){
+	if(mcb == freeBlocks.head){
+		freeBlocks.head = NULL;
+		if(mcb->next != NULL){
+			freeBlocks.head = mcb->next;
+			mcb->next->previous = NULL;
+		}
+	}else if (mcb == allocatedBlocks.head){
+		allocatedBlocks.head = NULL;
+		if(mcb->next != NULL){
+			allocatedBlocks.head = mcb->next;
+			mcb->next->previous = NULL;
+		}
+	}else if (mcb->next == NULL){
+		mcb->previous->next = NULL;
+	}else{
+		mcb->previous->next = mcb->next;
+		mcb->next->previous = mcb->previous;
+	}
+}
+

@@ -49,6 +49,7 @@ void showFree();
 void printOneMCB(MCB* currentMCB);
 //! Checks whether the heap is empty & free or not.
 int checkIfEmpty();
+void removeMCB(MCB* mcb);
 
 #endif
 
