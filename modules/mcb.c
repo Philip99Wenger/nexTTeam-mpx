@@ -39,18 +39,21 @@ void *allocateMem(int size){
 	}
 	//unlink the MCB from the free list
 	removeMCB(curMCB);
-	MCB* allocMCB=NULL; //unsure how to intialize this properly
+
+	MCB* freeMCB=(MCB*)(curMCB->startAddress+actualSize-sizeof(MCB)); //unsure how to intialize this properly
+	freeMCB->type = FREE;
+	freeMCB->startAddress=curMCB->startAddress+actualSize;
+	freeMCB->size=(curMCB->size)-actualSize;
+	freeMCB->pcbName= "new free block"; //uncertain if this is meant to be a parameter or what
+
+
+	MCB* allocMCB=(MCB*)(curMCB->startAddress-sizeof(MCB)); //unsure how to intialize this properly
 	allocMCB->type = ALLOCATED;
 	allocMCB->startAddress=curMCB->startAddress;
 	allocMCB->size=actualSize;
 	allocMCB->pcbName= "new allocated block"; //uncertain if this is meant to be a parameter or what
 
-	MCB* freeMCB=NULL; //unsure how to intialize this properly
-	freeMCB->type = FREE;
-	freeMCB->startAddress=curMCB->startAddress+actualSize;
-	freeMCB->size=curMCB->size-actualSize;
-	freeMCB->pcbName= "new free block"; //uncertain if this is meant to be a parameter or what
-
+	
 	
 	//put the mcb at the front of the memory blocks ???????????????
 	//allocMCB->startAddress-sizeof(MCB)=allocMCB;
@@ -74,6 +77,7 @@ void *allocateMem(int size){
 	
 	printOneMCB(freeMCB);
 	printOneMCB(allocMCB);
+	printOneMCB(curMCB);
 
 	sortedInsert(&allocatedBlocks,allocMCB); //insert the new block into the allocatedBlocks
 	sortedInsert(&freeBlocks,freeMCB); //insert the free block into the freeBlocks
