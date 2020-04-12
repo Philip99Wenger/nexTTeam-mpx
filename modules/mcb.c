@@ -180,11 +180,19 @@ void showFree(){
 
 void printOneMCB(MCB* currentMCB){
 	//Size strings
+	char address[] = "\nAddress: ";
+	int addressSize = strlen(address);
 	char size[] = "\nSize: ";
 	int sizeSize = strlen(size);
+	char mcbAddress[10];
 	char mcbSize[10];
 
 	//Print size
+	sys_req(WRITE, DEFAULT_DEVICE, address, &addressSize);
+	mcbAddress[9] = '\0';
+	strcpy(mcbAddress, intToAscii(currentMCB->startAddress));
+	int mcbAddressSize = strlen(mcbAddress);
+	sys_req(WRITE, DEFAULT_DEVICE, mcbAddress, &mcbAddressSize);
 	sys_req(WRITE, DEFAULT_DEVICE, size, &sizeSize);
 	mcbSize[9] = '\0';
 	strcpy(mcbSize, intToAscii(currentMCB->size));
