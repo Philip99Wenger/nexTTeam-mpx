@@ -555,6 +555,48 @@ void historyWrapper(){
 	}
 }
 
+void allocateMemoryWrapper()
+{
+	char allocateBuffer[100];
+	int bufferSize = 99;
+	int bytesNum;
+
+	//prompt user for date to set to
+	char prompt[] = "Enter the size of the block you want to allocate in bytes:\n";
+	int promptSize = strlen(prompt);
+
+	sys_req(WRITE, DEFAULT_DEVICE, prompt, &promptSize);
+
+	memset(allocateBuffer, '\0', 100);
+	sys_req(READ, DEFAULT_DEVICE, allocateBuffer, &bufferSize);
+
+	char* name = strtok(allocateBuffer, "");
+	bytesNum = atoi(name);
+	allocateMem(bytesNum);
+}
+
+void freeMemoryWrapper()
+{
+	char freeBuffer[100];
+	int bufferSize = 99;
+	int addressNum;
+
+	//prompt user for date to set to
+	char prompt[] = "Enter the address for the block you want to free:\n";
+	int promptSize = strlen(prompt);
+
+	sys_req(WRITE, DEFAULT_DEVICE, prompt, &promptSize);
+
+	memset(freeBuffer, '\0', 100);
+	sys_req(READ, DEFAULT_DEVICE, freeBuffer, &bufferSize);
+
+	char* name = strtok(freeBuffer, "");
+	addressNum = atoi(name);
+	addressNum = addressNum;
+	//UNCOMMENT BELOW ONCE SWITCHED TO ADDRESS AND DELETE ABOVE ONCE BELOW IS UNCOMMENTED
+	//freeMem(addressNum);
+}
+
 void comhand(){
 	char repeat2[] = "pos omega.\n";
 	int repeatSize2 = strlen(repeat2);
@@ -589,13 +631,13 @@ void comhand(){
 	void (*loadr3_ptr)() = &loadr3;
 	//R5 functions- uncomment once implemented
 	void (*initializeheap_ptr)() = &initializeHeapWrapper;
-	//void (*allocatememory_ptr)() = &allocateMemoryWrapper;
-	//void (*freememory_ptr)() = &freeMemoryWrapper;
+	void (*allocatememory_ptr)() = &allocateMemoryWrapper;
+	void (*freememory_ptr)() = &freeMemoryWrapper;
 	void (*isempty_ptr)() = &isEmpty;
 	void (*showallocated_ptr)() = &showAllocated;
 	void (*showfree_ptr)() = &showFree;
 
-	char commands[23][25]={
+	char commands[25][25]={
 		"shutdown", //must keep shutdown at index 0
 		"version",
 		"help",
@@ -620,8 +662,8 @@ void comhand(){
 		"yield",
 		"loadr3",
 		"initializeHeap",
-		//"allocateMemory",
-		//"freeMemory",
+		"allocateMemory",
+		"freeMemory",
 		"isEmpty",
 		"showAllocated",
 		"showFree"
@@ -650,8 +692,8 @@ void comhand(){
 		*yield_ptr,
 		*loadr3_ptr,
 		*initializeheap_ptr,
-		//*allocatememory_ptr,
-		//*freememory_ptr,
+		*allocatememory_ptr,
+		*freememory_ptr,
 		*isempty_ptr,
 		*showallocated_ptr,
 		*showfree_ptr
