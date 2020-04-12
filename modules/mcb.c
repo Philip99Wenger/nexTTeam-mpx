@@ -93,7 +93,7 @@ void sortedInsert(memoryList* curList,MCB* newBlock){
 
 
 
-void freeMem(char* toFree){
+void freeMem(MCB* toFree){
 	if(allocatedBlocks.head == NULL){	//ERROR CHECK: If allocated list is empty
 		char error1[] = "\nCannot free memory. No allocated memory to free.\n";
 		int error1Size = strlen(error1);
@@ -101,20 +101,17 @@ void freeMem(char* toFree){
 	}else{
 		MCB* current = allocatedBlocks.head;
 		while (current != NULL){	//ITERATE THROUGH ALLOCATED LIST
-			if(current->pcbName == toFree){
+			if(current == toFree){
 				//Logic to free block
 				
-				//TODO unlink AMCB
+				//unlink from allocated list
+				removeMCB(toFree);
 				
-				
-				//TODO create FMCB at start of block
-				
-				
-				//TODO modify MCB
+				//modify MCB
 				current->type = 1;	//Changes type to free
 								
-				//TODO link into free list in order by address
-
+				//link into free list in order by address
+				sortedInsert(&freeBlocks, toFree);
 
 				
 				//SUCCESS MESSAGE	
