@@ -127,22 +127,42 @@ void sortedInsert(memoryList* curList,MCB* newBlock){
 
 
 void freeMem(ucstar toFreeAddress){
+
 	char mcbAddress[10];
 	mcbAddress[9] = '\0';
 	strcpy(mcbAddress, intToAscii(toFreeAddress));
 	int addressSize = strlen(mcbAddress);
 	sys_req(WRITE, DEFAULT_DEVICE, mcbAddress, &addressSize);
+
+	char mcbAddress2[10];
+	mcbAddress2[9] = '\0';
+	//strcpy(mcbAddress, intToAscii(toFreeAddress));
+	//int addressSize = strlen(mcbAddress);
+	//sys_req(WRITE, DEFAULT_DEVICE, mcbAddress, &addressSize);
 	
 	if(allocatedBlocks.head == NULL){	//ERROR CHECK: If allocated list is empty
 		char error1[] = "\nCannot free memory. No allocated memory to free.\n";
 		int error1Size = strlen(error1);
 		sys_req(WRITE, DEFAULT_DEVICE, error1, &error1Size);
 	}else{
-		
 		//Search for MCB that matches address
 		MCB* current = allocatedBlocks.head;
 		while (current != NULL){
-			if((current->startAddress) == toFreeAddress){
+
+
+			//TESTING PRINTS
+			strcpy(mcbAddress2, intToAscii(current->startAddress));
+			int addressSize2 = strlen(mcbAddress2);
+			sys_req(WRITE, DEFAULT_DEVICE, mcbAddress2, &addressSize2);
+
+			//if (current->startAddress) == toFreeAddress
+			if(strcmp(mcbAddress, mcbAddress2) == 0){
+				
+				//TESTING MESSAGE	
+				char e[] = "\ntrue\n";
+				int eSize = strlen(e);
+				sys_req(WRITE, DEFAULT_DEVICE, e, &eSize);
+
 				//Logic to free block
 				
 				//unlink from allocated list
@@ -154,11 +174,7 @@ void freeMem(ucstar toFreeAddress){
 				//link into free list in order by address
 				sortedInsert(&freeBlocks, current);
 
-				
-				//SUCCESS MESSAGE	
-				char success[] = "Memory Block has been freed.";
-				int successSize = strlen(success);
-				sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);
+
 				
 				//if new linked free block is adjacent to another free block, merge into one
 
@@ -171,9 +187,21 @@ void freeMem(ucstar toFreeAddress){
 					removeMCB(current->previous);
 				}
 
+				
+				//SUCCESS MESSAGE	
+				char success[] = "\nMemory Block has been freed.\n";
+				int successSize = strlen(success);
+				sys_req(WRITE, DEFAULT_DEVICE, success, &successSize);
+
 				//BREAK OUT OF SEARCH LOOP
 				break;
 			}else{
+				
+				//TESTING MESSAGE	
+		char e2[] = "\nfalse\n";
+		int e2Size = strlen(e2);
+		sys_req(WRITE, DEFAULT_DEVICE, e2, &e2Size);
+
 				if((current->next) != NULL){
 					current = current->next;
 				}else{	//if current's next is null then you are at the end of the list
