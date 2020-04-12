@@ -22,8 +22,6 @@ int initializeHeap(int size){
 	head->next = NULL;
 	endHeap = startHeap + actualSize;
 
-	//UNCOMMENT BELOW ONCE INSERT IS CREATED
-	//insertMCB(head);
 	freeBlocks.head = head;
 	allocatedBlocks.head = NULL;
 

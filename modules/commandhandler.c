@@ -595,7 +595,7 @@ void comhand(){
 	void (*showallocated_ptr)() = &showAllocated;
 	void (*showfree_ptr)() = &showFree;
 
-	char commands[22][25]={
+	char commands[23][25]={
 		"shutdown", //must keep shutdown at index 0
 		"version",
 		"help",
@@ -623,7 +623,7 @@ void comhand(){
 		//"allocateMemory",
 		//"freeMemory",
 		"isEmpty",
-		"showAllocated"
+		"showAllocated",
 		"showFree"
 	};
 	void (*commands_ptrs[])()={
