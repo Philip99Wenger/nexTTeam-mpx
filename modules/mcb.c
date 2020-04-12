@@ -1,7 +1,7 @@
 #include "mcb.h"
 
-ucstar startHeap;
-ucstar endHeap;
+unsigned long startHeap;
+unsigned long endHeap;
 memoryList freeBlocks;
 memoryList allocatedBlocks;
 
@@ -88,9 +88,9 @@ void *allocateMem(int size){
 	sys_req(WRITE, DEFAULT_DEVICE, newline, &newlineSize);
 
 	
-	printOneMCB(freeMCB);
-	printOneMCB(allocMCB);
-	printOneMCB(curMCB);
+	//printOneMCB(freeMCB);
+	//printOneMCB(allocMCB);
+	//printOneMCB(curMCB);
 
 	sortedInsert(&allocatedBlocks,allocMCB); //insert the new block into the allocatedBlocks
 	sortedInsert(&freeBlocks,freeMCB); //insert the free block into the freeBlocks
@@ -131,12 +131,12 @@ void freeMem(ucstar toFreeAddress){
 	char mcbAddress[10];
 	mcbAddress[9] = '\0';
 	strcpy(mcbAddress, intToAscii(toFreeAddress));
-	int addressSize = strlen(mcbAddress);
-	sys_req(WRITE, DEFAULT_DEVICE, mcbAddress, &addressSize);
+	//int addressSize = strlen(mcbAddress);
+	//sys_req(WRITE, DEFAULT_DEVICE, mcbAddress, &addressSize);
 
 	char mcbAddress2[10];
 	mcbAddress2[9] = '\0';
-	//strcpy(mcbAddress, intToAscii(toFreeAddress));
+	strcpy(mcbAddress, intToAscii(toFreeAddress));
 	//int addressSize = strlen(mcbAddress);
 	//sys_req(WRITE, DEFAULT_DEVICE, mcbAddress, &addressSize);
 	
@@ -152,16 +152,16 @@ void freeMem(ucstar toFreeAddress){
 
 			//TESTING PRINTS
 			strcpy(mcbAddress2, intToAscii(current->startAddress));
-			int addressSize2 = strlen(mcbAddress2);
-			sys_req(WRITE, DEFAULT_DEVICE, mcbAddress2, &addressSize2);
+			//int addressSize2 = strlen(mcbAddress2);
+			//sys_req(WRITE, DEFAULT_DEVICE, mcbAddress2, &addressSize2);
 
 			//if (current->startAddress) == toFreeAddress
 			if(strcmp(mcbAddress, mcbAddress2) == 0){
 				
 				//TESTING MESSAGE	
-				char e[] = "\ntrue\n";
-				int eSize = strlen(e);
-				sys_req(WRITE, DEFAULT_DEVICE, e, &eSize);
+				//char e[] = "\ntrue\n";
+				//int eSize = strlen(e);
+				//sys_req(WRITE, DEFAULT_DEVICE, e, &eSize);
 
 				//Logic to free block
 				
@@ -198,9 +198,9 @@ void freeMem(ucstar toFreeAddress){
 			}else{
 				
 				//TESTING MESSAGE	
-		char e2[] = "\nfalse\n";
-		int e2Size = strlen(e2);
-		sys_req(WRITE, DEFAULT_DEVICE, e2, &e2Size);
+		//char e2[] = "\nfalse\n";
+		//int e2Size = strlen(e2);
+		//sys_req(WRITE, DEFAULT_DEVICE, e2, &e2Size);
 
 				if((current->next) != NULL){
 					current = current->next;
