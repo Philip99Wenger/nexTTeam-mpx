@@ -6,7 +6,7 @@ memoryList freeBlocks;
 memoryList allocatedBlocks;
 
 int initializeHeap(int size){
-	int actualSize = size + sizeof(MCB);
+	int actualSize = size;
 
 	startHeap = kmalloc(actualSize);
 	if(!startHeap) {
@@ -190,6 +190,9 @@ void printOneMCB(MCB* currentMCB){
 	strcpy(mcbSize, intToAscii(currentMCB->size));
 	int mcbSizeSize = strlen(mcbSize);
 	sys_req(WRITE, DEFAULT_DEVICE, mcbSize, &mcbSizeSize);
+	char newLine[] = "\n";
+	int newLineSize = strlen(newLine);
+	sys_req(WRITE, DEFAULT_DEVICE, newLine, &newLineSize);
 }
 
 int checkIfEmpty(){

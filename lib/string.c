@@ -204,13 +204,19 @@ char * intToAscii(int integer){
            int ones = integer%10;
            integer/=10;
            int tens = integer%10;
+	   integer/=10;
+	   int hundreds = integer%10;
+	   integer/=10;
+           int thousands = integer%10;
 
            //Convert to Char
   	  char OnesPlace = ones+'0';
            char TensPlace = tens+'0';
+	   char HundredsPlace = hundreds+'0';
+	   char ThousandsPlace = thousands+'0';
 
            //Place inside Array
-           char array[3] = {(char) TensPlace, (char) OnesPlace, '\0'};
+           char array[6] = {(char) ThousandsPlace, (char) HundredsPlace, (char) TensPlace, (char) OnesPlace, '\0'};
 
            //Point to Array
            char *arrayPoint = array;
