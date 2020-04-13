@@ -30,10 +30,23 @@ int initializeHeap(int size){
 
 void *allocateMem(int size){
 	int actualSize = size+ sizeof(MCB);
+	if(freeBlocks.head==NULL){
+		char error[] = "\nAllocation failed, problem with initialization\n";
+		int errorSize = strlen(error);
+
+		//Print blocked queue
+		sys_req(WRITE, DEFAULT_DEVICE, error, &errorSize);
+		return NULL;
+	}
 	MCB* curMCB= freeBlocks.head;
 	while(curMCB->size<actualSize){
 		curMCB=curMCB->next;
 		if(curMCB==NULL){
+			char error[] = "\nAllocation failed, no suitable memory block found\n";
+			int errorSize = strlen(error);
+
+			//Print blocked queue
+			sys_req(WRITE, DEFAULT_DEVICE, error, &errorSize);
 			return NULL;
 		}
 	}
