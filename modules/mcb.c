@@ -38,7 +38,7 @@ void *allocateMem(int size){
 		}
 	}
 	//unlink the MCB from the free list
-	removeMCB(freeBlocks,curMCB);
+	removeMCB(curMCB);
 	MCB* allocMCB=NULL; //unsure how to intialize this properly
 	allocMCB->type = ALLOCATED;
 	allocMCB->startAddress=curMCB->startAddress;
@@ -57,6 +57,21 @@ void *allocateMem(int size){
 	//insertMCB(allocMCB);
 	//freeMCB->startAddress-sizeof(MCB)=freeMCB;
 	//insertMCB(freeMCB);
+	char address[] = "\nAddress offset: ";
+	int addressSize = strlen(address);
+	char newline[] = " \n";
+	int newlineSize = strlen(newline);
+	char mcbAddress[10];
+
+	//Print size
+	sys_req(WRITE, DEFAULT_DEVICE, address, &addressSize);
+	mcbAddress[9] = '\0';
+	strcpy(mcbAddress, intToAscii((allocMCB->startAddress)-startHeap));
+	int mcbAddressSize = strlen(mcbAddress);
+	sys_req(WRITE, DEFAULT_DEVICE, mcbAddress, &mcbAddressSize);
+	sys_req(WRITE, DEFAULT_DEVICE, newline, &newlineSize);
+
+	
 
 
 	sortedInsert(&allocatedBlocks,allocMCB); //insert the new block into the allocatedBlocks
@@ -93,25 +108,27 @@ void sortedInsert(memoryList* curList,MCB* newBlock){
 
 
 
-void freeMem(MCB* toFree){
+void freeMem(ucstar toFreeAddress){	
 	if(allocatedBlocks.head == NULL){	//ERROR CHECK: If allocated list is empty
 		char error1[] = "\nCannot free memory. No allocated memory to free.\n";
 		int error1Size = strlen(error1);
 		sys_req(WRITE, DEFAULT_DEVICE, error1, &error1Size);
 	}else{
+		
+		//Search for MCB that matches address
 		MCB* current = allocatedBlocks.head;
-		while (current != NULL){	//ITERATE THROUGH ALLOCATED LIST
-			if(current == toFree){
+		while (current != NULL){
+			if(current->startAddress == toFreeAddress){
 				//Logic to free block
 				
 				//unlink from allocated list
-				removeMCB(toFree);
+				removeMCB(current);
 				
 				//modify MCB
 				current->type = 1;	//Changes type to free
 								
 				//link into free list in order by address
-				sortedInsert(&freeBlocks, toFree);
+				sortedInsert(&freeBlocks, current);
 
 				
 				//SUCCESS MESSAGE	
@@ -121,13 +138,13 @@ void freeMem(MCB* toFree){
 				
 				//if new linked free block is adjacent to another free block, merge into one
 
-				if(toFree->next != NULL && getAddress(toFree->next) == (getAddress(toFree)+toFree->size)){	//checks if next is adjacent
-					toFree->size = toFree->size + toFree->next->size;
-					removeMCB(toFree->next);
-				}else if(toFree->previous != NULL && getAddress(toFree->previous) == (getAddress(toFree)+toFree->size)){
-					toFree->size = toFree->size + toFree->previous->size;
-					toFree->startAddress = toFree->previous->startAddress;
-					removeMCB(toFree->previous);
+				if(current->next != NULL && getAddress(current->next) == (getAddress(current)+current->size)){	//checks if next is adjacent
+					current->size = current->size + current->next->size;
+					removeMCB(current->next);
+				}else if(current->previous != NULL && getAddress(current->previous) == (getAddress(current)+current->size)){
+					current->size = current->size + current->previous->size;
+					current->startAddress = current->previous->startAddress;
+					removeMCB(current->previous);
 				}
 
 				//BREAK OUT OF SEARCH LOOP
