@@ -607,7 +607,7 @@ void freeMemoryWrapper()
 	addressNum = atoi(name);
 	addressNumLong = (ucstar) addressNum;
 	//UNCOMMENT BELOW ONCE SWITCHED TO ADDRESS AND DELETE ABOVE ONCE BELOW IS UNCOMMENTED
-	freeMem(addressNumLong);
+	freeMem((void *)addressNumLong);
 }
 
 void comhand(){

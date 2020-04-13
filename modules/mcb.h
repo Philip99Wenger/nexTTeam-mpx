@@ -40,13 +40,8 @@ typedef struct memoryList {
 } memoryList;
 
 int initializeHeap(int size);
-<<<<<<< HEAD
 int freeMem(void *toFree);
-void *allocateMem(int size);
-=======
-void freeMem(ucstar toFreeAddress);
 u32int allocateMem(u32int size);
->>>>>>> adb88c33dd51e968315f17d8f2fba67e6a230e3d
 void sortedInsert(memoryList* curList,MCB* newBlock);
 ucstar getAddress (MCB* mcb);
 void showAllocated();

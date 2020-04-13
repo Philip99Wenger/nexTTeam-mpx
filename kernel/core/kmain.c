@@ -24,6 +24,7 @@
 #include "modules/pcb.h"
 #include "modules/r3commands.h"
 #include "modules/context.h"
+#include "modules/mcb.h"
 
 
 void kmain(void)
@@ -46,7 +47,7 @@ void kmain(void)
 init_serial(0x3f8);
 set_serial_out(0x3f8);
 set_serial_in(0x3f8);
-mpx_init(MODULE_R5);
+mpx_init(MEM_MODULE);
  	
    // 2) Check that the boot was successful and correct when using grub
    // Comment this when booting the kernel directly using QEMU, etc.
@@ -66,7 +67,13 @@ init_paging();
 
    // 4) Virtual Memory
    klogv("Initializing virtual memory...");
-
+initializeHeap(55000);
+sys_set_malloc(&allocateMem);
+sys_set_free(&freeMem);
+if(checkIfEmpty()!=1){
+	klogv("Shutdown complete. You may now turn off the machine. (QEMU: C-a x)");
+   	hlt();
+};//Quit if that didn't work
 
    // 5) Call YOUR command handler -  interface method
    klogv("Transferring control to commhand...");
@@ -79,8 +86,8 @@ init_paging();
 
 	//comhand();
 	//asm volatile("int $60");
-	loadr3();
-	clearQueues();
+	//loadr3();
+	//clearQueues();
 	char comhandprocess[] = "comhand";
 	load(comhandprocess, &comhand,0);
 	pcb * comhandPCB = findPCB(comhandprocess);

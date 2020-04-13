@@ -455,7 +455,7 @@ void unblock(pcb* PCB){
 }
 
 int freePCB(pcb* PCB){
-	sys_free_mem((PCB->processName));		//The name of the process
+	/*sys_free_mem((PCB->processName));		//The name of the process
 	sys_free_mem((PCB->namePtr));	//Pointer to the name
 	sys_free_mem(&(PCB->priority));			//0-9 ranking of importance, with 9 going first
 	sys_free_mem(&(PCB->stateRRB));			//Ready(0)/Running(1)/Blocked(2)
@@ -465,7 +465,7 @@ int freePCB(pcb* PCB){
 	sys_free_mem((PCB-> pcbPrev));		//Pointer to the start of the last process
 		
 	sys_free_mem((PCB-> base));		//Pointer to the base of the process
-	sys_free_mem((PCB-> top));
+	sys_free_mem((PCB-> top));*/
 
 	sys_free_mem(PCB);
 
@@ -516,16 +516,24 @@ pcb* nextProcess(){
 
 void clearQueues(){
 	while(readyQueue.head){
+		//pcb* tempPCB = readyQueue.head;
 		removePCB(readyQueue.head);
+		//freePCB(tempPCB);
 	}
 	while(suspendReadyQueue.head){
+		pcb* tempPCB = suspendReadyQueue.head;
 		removePCB(suspendReadyQueue.head);
+		freePCB(tempPCB);
 	}
 	while(blockedQueue.head){
+		pcb* tempPCB = blockedQueue.head;
 		removePCB(blockedQueue.head);
+		freePCB(tempPCB);
 	}
 	while(suspendedBlockedQueue.head){
+		pcb* tempPCB = suspendedBlockedQueue.head;
 		removePCB(suspendedBlockedQueue.head);
+		freePCB(tempPCB);
 	}
 }
 
