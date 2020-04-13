@@ -26,6 +26,8 @@
 void version();
 //! Displays instructions for how to use each command
 void help();
+void help1();
+void help2();
 //! Shutdown the MPX and terminate
 int shutdown();
 //! Prompts the user for time input and sets the time
