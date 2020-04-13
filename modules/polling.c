@@ -17,6 +17,10 @@ int poll(char * buffer, int * count){
 	int doPrint;
 	//char temp[1]={0};
 
+	extern char thisHistory[10][100];//This contains 10 most recent commands
+	extern int index;
+	int startingindex=index;
+
 
 	serial_print("\x1B[47m\x1B[31m>>>\x1B[2m\x1B[30m");
 	
@@ -82,6 +86,49 @@ int poll(char * buffer, int * count){
 						serial_print(tempLetAr);
 						serial_print("\[1D");
 					}
+
+					
+
+				}
+				else if(sublet==65){
+					doPrint=0;
+					if (index>0){
+						index=index-1;
+						tempLetAr[0]=27;
+						serial_print(tempLetAr);
+						serial_print("\[4G");
+						tempLetAr[0]=27;
+						serial_print(tempLetAr);
+						serial_print("\[K");
+						serial_print(thisHistory[index]);
+						memset(buffer, '\0', 100);
+						strcpy(buffer,thisHistory[index]);
+						position=strlen(thisHistory[index]);
+						totalChars=position;
+					}
+					
+					//serial_print("\[1D");
+
+					
+
+				}
+				else if(sublet==66){
+					doPrint=0;
+					if (index<startingindex){
+						index=index+1;
+						tempLetAr[0]=27;
+						serial_print(tempLetAr);
+						serial_print("\[4G");
+						tempLetAr[0]=27;
+						serial_print(tempLetAr);
+						serial_print("\[K");
+						serial_print(thisHistory[index]);
+						memset(buffer, '\0', 100);
+						strcpy(buffer,thisHistory[index]);
+						position=strlen(thisHistory[index]);
+						totalChars=position;
+					}
+					
 					
 
 				}
@@ -129,6 +176,7 @@ int poll(char * buffer, int * count){
 				//tempLetAr[0]=totalChars+'0';
 				serial_print("\x1B[0m\n");
 				*count=totalChars;
+				index=startingindex;
 				return 1;
 
 				break;

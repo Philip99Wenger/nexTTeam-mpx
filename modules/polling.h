@@ -14,6 +14,7 @@
 #include <mem/paging.h>
 
 #include "mpx_supt.h"
+#include "commandhandler.h"
 
 //! Will accept user input.  Processes input and displays the buffer.
 int poll(char * buffer, int * count);
