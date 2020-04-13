@@ -47,9 +47,9 @@ void *allocateMem(int size){
 
 	MCB* freeMCB=NULL; //unsure how to intialize this properly
 	freeMCB->type = FREE;
-	allocMCB->startAddress=curMCB->startAddress+actualSize;
-	allocMCB->size=curMCB->size-actualSize;
-	allocMCB->pcbName= "new free block"; //uncertain if this is meant to be a parameter or what
+	freeMCB->startAddress=curMCB->startAddress+actualSize;
+	freeMCB->size=curMCB->size-actualSize;
+	freeMCB->pcbName= "new free block"; //uncertain if this is meant to be a parameter or what
 
 	
 	//put the mcb at the front of the memory blocks ???????????????
@@ -72,7 +72,8 @@ void *allocateMem(int size){
 	sys_req(WRITE, DEFAULT_DEVICE, newline, &newlineSize);
 
 	
-
+	printOneMCB(freeMCB);
+	printOneMCB(allocMCB);
 
 	sortedInsert(&allocatedBlocks,allocMCB); //insert the new block into the allocatedBlocks
 	sortedInsert(&freeBlocks,freeMCB); //insert the free block into the freeBlocks
