@@ -128,7 +128,7 @@ void sortedInsert(memoryList* curList,MCB* newBlock){
 
 
 int freeMem(void *toFree){
-	ucstar toFreeAddress = (ucstar) toFree;
+	unsigned long toFreeAddress = (unsigned long) toFree;
 	
 	char mcbAddress[10];
 	mcbAddress[9] = '\0';
@@ -218,16 +218,16 @@ int freeMem(void *toFree){
 	return -1;
 }
 
-ucstar getAddress (MCB* mcb) {
+unsigned long getAddress (MCB* mcb) {
 	int i;
-	ucstar address;
+	unsigned long address;
 	
-	address = (ucstar) mcb;
+	address = (unsigned long) mcb;
 	for(i=0; i<(int)sizeof(MCB); i++) {
 		address++;
 	}
 	
-	return (ucstar) address;
+	return (unsigned long) address;
 }
 
 void showAllocated(){

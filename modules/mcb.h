@@ -22,11 +22,9 @@
 #include "context.h"
 #include "pcb.h"
 
-typedef unsigned long ucstar;
-
 typedef struct MCB {
 	int type;
-	ucstar startAddress;
+	unsigned long startAddress;
 	int size;
 	char* pcbName;
 	struct MCB* previous;
@@ -43,7 +41,7 @@ int initializeHeap(int size);
 int freeMem(void *toFree);
 u32int allocateMem(u32int size);
 void sortedInsert(memoryList* curList,MCB* newBlock);
-ucstar getAddress (MCB* mcb);
+unsigned long getAddress (MCB* mcb);
 void showAllocated();
 void showFree();
 void printOneMCB(MCB* currentMCB);
