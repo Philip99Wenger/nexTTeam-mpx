@@ -38,7 +38,7 @@ void *allocateMem(int size){
 		}
 	}
 	//unlink the MCB from the free list
-	//removeMCB(freeBlocks,curMCB);
+	removeMCB(freeBlocks,curMCB);
 	MCB* allocMCB=NULL; //unsure how to intialize this properly
 	allocMCB->type = ALLOCATED;
 	allocMCB->startAddress=curMCB->startAddress;
