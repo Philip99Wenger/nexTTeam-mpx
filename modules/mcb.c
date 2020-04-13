@@ -28,7 +28,8 @@ int initializeHeap(int size){
 	return actualSize;
 }
 
-void *allocateMem(int size){
+u32int allocateMem(u32int size32){
+	int size=(int)size32;
 	int actualSize = size+ sizeof(MCB);
 	if(freeBlocks.head==NULL){
 		char error[] = "\nAllocation failed, problem with initialization\n";
@@ -96,7 +97,7 @@ void *allocateMem(int size){
 	sortedInsert(&freeBlocks,freeMCB); //insert the free block into the freeBlocks
 	
 
-	return (void*)allocMCB->startAddress;
+	return (u32int)allocMCB->startAddress;
 }
 
 void sortedInsert(memoryList* curList,MCB* newBlock){
