@@ -592,7 +592,7 @@ void freeMemoryWrapper()
 	char freeBuffer[100];
 	int bufferSize = 99;
 	int addressNum;
-	ucstar addressNumLong;
+	unsigned long addressNumLong;
 
 	//prompt user for date to set to
 	char prompt[] = "Enter the address for the block you want to free:\n";
@@ -605,7 +605,7 @@ void freeMemoryWrapper()
 
 	char* name = strtok(freeBuffer, "");
 	addressNum = atoi(name);
-	addressNumLong = (ucstar) addressNum;
+	addressNumLong = (unsigned long) addressNum;
 	//UNCOMMENT BELOW ONCE SWITCHED TO ADDRESS AND DELETE ABOVE ONCE BELOW IS UNCOMMENTED
 	freeMem((void *)addressNumLong);
 }
