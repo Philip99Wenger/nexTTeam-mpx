@@ -41,6 +41,7 @@ typedef struct directory{
 	char fileName[9];
 	char extension[4];
 	int attribute;
+	int reserved;
 	time creationTime;
 	date creationDate;
 	date lastAccessDate;

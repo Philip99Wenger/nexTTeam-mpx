@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
 			fread(root[i].fileName, 1, 8, filePointer);
 			fread(root[i].extension, 1, 3, filePointer);
 			root[i].attribute=getInt(1);
+			root[i].reserved = getInt(2);
 			root[i].creationTime = getTime();
 			root[i].creationDate = getDate();
 			root[i].lastAccessDate = getDate();
@@ -136,13 +137,14 @@ void printOneFile(directory curr){
 	printf("File Name: %s\n", curr.fileName);
 	printf("Extension: %s\n", curr.extension);
 	printf("Attribute: %d\n", curr.attribute);
+	printf("Reserved: %d\n", curr.reserved);
 	printf("Creation Time: %s:%s:%s\n", intToAscii(curr.creationTime.hour), intToAscii(curr.creationTime.minute), intToAscii(curr.creationTime.second));
 	printf("Creation Date: %d/%d/%d\n", curr.creationDate.month, curr.creationDate.day, curr.creationDate.year);
 	printf("Last Access Date: %d/%d/%d\n", curr.lastAccessDate.month, curr.lastAccessDate.day, curr.lastAccessDate.year);
 	printf("Last Write Time: %s:%s:%s\n", intToAscii(curr.lastWriteTime.hour), intToAscii(curr.lastWriteTime.minute), intToAscii(curr.lastWriteTime.second));
 	printf("Last Write Date: %d/%d/%d\n", curr.lastWriteDate.month, curr.lastWriteDate.day, curr.lastWriteDate.year);
 	printf("First Cluster: %d\n", curr.firstCluster);
-	printf("File Size: %d\n", curr.fileSize);
+	printf("File Size: %d\n\n", curr.fileSize);
 }
 
 //set up directory can be used for changing the directory
@@ -158,6 +160,7 @@ void setupDirectory(directory* dir, int startSec, int numEntries){
 		fread(dir[i].fileName, 1, 8, filePointer);
 		fread(dir[i].extension, 1, 3, filePointer);
 		dir[i].attribute=getInt(1);
+		dir[i].reserved = getInt(2);
 		dir[i].creationTime = getTime();
 		dir[i].creationDate = getDate();
 		dir[i].lastAccessDate = getDate();
