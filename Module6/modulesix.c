@@ -27,18 +27,18 @@ int main(int argc, char *argv[])
 	for(i=0; i<14; i++){ //root directory goes from 19-32
 		fseek(filePointer, 512*(startSec+i), SEEK_SET);
 		for(j=0; j<16; j++){
-			fread(root[i].fileName, 1, 8, filePointer);
-			fread(root[i].extension, 1, 3, filePointer);
-			root[i].attribute=getInt(1);
-			root[i].reserved = getInt(2);
-			root[i].creationTime = getTime();
-			root[i].creationDate = getDate();
-			root[i].lastAccessDate = getDate();
+			fread(root[16*i+j].fileName, 1, 8, filePointer);
+			fread(root[16*i+j].extension, 1, 3, filePointer);
+			root[16*i+j].attribute=getInt(1);
+			root[16*i+j].reserved = getInt(2);
+			root[16*i+j].creationTime = getTime();
+			root[16*i+j].creationDate = getDate();
+			root[16*i+j].lastAccessDate = getDate();
 			fseek(filePointer, 2, SEEK_CUR);
-			root[i].lastWriteTime = getTime();
-			root[i].lastWriteDate = getDate();
-			root[i].firstCluster = getInt(2);
-			root[i].fileSize = getInt(4);
+			root[16*i+j].lastWriteTime = getTime();
+			root[16*i+j].lastWriteDate = getDate();
+			root[16*i+j].firstCluster = getInt(2);
+			root[16*i+j].fileSize = getInt(4);
 		}
 	}
 
