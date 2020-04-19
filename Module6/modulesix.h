@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 typedef struct bootSector{
 	int bytesPerSector;
@@ -60,6 +61,8 @@ void setupDirectory(directory* dir, int startSec, int numEntries);
 time getTime();
 date getDate();
 void printRootDirectory();
+void changeDirectory(char* directoryName);
+char * intToAscii(int integer);
 
 
 #endif

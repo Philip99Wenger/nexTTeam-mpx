@@ -3,7 +3,10 @@
 FILE* filePointer;
 bootSector boot;
 int fatTable[2880]; //2880 = 512*9*5/8
-directory root[224]; //14*16 = 2224
+directory root[224]; //14*16 = 224
+directory* currentDir;
+int sizeOfCurrentDir;
+int startOfCurrentDir;
 
 int main(int argc, char *argv[])
 {
@@ -30,7 +33,6 @@ int main(int argc, char *argv[])
 			root[i].creationTime = getTime();
 			root[i].creationDate = getDate();
 			root[i].lastAccessDate = getDate();
-			root[i].lastAccessDate.year = 2001;
 			fseek(filePointer, 2, SEEK_CUR);
 			root[i].lastWriteTime = getTime();
 			root[i].lastWriteDate = getDate();
@@ -38,6 +40,10 @@ int main(int argc, char *argv[])
 			root[i].fileSize = getInt(4);
 		}
 	}
+
+	currentDir = root;
+	sizeOfCurrentDir = 224;
+	startOfCurrentDir = 14;	
 
 	printBootSector();
 	printRootDirectory();
@@ -130,10 +136,10 @@ void printOneFile(directory curr){
 	printf("File Name: %s\n", curr.fileName);
 	printf("Extension: %s\n", curr.extension);
 	printf("Attribute: %d\n", curr.attribute);
-	printf("Creation Time: %d:%d:%d\n", curr.creationTime.hour, curr.creationTime.minute, curr.creationTime.second);
+	printf("Creation Time: %s:%s:%s\n", intToAscii(curr.creationTime.hour), intToAscii(curr.creationTime.minute), intToAscii(curr.creationTime.second));
 	printf("Creation Date: %d/%d/%d\n", curr.creationDate.month, curr.creationDate.day, curr.creationDate.year);
 	printf("Last Access Date: %d/%d/%d\n", curr.lastAccessDate.month, curr.lastAccessDate.day, curr.lastAccessDate.year);
-	printf("Last Write Time: %d:%d:%d\n", curr.lastWriteTime.hour, curr.lastWriteTime.minute, curr.lastWriteTime.second);
+	printf("Last Write Time: %s:%s:%s\n", intToAscii(curr.lastWriteTime.hour), intToAscii(curr.lastWriteTime.minute), intToAscii(curr.lastWriteTime.second));
 	printf("Last Write Date: %d/%d/%d\n", curr.lastWriteDate.month, curr.lastWriteDate.day, curr.lastWriteDate.year);
 	printf("First Cluster: %d\n", curr.firstCluster);
 	printf("File Size: %d\n", curr.fileSize);
@@ -172,9 +178,9 @@ time getTime(){
 	hour = hour + ((current[1] & 0xf8) >> 3); //hour is bits 15-11
 	t.hour = hour;
 	int minute = 0;
-	minute = minute + ((current[2] & 0xe0)) + ((current[1] & 0x07) << 3); //minute is bits 10-5
+	minute = minute + ((current[2] & 0xe0) >> 5) + ((current[1] & 0x07) << 3); //minute is bits 10-5
 	t.minute = minute;
-	int second = 0;
+	int second = 00;
 	second = second + (current[2] & 0x1f); //second is bits 4-0
 	t.second = second;
 	return t;
@@ -188,15 +194,52 @@ date getDate(){
 	year = year + ((current[1] & 0xfe) >> 1); //year is bits 15-9
 	d.year = year;
 	int month = 0;
-	month = month + ((current[2] & 0xe0)) + ((current[1] & 0x01) << 3); //month is bits 8-5
+	month = month + ((current[2] & 0x01) << 3) + ((current[1] & 0xe0) >> 5); //month is bits 8-5
 	d.month = month;
 	int day = 0;
-	day = day + (current[1] & 0x1f); //day is bits 4-0
+	day = day + (current[2] & 0x1f); //day is bits 4-0
 	d.day = day;
 	return d;
 }
 
 void printRootDirectory(){
 	printDirectoryEntry(root, 224);
+}
+
+void changeDirectory(char* directoryName) {
+	if(directoryName ==  NULL){ //if null, reset to root
+		if(currentDir != root) {
+			free(currentDir);
+		}
+		int startSector = 19;
+		fseek(filePointer, 512*(startSector), SEEK_SET);
+		sizeOfCurrentDir = 224;
+		startOfCurrentDir = 14;
+	} 
+	//THIS NEEDS TO BE COMPLETED
+	else {
+	}
+}
+
+char * intToAscii(int integer){
+
+           //Split the Digits
+           int ones = integer%10;
+           integer/=10;
+           int tens = integer%10;
+	   integer/=10;
+
+           //Convert to Char 
+  	  char OnesPlace = ones+'0';
+           char TensPlace = tens+'0';
+
+		//Place inside Array
+        	char array[4] = {(char) TensPlace, (char) OnesPlace, '\0'};
+
+           	//Point to Array
+           	char *arrayPoint = array;
+
+           	//Return the Array
+     	   	return arrayPoint;
 }
 
