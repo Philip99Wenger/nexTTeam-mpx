@@ -24,10 +24,42 @@ typedef struct bootSector{
 	
 } bootSector;
 
+typedef struct time{
+	int hour;
+	int minute;
+	int second;
+} time;
+
+typedef struct date{
+	int year;
+	int month;
+	int day;
+} date;
+
+typedef struct directory{
+	char fileName[9];
+	char extension[4];
+	int attribute;
+	time creationTime;
+	date creationDate;
+	date lastAccessDate;
+	time lastWriteTime;
+	date lastWriteDate;
+	int firstCluster;
+	int fileSize;
+} directory;
+
 void initializeBootSector();
+void initializeFatTable();
 void printBootSector();
 int getInt(int numBytes);
 int bcdToInt(int numBytes, unsigned char* bytes);
+void printDirectoryEntry(directory* current, int num);
+void printOneFile(directory curr);
+void setupDirectory(directory* dir, int startSec, int numEntries);
+time getTime();
+date getDate();
+void printRootDirectory();
 
 
 #endif
