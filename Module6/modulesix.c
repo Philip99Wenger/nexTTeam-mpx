@@ -128,7 +128,10 @@ void printDirectoryEntry(directory* current, int num){
 			break;
 		else if((unsigned char) current[i].fileName[0] == 0xE5) //file is empty
 			continue;
-		printOneFile(current[i]);
+		else if (((unsigned int) current[i].attribute & 0x02) == 0x02) //file is hidden
+			continue;
+		else
+			printOneFile(current[i]);
 		
 	}
 }
