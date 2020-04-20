@@ -52,6 +52,7 @@ typedef struct directory{
 } directory;
 
 int main(int argc, char *argv[]);
+void help();
 void initializeBootSector();
 void initializeFatTable();
 void printBootSector();

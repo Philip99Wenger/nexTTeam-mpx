@@ -58,13 +58,15 @@ int main(int argc, char *argv[])
 	void (*printRootDirectory_ptr)() = &printRootDirectory;
 	void (*changeDirectory_ptr)() = &changeDirectoryWrapper;
 	void (*quitNow_ptr)() = &quitNow;
+	void (*help_ptr)() = &help;
 	//void (*settime_ptr)() = &settimeWrapper;
 	//void (*getdate_ptr)() = &getdate;
 	//void (*setdate_ptr)() = &setdateWrapper;
 	void (*list_ptr)() = &listWrapper;
 	
-	char commands[5][25]={
+	char commands[6][25]={
 		"quit",
+		"help",
 		"printBootSector", 
 		"printRootDirectory",
 		"changeDirectory",
@@ -76,6 +78,7 @@ int main(int argc, char *argv[])
 	};
 	void (*commands_ptrs[])()={
 		*quitNow_ptr,
+		*help_ptr,
 		*printBoot_ptr,
 		*printRootDirectory_ptr,
 		*changeDirectory_ptr,
@@ -87,7 +90,7 @@ int main(int argc, char *argv[])
 	};
 	
 	//Print welcome message
-	char welcome[] = "Welcome to NextTeam's File Management!\nPlease type one of the available commands:\nquit\nprintBootSector\nprintRootDirectory\nchangeDirectory\nlist\n\n";
+	char welcome[] = "Welcome to NextTeam's File Management!\nPlease type one of the available commands:\nquit\nhelp\nprintBootSector\nprintRootDirectory\nchangeDirectory\nlist\n\n";
 	printf("%s", welcome);	
 		
 	//for(k=0; k<sizeof(commands); k++){
@@ -117,6 +120,14 @@ int main(int argc, char *argv[])
 		if(matchFlag == 0){printf("%s", noCommand);}
 	}
 	
+}
+
+void help(){
+	printf("quit\n\tEnds execution of module 6\n");	
+	printf("printBootSector\n\tPrints out all information in the boot sector\n");
+	printf("printRootDirectory\n\tPrint all the info in the root directory\n");
+	printf("changeDirectory\n\tChanges the directory to a subdirectory of the current directory\n");
+	printf("list <file>\n\tLists the info for current directory by default, but lists for specified file if specified\n");
 }
 
 void initializeBootSector(){
