@@ -67,6 +67,7 @@ void changeDirectory(char* directoryName);
 int getDirectoryLocation(char* name, char* extension, int start);
 char * intToAscii(int integer);
 char * removeWhiteSpaces(char * word);
+void quitNow();
 
 
 #endif

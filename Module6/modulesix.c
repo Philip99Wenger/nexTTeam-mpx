@@ -7,6 +7,7 @@ directory root[224]; //14*16 = 224
 directory* currentDir;
 int sizeOfCurrentDir;
 int startOfCurrentDir;
+int quit;
 
 int main(int argc, char *argv[])
 {
@@ -46,18 +47,71 @@ int main(int argc, char *argv[])
 	sizeOfCurrentDir = 224;
 	startOfCurrentDir = 14;	
 
-	printBootSector();
-	printRootDirectory();
-	char fileName[] = "SUBDIR";
-	changeDirectory(fileName);
-	printDirectoryEntry(currentDir, sizeOfCurrentDir);
-	changeDirectory("HOWDY");
-	printDirectoryEntry(currentDir, sizeOfCurrentDir);
-
 	if(!filePointer){
 		printf("File was not found.\n");
 		return -1;
 	}
+
+	unsigned int k;
+	quit = 0;
+	void (*printBoot_ptr)() = &printBootSector;
+	void (*printRootDirectory_ptr)() = &printRootDirectory;
+	void (*quitNow_ptr)() = &quitNow;
+	//void (*gettime_ptr)() = &gettime;
+	//void (*settime_ptr)() = &settimeWrapper;
+	//void (*getdate_ptr)() = &getdate;
+	//void (*setdate_ptr)() = &setdateWrapper;
+	
+	char commands[3][25]={
+		"quit",
+		"printBootSector", 
+		"printRootDirectory",
+		//"help",
+		//"getTime",
+		//"setTime",
+		
+	};
+	void (*commands_ptrs[])()={
+		*quitNow_ptr,
+		*printBoot_ptr,
+		*printRootDirectory_ptr,
+		//*gettime_ptr,
+		//*settime_ptr,
+		//*getdate_ptr,
+		
+	};
+	
+	//Print welcome message
+	char welcome[] = "Welcome to NextTeam's File Management!\nPlease type one of the available commands:\nquit\nprintBootSector\nprintRootDirectory\n\n";
+	printf("%s", welcome);	
+		
+	//for(k=0; k<sizeof(commands); k++){
+	//	printf("%s", commands[k]);
+	//	printf("\n");
+	//}	
+
+	
+	while(!quit){
+		//get a command
+		char newCommands[25];
+		memset(newCommands, '\0', 25);
+		scanf("%s", newCommands);
+		char* cmdBuffer = strtok(newCommands, " ");
+		//pass
+
+		//
+		char noCommand[] = "There is no matching command. Commands are case-sensitive.\n";
+
+		int matchFlag = 0;
+		for(k=0; k<sizeof(commands); k++){
+			if(strcmp(cmdBuffer, commands[k])==0){
+				(*commands_ptrs[k])();
+				matchFlag = 1;
+			}
+		}
+		if(matchFlag == 0){printf("%s", noCommand);}
+	}
+	
 }
 
 void initializeBootSector(){
@@ -313,5 +367,9 @@ char * removeWhiteSpaces(char *word){
 
 	return temp;
 	
+}
+
+void quitNow(){
+	quit=1;
 }
 
