@@ -288,9 +288,7 @@ void printRootDirectory(){
 }
 
 void changeDirectoryWrapper(){
-	char *directoryName;
-	printf("What is the name of the subdirectory?\n");
-	scanf("%s", directoryName);
+	char *directoryName = strtok(NULL, " ");
 	printf("Hi\n");
 	changeDirectory(directoryName);
 }
@@ -468,7 +466,6 @@ char * intToAscii(int integer){
 
 char * removeWhiteSpaces(char *word){
 	char *temp = word;
-	char *end
 	int i;	
 
 	if (word == NULL){
