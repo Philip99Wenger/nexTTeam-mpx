@@ -51,6 +51,7 @@ typedef struct directory{
 	int fileSize;
 } directory;
 
+int main(int argc, char *argv[]);
 void initializeBootSector();
 void initializeFatTable();
 void printBootSector();
@@ -63,7 +64,9 @@ time getTime();
 date getDate();
 void printRootDirectory();
 void changeDirectory(char* directoryName);
+int getDirectoryLocation(char* name, char* extension, int start);
 char * intToAscii(int integer);
+char * removeWhiteSpaces(char * word);
 
 
 #endif

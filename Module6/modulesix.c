@@ -48,6 +48,8 @@ int main(int argc, char *argv[])
 
 	printBootSector();
 	printRootDirectory();
+	changeDirectory("SUBDIR");
+	printDirectoryEntry(currentDir, sizeOfCurrentDir);
 
 	if(!filePointer){
 		printf("File was not found.\n");
@@ -224,7 +226,45 @@ void changeDirectory(char* directoryName) {
 	} 
 	//THIS NEEDS TO BE COMPLETED
 	else {
+		int location = getDirectoryLocation(directoryName, "", 0);
+		printf("Location %d\n", location);
+
+		if(location != -1){
+			int sectors = 9;
+			int numEntries = sectors*16;
+
+			directory *temp = malloc(sizeof(directory)*numEntries);
+			int currSector = currentDir[location].firstCluster;
+			fseek(filePointer, 512*(31+currSector), SEEK_SET);
+			setupDirectory(temp, currSector, numEntries);
+			startOfCurrentDir = currentDir[location].firstCluster;
+			
+			currentDir = temp;
+			sizeOfCurrentDir = numEntries;
+			}
+
+		else
+			printf("Did not find directory %s.\n\n", directoryName);
+		
 	}
+}
+
+int getDirectoryLocation(char* name, char* extension, int start){
+	if(extension == "   " || extension == NULL){
+		extension = "";
+	}
+
+	int j;
+
+	for(j=start; j<sizeOfCurrentDir; j++){
+		if(((unsigned char)currentDir[j].fileName[0])==0x00)
+			break;
+		else if(((unsigned char)currentDir[j].fileName[0])==0xE5)
+			continue;
+		else if(((strcmp(name, "*") == 0) || (strcmp((currentDir[j].fileName), name)==0)) && ((strcmp(extension, "*") == 0) || (strcmp((currentDir[j].fileName), name)==0)))
+			return j;
+	}
+	return -1;
 }
 
 char * intToAscii(int integer){
@@ -247,5 +287,28 @@ char * intToAscii(int integer){
 
            	//Return the Array
      	   	return arrayPoint;
+}
+
+char * removeWhiteSpaces(char *word){
+	char *temp = word;
+	int i;	
+
+	if (word == NULL){
+		return NULL;
+	}
+
+	if(word[0] = '\0'){
+		return word;
+	}
+	
+	while(word[i] != '\0'){
+		if(word[i] == ' '){
+			temp[i] = temp[i+1];
+			i++;
+		}
+	}
+
+	return temp;
+	
 }
 
