@@ -364,14 +364,20 @@ int getDirectoryLocation(char* name, char* extension, int start){
 }
 
 void listWrapper(){
-	char query[] = "\0";
-	char* queryPtr = query;
-	listDirectory(queryPtr);
+	char* fileName;
+	char* extension;
+	char* theRest = strtok(NULL, "");
+	if(theRest=="\0"){fileName = "\0"; extension = "\0";} else{
+		fileName = strtok(theRest, ".");
+		extension = strtok(NULL, "\0");
+	}
+	listDirectory(fileName, extension);
 }
 
-void listDirectory(char* query){
+void listDirectory(char* fileName, char* extension){
 	char* nullPtr = "\0";
-	if(query!=nullPtr){//if the user just enterd "list", print the whole current directory
+	printf("\n%s\n", fileName);
+	if(fileName==nullPtr){//if the user just enterd "list", print the whole current directory
 		printf("\nDirectory Name: %s", (*currentDir).fileName);
 		if((*currentDir).extension!=NULL){printf(".%s", (*currentDir).extension);}
 		printf("\nDirectory Size: %d", (*currentDir).fileSize);
@@ -404,11 +410,12 @@ void listDirectory(char* query){
 		int key;		//Whether a file(s) is present
 		int sectorSize = 512;	//Size of a sector (fixed)
 		int incrementSector = 0;//how much of the sector have we been through
-		int total = 0;		//how much of the file have we been through
+		//int total = 0;	//how much of the file have we been through
 		int location = 0;	//where we read the data from
 		int currentSector = (*currentDir).firstCluster;
 		printf("hi\n");
-		while(total<(*currentDir).fileSize){				//Increment till end of file
+		while(currentSector!=0xFF8){
+		//while(total<(*currentDir).fileSize){				//Increment till end of file
 			fseek(filePointer, sectorSize*currentSector, SEEK_SET);	//Start at the beginning of the sector
 			printf("hii\n");
 			while(incrementSector<=sectorSize){			//Increment till end of sector
@@ -420,7 +427,7 @@ void listDirectory(char* query){
 					printf("Empty File\n");
 				} else if(key==0x0000000000000000){
 					printf("All else is free\n");
-					total = (*currentDir).fileSize;
+					//total = (*currentDir).fileSize;
 					break;
 				} else{					//Where The Magic Happens ->
 
@@ -439,12 +446,12 @@ void listDirectory(char* query){
 
 				}					//Where The Magic Happens ^^^^^
 				incrementSector = incrementSector + 32;	
-				if(incrementSector>=(*currentDir).fileSize){break;}//break if at the end of file before end of sector
+				if(fatTable[currentSector+2]==0xFF8){break;}//break if at the end of file before end of sector
 			}
 			currentSector = fatTable[currentSector+2];		//Find the next sector in the FAT
 			if((currentSector==0x00)||(currentSector==0xFF7)){	//If that sector is broken or empty
 				printf("\x1B[31mThere is an unfortunate error.\x1B[37m\n");
-				total = (*currentDir).fileSize;			//Break out of loops
+				//total = (*currentDir).fileSize;			//Break out of loops
 			}
 			if(currentSector>=0xFF8){				//If this is true, it should be the end
 				printf("  '->  End of Directory\n");
