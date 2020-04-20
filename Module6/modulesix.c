@@ -379,7 +379,7 @@ void listWrapper(){
 void listDirectory(char* fileName, char* extension){
 	char* nullPtr = "\0";
 	printf("\n%s\n", fileName);
-	if(fileName==nullPtr){//if the user just enterd "list", print the whole current directory
+	if(fileName==NULL){//if the user just enterd "list", print the whole current directory
 		printf("\nDirectory Name: %s", (*currentDir).fileName);
 		if((*currentDir).extension!=NULL){printf(".%s", (*currentDir).extension);}
 		printf("\nDirectory Size: %d", (*currentDir).fileSize);
@@ -407,43 +407,68 @@ void listDirectory(char* fileName, char* extension){
 	
 		//Files & Directories
 		printf("The Files and Folders Contained in this Directory:\n");
-		int startCluster;	//temporary start-cluster holder
-		int filename;		//temporary file-name holder
-		int key;		//Whether a file(s) is present
-		int sectorSize = 512;	//Size of a sector (fixed)
-		int incrementSector = 0;//how much of the sector have we been through
-		//int total = 0;	//how much of the file have we been through
-		int location = 0;	//where we read the data from
+		unsigned char startCluster[2];		//temporary start-cluster holder
+		unsigned char filename[8];	//temporary file-name holder
+		unsigned char extension[3];	//temporary extension holder
+		unsigned char size[4];		//temporary size holder
+		unsigned char byteHolder[1];	//temporary byteHolder
+		int sectorSize = 512;		//Size of a sector (fixed)
+		int incrementSector = 0;	//how much of the sector have we been through
+		int location = 0;		//where we read the data from
 		int currentSector = (*currentDir).firstCluster;
+		int t, s;
 		printf("hi\n");
-		while(currentSector!=0xFF8){
-		//while(total<(*currentDir).fileSize){				//Increment till end of file
+		while(currentSector!=0xFF8){			//Increment till end of file
 			fseek(filePointer, sectorSize*currentSector, SEEK_SET);	//Start at the beginning of the sector
 			printf("hii\n");
 			while(incrementSector<=sectorSize){			//Increment till end of sector
 				location = (sectorSize*currentSector)+incrementSector;
-				filename = getInt(8);
-				key = filename&0xFF00000000000000;
+				//filename = getInt(8);
+				fread(byteHolder, 1, 1, filePointer);
+				filename[7] = *byteHolder;
+				printf("\nshoelace->>>  %d\n", filename[7]);
 				printf("hiii\n");
-				if(key==0xE500000000000000){
+				if(filename[7]==0xE5){
 					printf("Empty File\n");
-				} else if(key==0x0000000000000000){
+				} else if(filename[7]==0x00){
 					printf("All else is free\n");
-					//total = (*currentDir).fileSize;
-					break;
+					return;
 				} else{					//Where The Magic Happens ->
 
 					printf("hiiii4\n");
 					//Print Name
-					printf("Name: %s", intToAscii(filename));
+					t = 6;
+					for(s=0; s<7; s++){
+						fread(byteHolder, 1, 1, filePointer);
+						filename[t] = *byteHolder;
+						t--;
+					}
+					printf("Name: %s", filename);
 					//Print Extention
-					printf(".%s", intToAscii(getInt(3)));
+					t = 2;
+					for(s=0; s<3; s++){
+						fread(byteHolder, 1, 1, filePointer);
+						extension[t] = *byteHolder;
+						t--;
+					}
+					printf(".%s", extension);
 					fseek(filePointer, 15, SEEK_CUR);
-					startCluster = getInt(2);
+					t = 1;
+					for(s=0; s<2; s++){
+						fread(byteHolder, 1, 1, filePointer);
+						startCluster[t] = *byteHolder;
+						t--;
+					}
 					//Print Size
-					printf("	Size: %d bytes", getInt(4));
+					t = 3;
+					for(s=0; s<2; s++){
+						fread(byteHolder, 1, 1, filePointer);
+						size[t] = *byteHolder;
+						t--;
+					}
+					printf("	Size: %d bytes", *size);
 					//Print Start Cluster
-					printf("	Start Cluster: %d\n\n", startCluster);
+					printf("	Start Cluster: %d\n\n", *startCluster);
 
 
 				}					//Where The Magic Happens ^^^^^
@@ -453,7 +478,7 @@ void listDirectory(char* fileName, char* extension){
 			currentSector = fatTable[currentSector+2];		//Find the next sector in the FAT
 			if((currentSector==0x00)||(currentSector==0xFF7)){	//If that sector is broken or empty
 				printf("\x1B[31mThere is an unfortunate error.\x1B[37m\n");
-				//total = (*currentDir).fileSize;			//Break out of loops
+				return;
 			}
 			if(currentSector>=0xFF8){				//If this is true, it should be the end
 				printf("  '->  End of Directory\n");
