@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
 
 	filePointer = fopen(argv[1], "r+");
 
+	changeDirectory(NULL);
 	char fileName[] = "SUBDIR";
 	changeDirectory(fileName);
 
@@ -63,8 +64,9 @@ int main(int argc, char *argv[])
 	//void (*getdate_ptr)() = &getdate;
 	//void (*setdate_ptr)() = &setdateWrapper;
 	void (*list_ptr)() = &listWrapper;
+	void (*renameFile_pointer)() = &renameFile;
 	
-	char commands[6][25]={
+	char commands[7][25]={
 		"quit",
 		"help",
 		"printBootSector", 
@@ -74,6 +76,7 @@ int main(int argc, char *argv[])
 		//"getTime",
 		//"setTime",
 		"list"
+		"rename"
 		
 	};
 	void (*commands_ptrs[])()={
@@ -85,12 +88,13 @@ int main(int argc, char *argv[])
 		//*gettime_ptr,
 		//*settime_ptr,
 		//*getdate_ptr,
-		*list_ptr
+		*list_ptr,
+		*renameFile_pointer
 		
 	};
 	
 	//Print welcome message
-	char welcome[] = "Welcome to NextTeam's File Management!\nPlease type one of the available commands:\nquit\nhelp\nprintBootSector\nprintRootDirectory\nchangeDirectory\nlist\n\n";
+	char welcome[] = "Welcome to NextTeam's File Management!\nPlease type one of the available commands:\nquit\nhelp\nprintBootSector\nprintRootDirectory\nchangeDirectory\nlist\nrename\n\n";
 	printf("%s", welcome);	
 		
 	//for(k=0; k<sizeof(commands); k++){
@@ -128,6 +132,7 @@ void help(){
 	printf("printRootDirectory\n\tPrint all the info in the root directory\n");
 	printf("changeDirectory\n\tChanges the directory to a subdirectory of the current directory\n");
 	printf("list <file>\n\tLists the info for current directory by default, but lists for specified file if specified\n");
+	printf("rename <oldFileName> <newFileName>\n\tChanges the file name\n");
 }
 
 void initializeBootSector(){
@@ -298,12 +303,10 @@ void changeDirectoryWrapper(){
 }
 
 void changeDirectory(char* directoryName) {
-	printf("Hello");
+	//char* directoryName = strtok(NULL, " ");
+	//printf("%s\n", directoryName);
 	if(directoryName ==  NULL){ //if null, reset to root
-		if(currentDir != root) {
-			free(currentDir);
-		}
-		printf("Hi\n");
+		printf("Hi NULL here\n");
 		int startSector = 19;
 		currentDir = root;
 		fseek(filePointer, 512*(startSector), SEEK_SET);
@@ -311,7 +314,7 @@ void changeDirectory(char* directoryName) {
 		startOfCurrentDir = 14;
 	} 
 	//THIS NEEDS TO BE COMPLETED
-	else {
+	else if (directoryName != NULL){
 		printf("Hello");
 		int location = getDirectoryLocation(directoryName, "", 0);
 		printf("Location %d\n", location);
@@ -337,20 +340,26 @@ void changeDirectory(char* directoryName) {
 }
 
 int getDirectoryLocation(char* name, char* extension, int start){
-	if(extension == "   " || extension == NULL){
-		extension = "";
-	}
+	//if(extension == "   " || extension == NULL){
+	//	extension = "";
+	//}
 
-	int j;
+	//int j;
 
-	for(j=start; j<sizeOfCurrentDir; j++){
-		if(((unsigned char)currentDir[j].fileName[0])==0x00)
-			break;
-		else if(((unsigned char)currentDir[j].fileName[0])==0xE5)
-			continue;
-		else if(((strcmp(name, "*") == 0) || (strcmp(removeWhiteSpaces(currentDir[j].fileName), removeWhiteSpaces(name))==0)) && ((strcmp(extension, "*") == 0) || (strcmp(removeWhiteSpaces(currentDir[j].extension), removeWhiteSpaces(extension))==0)))
+	//for(j=start; j<sizeOfCurrentDir; j++){
+	//	if(((unsigned char)currentDir[j].fileName[0])==0x00)
+	//		break;
+	//	else if(((unsigned char)currentDir[j].fileName[0])==0xE5)
+	//		continue;
+	//	else if(((strcmp(name, "*") == 0) || (strcmp(removeWhiteSpaces(currentDir[j].fileName), removeWhiteSpaces(name))==0)) && ((strcmp(extension, "*") == 0) || (strcmp(removeWhiteSpaces(currentDir[j].extension), removeWhiteSpaces(extension))==0)))
+	//		return j;
+	//}
+	int j=0;
+	while (currentDir[j].fileName[0] != 0x00){
+		if (strcmp(currentDir[j].fileName, name) == 0 && strcmp(currentDir[j].extension, extension) == 0){
 			return j;
-	}
+		}
+	}	j++;
 	return -1;
 }
 
@@ -496,5 +505,82 @@ char * removeWhiteSpaces(char *word){
 
 void quitNow(){
 	quit=1;
+}
+
+void renameFile(){
+	char* oldFile = strtok(NULL, " ");
+	char* newFile = strtok(NULL, " ");
+
+	if(!oldFile || !newFile){
+		printf("Two Files are needed\n");
+	}
+	
+	else{
+		char* oldName = strtok(oldFile, ".");
+		char* oldExtension = strtok(NULL, "");
+		if(!oldExtension){
+			oldExtension = "   ";
+		}
+
+		int location = getDirectoryLocation(oldName, oldExtension, 0);
+
+		char* newName = strtok(oldFile, ".");
+		char* newExtension = strtok(NULL, "");
+		if(!newExtension){
+			newExtension = "   ";
+		}
+
+		if(!oldName || !newName || location==-1){
+			printf("File name cannot be changed\n");
+		}
+		else if(newExtension != "   " && strcasecmp(removeWhiteSpaces(oldExtension), removeWhiteSpaces(newExtension)) != 0){
+			printf("File extension cannot be changed\n");
+		}
+		else{
+
+			int j;
+			int sector = location/16;
+			int locationWithinSector = location - 16*sector;
+
+			if(currentDir ==  root){
+				fseek(filePointer, 512*(19+sector), SEEK_SET);
+			}	
+			else{
+				int currentSector = startOfCurrentDir;
+				for(j=0; j<sector; j++){
+					currentSector = fatTable[currentSector];
+				}
+				fseek(filePointer, 512*(31+currentSector), SEEK_SET);
+			}
+
+			fseek(filePointer, 32*locationWithinSector, SEEK_CUR);
+			fwrite(newName, 1, 8, filePointer);
+			fwrite(newExtension, 1, 3, filePointer);
+
+			for(j=0; j<8; j++){
+				if(j<strlen(newName)){
+					currentDir[location].fileName[j]=newName[j];
+				}
+				else{
+					currentDir[location].fileName[j] = ' ';
+				}
+			}
+
+			for(j=0; j<3; j++){
+				if(j<strlen(newName)){
+					currentDir[location].extension[j]=newExtension[j];
+				}
+				else{
+					currentDir[location].fileName[j] = ' ';
+				}
+			}
+			if (currentDir ==  root){
+				fseek(filePointer, 512*(14), SEEK_SET);
+			}
+			else{
+				fseek(filePointer, 512*(31+startOfCurrentDir), SEEK_SET);
+			}
+		}
+	}
 }
 
