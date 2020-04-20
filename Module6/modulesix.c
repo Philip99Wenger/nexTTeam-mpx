@@ -19,8 +19,8 @@ int main(int argc, char *argv[])
 
 	filePointer = fopen(argv[1], "r+");
 
-	initializeBootSector();
-	initializeFatTable();
+	char fileName[] = "SUBDIR";
+	changeDirectory(fileName);
 
 	//setup the root directory
 	int startSec = 19;
@@ -56,16 +56,17 @@ int main(int argc, char *argv[])
 	quit = 0;
 	void (*printBoot_ptr)() = &printBootSector;
 	void (*printRootDirectory_ptr)() = &printRootDirectory;
+	void (*changeDirectory_ptr)() = &changeDirectoryWrapper;
 	void (*quitNow_ptr)() = &quitNow;
-	//void (*gettime_ptr)() = &gettime;
 	//void (*settime_ptr)() = &settimeWrapper;
 	//void (*getdate_ptr)() = &getdate;
 	//void (*setdate_ptr)() = &setdateWrapper;
 	
-	char commands[3][25]={
+	char commands[4][25]={
 		"quit",
 		"printBootSector", 
 		"printRootDirectory",
+		"changeDirectory"
 		//"help",
 		//"getTime",
 		//"setTime",
@@ -75,6 +76,7 @@ int main(int argc, char *argv[])
 		*quitNow_ptr,
 		*printBoot_ptr,
 		*printRootDirectory_ptr,
+		*changeDirectory_ptr
 		//*gettime_ptr,
 		//*settime_ptr,
 		//*getdate_ptr,
@@ -82,7 +84,7 @@ int main(int argc, char *argv[])
 	};
 	
 	//Print welcome message
-	char welcome[] = "Welcome to NextTeam's File Management!\nPlease type one of the available commands:\nquit\nprintBootSector\nprintRootDirectory\n\n";
+	char welcome[] = "Welcome to NextTeam's File Management!\nPlease type one of the available commands:\nquit\nprintBootSector\nprintRootDirectory\nchangeDirectory\n\n";
 	printf("%s", welcome);	
 		
 	//for(k=0; k<sizeof(commands); k++){
@@ -271,11 +273,20 @@ void printRootDirectory(){
 	printDirectoryEntry(root, 224);
 }
 
+void changeDirectoryWrapper(){
+	char *directoryName;
+	printf("What is the name of the subdirectory?\n");
+	scanf("%s", directoryName);
+	printf("Hi\n");
+	changeDirectory(directoryName);
+}
+
 void changeDirectory(char* directoryName) {
 	if(directoryName ==  NULL){ //if null, reset to root
 		if(currentDir != root) {
 			free(currentDir);
 		}
+		printf("Hi\n");
 		int startSector = 19;
 		fseek(filePointer, 512*(startSector), SEEK_SET);
 		sizeOfCurrentDir = 224;
@@ -283,6 +294,7 @@ void changeDirectory(char* directoryName) {
 	} 
 	//THIS NEEDS TO BE COMPLETED
 	else {
+		printf("Hello");
 		int location = getDirectoryLocation(directoryName, "", 0);
 		printf("Location %d\n", location);
 
@@ -318,7 +330,7 @@ int getDirectoryLocation(char* name, char* extension, int start){
 			break;
 		else if(((unsigned char)currentDir[j].fileName[0])==0xE5)
 			continue;
-		else if(((strcmp(name, "*") == 0) || (strcmp((currentDir[j].fileName), name)==0)) && ((strcmp(extension, "*") == 0) || (strcmp((currentDir[j].fileName), name)==0)))
+		else if(((strcmp(name, "*") == 0) || (strcmp(removeWhiteSpaces(currentDir[j].fileName), removeWhiteSpaces(name))==0)) && ((strcmp(extension, "*") == 0) || (strcmp(removeWhiteSpaces(currentDir[j].extension), removeWhiteSpaces(extension))==0)))
 			return j;
 	}
 	return -1;
@@ -364,6 +376,7 @@ char * removeWhiteSpaces(char *word){
 			i++;
 		}
 	}
+	printf("%s", temp);
 
 	return temp;
 	
