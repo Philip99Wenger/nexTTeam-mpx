@@ -48,7 +48,10 @@ int main(int argc, char *argv[])
 
 	printBootSector();
 	printRootDirectory();
-	changeDirectory("SUBDIR");
+	char fileName[] = "SUBDIR";
+	changeDirectory(fileName);
+	printDirectoryEntry(currentDir, sizeOfCurrentDir);
+	changeDirectory("HOWDY");
 	printDirectoryEntry(currentDir, sizeOfCurrentDir);
 
 	if(!filePointer){
