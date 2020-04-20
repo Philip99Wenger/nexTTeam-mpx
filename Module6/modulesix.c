@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 		//get a command
 		char newCommands[25];
 		memset(newCommands, '\0', 25);
-		scanf("%s", newCommands);
+		scanf(" %[^\n]", newCommands);
 		char* cmdBuffer = strtok(newCommands, " ");
 		//pass
 
@@ -468,6 +468,7 @@ char * intToAscii(int integer){
 
 char * removeWhiteSpaces(char *word){
 	char *temp = word;
+	char *end
 	int i;	
 
 	if (word == NULL){
