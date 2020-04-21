@@ -73,6 +73,6 @@ char * intToAscii(int integer);
 char * removeWhiteSpaces(char * word);
 void quitNow();
 void renameFile();
-
+void typeWrapper();
 
 #endif

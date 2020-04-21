@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
 
 	filePointer = fopen(argv[1], "r+");
 
+	//initialize the boot sector and the fat table
 	initializeBootSector();
 	initializeFatTable();
 	changeDirectory(NULL);
@@ -57,18 +58,17 @@ int main(int argc, char *argv[])
 
 	unsigned int k;
 	quit = 0;
+	//setup pointers
 	void (*printBoot_ptr)() = &printBootSector;
 	void (*printRootDirectory_ptr)() = &printRootDirectory;
 	void (*changeDirectory_ptr)() = &changeDirectoryWrapper;
 	void (*quitNow_ptr)() = &quitNow;
 	void (*help_ptr)() = &help;
-	//void (*settime_ptr)() = &settimeWrapper;
-	//void (*getdate_ptr)() = &getdate;
-	//void (*setdate_ptr)() = &setdateWrapper;
 	void (*list_ptr)() = &listWrapper;
 	void (*renameFile_pointer)() = &renameFile;
+	void (*type_ptr)() = &typeWrapper;
 	
-	char commands[7][25]={
+	char commands[8][25]={
 		"quit",
 		"help",
 		"printBootSector", 
@@ -78,7 +78,8 @@ int main(int argc, char *argv[])
 		//"getTime",
 		//"setTime",
 		"list",
-		"rename"
+		"rename", 
+		"type"
 		
 	};
 	void (*commands_ptrs[])()={
@@ -91,12 +92,13 @@ int main(int argc, char *argv[])
 		//*settime_ptr,
 		//*getdate_ptr,
 		*list_ptr,
-		*renameFile_pointer
+		*renameFile_pointer, 		
+		*type_ptr
 		
 	};
 	
 	//Print welcome message
-	char welcome[] = "Welcome to NextTeam's File Management!\nPlease type one of the available commands:\nquit\nhelp\nprintBootSector\nprintRootDirectory\nchangeDirectory\nlist\nrename\n\n";
+	char welcome[] = "Welcome to NextTeam's File Management!\nPlease type one of the available commands:\nquit\nhelp\nprintBootSector\nprintRootDirectory\nchangeDirectory\nlist\nrename\ntype\n\n";
 	printf("%s", welcome);	
 		
 	//for(k=0; k<sizeof(commands); k++){
@@ -104,7 +106,7 @@ int main(int argc, char *argv[])
 	//	printf("\n");
 	//}	
 
-	
+	//while the user has not entered quit, keep getting user input
 	while(!quit){
 		//get a command
 		char newCommands[25];
@@ -117,6 +119,7 @@ int main(int argc, char *argv[])
 		char noCommand[] = "There is no matching command. Commands are case-sensitive.\n";
 
 		int matchFlag = 0;
+		//if there is a command match, then go to the correct command pointer
 		for(k=0; k<sizeof(commands); k++){
 			if(strcmp(cmdBuffer, commands[k])==0){
 				(*commands_ptrs[k])();
@@ -129,15 +132,18 @@ int main(int argc, char *argv[])
 }
 
 void help(){
+	//display information for how to execute each command
 	printf("quit\n\tEnds execution of module 6\n");	
 	printf("printBootSector\n\tPrints out all information in the boot sector\n");
 	printf("printRootDirectory\n\tPrint all the info in the root directory\n");
-	printf("changeDirectory\n\tChanges the directory to a subdirectory of the current directory\n");
-	printf("list <file>\n\tLists the info for current directory by default, but lists for specified file if specified\n");
-	printf("rename <oldFileName> <newFileName>\n\tChanges the file name\n");
+	printf("changeDirectory <directoryName>\n\tChanges the directory to a subdirectory of the current directory\n");
+	printf("list <file.extension>\n\tLists the info for current directory by default, but lists for specified file if specified\n");
+	printf("rename <oldFileName.extension> <newFileName.extension>\n\tChanges the file name\n");
+	printf("type <fileName.extension>\n\tDisplay the file enterd\n");
 }
 
 void initializeBootSector(){
+	//get the values for each variable in the struct boot
 	fseek(filePointer, 11, SEEK_SET);
 	boot.bytesPerSector = getInt(2);
 	boot.sectorsPerCluster = getInt(1);
@@ -159,6 +165,7 @@ void initializeBootSector(){
 }
 
 void initializeFatTable(){
+	//read in the values from the fat table into a global variable
 	int i;
 	int sector = 1;
 	fseek(filePointer, 512*sector, SEEK_SET);
@@ -171,6 +178,7 @@ void initializeFatTable(){
 	
 }
 void printBootSector(){
+	//print a decription of each variable and print the variable value for boot
 	printf("Bytes per Sector: %d\n", boot.bytesPerSector);
 	printf("Sectors per Cluster: %d\n", boot.sectorsPerCluster);
 	printf("Number of Reserved Sectors: %d\n", boot.numOfReservedSectors);
@@ -189,12 +197,14 @@ void printBootSector(){
 }
 
 int getInt(int numBytes){
+	//read in the number of specified bytes and return an integer
 	unsigned char current[numBytes];
 	fread(current, 1, numBytes, filePointer);
 	return bcdToInt(numBytes, current);
 }
 
 int bcdToInt(int numBytes, unsigned char* bytes){
+	//convert the unsigned char bytes to an integer
 	int i;
 	int integerValue = 0;
 	for(i=0; i<numBytes; i++){
@@ -212,13 +222,14 @@ void printDirectoryEntry(directory* current, int num){
 			continue;
 		else if (((unsigned int) current[i].attribute & 0x02) == 0x02) //file is hidden
 			continue;
-		else
+		else //if the file is not free, empty, or hidden, display the file
 			printOneFile(current[i]);
 		
 	}
 }
 
 void printOneFile(directory curr){
+	//print all of the attributes for on entry in the directory
 	printf("File Name: %s\n", curr.fileName);
 	printf("Extension: %s\n", curr.extension);
 	printf("Attribute: %d\n", curr.attribute);
@@ -237,6 +248,7 @@ void setupDirectory(directory* dir, int startSec, int numEntries){
 	int i;
 	int currSector;
 	fseek(filePointer, 512*(31+startSec), SEEK_SET);
+	//read in the values for the directory entry for the number of entries
 	for (int i=0; i<numEntries; i++){
 		if(i != 0 && i%512 == 0){
 			currSector = fatTable[currSector];
@@ -261,6 +273,7 @@ void setupDirectory(directory* dir, int startSec, int numEntries){
 time getTime(){
 	time t;
 	unsigned char current[2];
+	//read in two bytes for the time and & with the correct bits to get hour, min, and second
 	fread(current, 1, 2, filePointer);
 	int hour = 0;
 	hour = hour + ((current[1] & 0xf8) >> 3); //hour is bits 15-11
@@ -277,6 +290,7 @@ time getTime(){
 date getDate(){
 	date d;
 	unsigned char current[2];
+	//read in two bytes for the date and & with the correct bits to get year, month, and day
 	fread(current, 1, 2, filePointer);
 	int year = 1980; //starts at year 1980
 	year = year + ((current[1] & 0xfe) >> 1); //year is bits 15-9
@@ -291,10 +305,12 @@ date getDate(){
 }
 
 void printRootDirectory(){
+	//go to printDirectoryEntry for the root
 	printDirectoryEntry(root, 224);
 }
 
 void changeDirectoryWrapper(){
+	//get the directory name entered by the user
 	char* directoryN = strtok(NULL, " ");
 	printf("%s\n", directoryN);
 	char s1[25]; 
@@ -348,6 +364,7 @@ int getDirectoryLocation(char* name, char* extension, int start){
 
 	int j;
 
+	//for the size of the directory, if the file is not free or deleted, check if the name and extension entered matches the entry and return if it matches
 	for(j=start; j<sizeOfCurrentDir; j++){
 		if(((unsigned char)currentDir[j].fileName[0])==0x00)
 			break;
@@ -366,6 +383,7 @@ int getDirectoryLocation(char* name, char* extension, int start){
 }
 
 void listWrapper(){
+	//get the file name and extension entered and then go to list the directory
 	char* fileName;
 	char* extension;
 	char* theRest = strtok(NULL, "");
@@ -534,11 +552,14 @@ char * removeWhiteSpaces(char *word){
 	len = strlen(word);
 	end = word + len;
 
+	//while the front is a space, remove the first character
 	while(isspace(*temp)){++temp;}
 	if( end != temp){
+		//while the end is a space, move one character in
 		while(isspace(*(--end)) && end != temp) {}
 	}
 
+	//set the null terminating character if temo, end, and word do not match
 	if(word + len -1 != end)
 		*(end+1) = '\0';
 	else if(temp != word && end == word)
@@ -555,6 +576,7 @@ char * removeWhiteSpaces(char *word){
 }
 
 void quitNow(){
+	//set quit to 1 so the program quits
 	quit=1;
 }
 
@@ -562,26 +584,31 @@ void renameFile(){
 	char* oldFile = strtok(NULL, " ");
 	char* newFile = strtok(NULL, " ");
 
+	//print error message if two files were not entered
 	if(!oldFile || !newFile){
 		printf("Two Files are needed\n");
 	}
 	
 	else{
+		//get the old name and extension
 		char* oldName = strtok(oldFile, ".");
 		char* oldExtension = strtok(NULL, "");
 		if(!oldExtension){
 			oldExtension = "   ";
 		}
 		printf("HOWDY 1\n");
+		//get the location of the old file
 		int location = getDirectoryLocation(oldName, oldExtension, 0);
 		printf("HOWDY A\n");
 
+		//get the new name and extension
 		char* newName = strtok(newFile, ".");
 		char* newExtension = strtok(NULL, "");
 		if(!newExtension){
 			newExtension = "   ";
 		}
 		printf("HOWDY 2\n");
+		//if there's no old name, new name, or location not found, print error
 		if(!oldName || !newName || location==-1){
 			printf("File name cannot be changed\n");
 		}
@@ -595,10 +622,12 @@ void renameFile(){
 			int sector = location/16;
 			int locationWithinSector = location - 16*sector;
 
+			//set the pointer if current directory is root
 			if(currentDir ==  root){
 				fseek(filePointer, 512*(19+sector), SEEK_SET);
 			}	
 			else{
+				//set the pointer if not in root
 				int currentSector = startOfCurrentDir;
 				for(j=0; j<sector; j++){
 					currentSector = fatTable[currentSector];
@@ -606,10 +635,12 @@ void renameFile(){
 				fseek(filePointer, 512*(31+currentSector), SEEK_SET);
 			}
 
+			//find the old file location and change the name and extension
 			fseek(filePointer, 32*locationWithinSector, SEEK_CUR);
 			fwrite(newName, 1, 8, filePointer);
 			fwrite(newExtension, 1, 3, filePointer);
 
+			//change the file name in the currentDir array
 			for(j=0; j<8; j++){
 				if(j<strlen(newName)){
 					currentDir[location].fileName[j]=newName[j];
@@ -619,6 +650,7 @@ void renameFile(){
 				}
 			}
 
+			//change the file extension in currentDir array
 			for(j=0; j<3; j++){
 				if(j<strlen(newName)){
 					currentDir[location].extension[j]=newExtension[j];
@@ -627,6 +659,7 @@ void renameFile(){
 					currentDir[location].fileName[j] = ' ';
 				}
 			}
+			//set the pointer based off if the current directory is root
 			if (currentDir ==  root){
 				fseek(filePointer, 512*(14), SEEK_SET);
 			}
@@ -637,3 +670,20 @@ void renameFile(){
 	}
 }
 
+void typeWrapper(){
+	//get the file that should be displayed
+	char* fileNameEntered = strtok(NULL, " ");
+
+	//print error if no file name is included
+	if(fileNameEntered == NULL){
+		printf("File must be included\n");
+	}
+
+	//get the file name and the extension if file name was entered
+	else{
+		char* name = strtok(fileNameEntered, ".");
+		char* externsion = strtok(NULL, " ");
+
+		printf("Cannot print file\n");
+	}
+}
