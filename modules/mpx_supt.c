@@ -195,6 +195,7 @@ void idle()
   }
 }
 
+//get the opcode for the global variable parameter
 int getOpCode() {
 	return params.op_code;
 }

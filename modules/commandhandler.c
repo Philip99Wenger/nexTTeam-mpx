@@ -7,7 +7,7 @@ char thisHistory[10][100];//This contains 10 most recent commands
 int index = 0;//This is a placeholder for history
 //char** historyArray = thisHistory;//this points to history
 
-void version(){
+void version(){ //display the version number
 	char version[] = "\x1B[36mVERSION: 5.0\x1B[37m\n";
 	int versionSize = strlen(version);
 	sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
@@ -16,7 +16,7 @@ void help(){
 	help1();
 	help2();
 }
-void help1(){	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!TODO update with new commands !!!!!!!!!!!!!!!!!!!!!!!!!!!
+void help1(){	//first set of help commands
 	char help1[] = "NAME\n     version - display current version of NTOS in use.\n\nNAME\n     getTime - display current time of system.\nDETAIL DESCRIPTION\n     Time will be displayed as hour:minute:second.\n\nNAME\n     setTime - change system's current time.\nDETAIL DESCRIPTION\n     Will prompt user to enter time as hh:mm:ss (i.e. hour:minute:second).\n\nNAME\n     getDate - display current date of system.\nDETAIL DESCRIPTION\n     Date will be displayed as month/day/year.\n\nNAME\n     setDate - change system's current date.\nDETAIL DESCRIPTION\n     Will prompt user to enter date as mm/dd/yy (i.e. month/day/year).\n\nNAME\n     setAlarm - set an alarm.\nDETAIL DESCRIPTION\n     Will prompt user to enter a time as hh:mm:ss (i.e. hour:minute:second). Will also prompt user for a message to display when the alarm goes off.\n\nNAME\n     infinite - goes forever.\nDETAIL DESCRIPTION\n     Will create a process that sits idle forever and cannot be deleted unless it is suspended.\n\nNAME\n     shutdown - shuts down NTOS.\nDETAIL DESCRIPTION\n     Will prompt user to confirm system shut down as yes/no.\n\nNAME\n     suspend - places PCB in suspended state.\n\nNAME\n     resume - places PCB in not suspended state.\nDETAIL DESCRIPTION\n     Will prompt user for a process name and will set to not suspended state and move to the appropriate queue.\n\nNAME\n     setPriority - sets PCB priority.\nDETAIL DESCRIPTION\n     Will prompt user for a process name and ask for new priority and will set to new priority and move to the appropriate queue.\n\nNAME\n     showPCB - display info for a PCB.\nDETAIL DESCRIPTION\n     Will ask for a process name and display the process name, class, state, suspended status, and priority for a PCB.\n\nNAME\n     showAllProcesses - display the process name, class, state, suspended status, and priority for all PCBs.\n\n";
 	
 	int helpSize1 = strlen(help1);
@@ -24,7 +24,7 @@ void help1(){	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!TODO update with new commands !
 	sys_req(WRITE, DEFAULT_DEVICE, help1, &helpSize1);
 	
 }
-void help2(){
+void help2(){ //second set of help commands
 	char help2[] = "NAME\n     showReady - display the process name, class, state, suspended status, and priority for all ready queue PCBs.\n\nNAME\n     showBlocked - display the process name, class, state, suspended status, and priority for all blocked PCBs.\n\nNAME\n     history - print command history.\nDETAIL DESCRIPTION\n     Will display the user's ten previous commands.\n\nNAME\n     isEmpty - checks if the heap is empty.\nDETAIL DESCRIPTION\n     Will say whether any processes are taking up memory or not.\n\nNAME\n     yield - yield command handler.\nDETAIL DESCRIPTION\n     Will temporarily yield in R3.\n\nNAME\n     loadr3 - setup and load the five test processes.\n\nNAME\n     setAlarm - sets a user alaram.\nDETAIL DESCRIPTION\n     Will allow the user to enter hour, minute, and second for an alarm to set.\n\nNAME\n     initializeHeap - initializes memory heap.\nDETAIL DESCRIPTION\n     Will ask the user for memory to initialize heap in bytes.\n\nNAME\n     allocateMemory - allocate a block of memory.\nDETAIL DESCRIPTION\n     Will ask for block for how much memory to allocate in new block.\n\nNAME\n     freeMemory - frees a block of memory.\nDETAIL DESCRIPTION\n     Will ask the user for the start address of what block to free.\n\nNAME\n    isEmpty - says if memory is empty.\nDETAIL DESCRIPTION\n     Will say if the memory block is empty or not.\n\nNAME\n     showAllocated - show allocated block memories.\nDETAIL DESCRIPTION\n     Will show size and address of allocated memory blocks.\n\nNAME\n     showFree - show free block memories.\nDETAIL DESCRIPTION\n     Will show size and address of free memory blocks.";
 	int helpSize2 = strlen(help2);
 	
@@ -36,6 +36,7 @@ int shutdown(){
 	char shutdownBuffer[100];
 	int bufferSize = 99;
 	
+	//confirm shutdown messages
 	char confirm[] = "Are you sure you want to shut down?	yes/no\n";
 	char stayInMenu[] = "\x1B[32mNot shutting down. Continue entering commands. \x1B[37m\n";
 	int confirmSize = strlen(confirm);
@@ -48,6 +49,7 @@ int shutdown(){
 	memset(shutdownBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, shutdownBuffer, &bufferSize);
 	
+	//check for valid input: shutdown if yes, do not shutdown if no
 	int returnValue;
 	if(strcmp(shutdownBuffer, "yes") == 0){
 		returnValue = 1;
@@ -79,6 +81,7 @@ void settimeWrapper(){
 	memset(timeBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, timeBuffer, &bufferSize);
 
+	//get the hour, minute and second from user
 	char* token = strtok(timeBuffer, ":");
 	while (token != NULL){
 		parArr[i] = atoi(token);
@@ -102,6 +105,7 @@ void setdateWrapper(){
 	memset(dateBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, dateBuffer, &bufferSize);
 
+	//get the month, day, and year from user
 	char* token = strtok(dateBuffer, "/");
 	while (token != NULL){
 		parArr[i] = atoi(token);
@@ -161,7 +165,8 @@ void suspendWrapper(){
 	sys_req(WRITE, DEFAULT_DEVICE, prompt, &promptSize);
 	memset(suspendBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, suspendBuffer, &bufferSize);
-
+	
+	//check if the PVB name is too long, then find the PCB and suspend the PCB if found
 	char* name = strtok(suspendBuffer, "");
 	//while (name != NULL){
 		if(strlen(name) > 8){
@@ -197,6 +202,7 @@ void resumeWrapper(){
 	memset(suspendBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, suspendBuffer, &bufferSize);
 
+	//check if the name is too long, then find the PCB and resume the PCB if the PCB is found
 	char* name = strtok(suspendBuffer, "");
 	//while (name != NULL){
 		if(strlen(name) > 8){
@@ -246,7 +252,7 @@ void createPCBWrapper(){
 	char success[] = "\x1B[32mValid Entry\x1B[37m\n";
 	char finish[] = "\x1B[32mSuccessfully Finished\x1B[37m\n";
 
-	//Recieve Name
+	//Receive Name
 	promptSize = strlen(namePrompt);
 	sys_req(WRITE, DEFAULT_DEVICE, namePromptPointer, &promptSize);
 	memset(pcbName, '\0', 100);
@@ -266,7 +272,7 @@ void createPCBWrapper(){
 	sys_req(WRITE, DEFAULT_DEVICE, success, &promptSize);//Success!
 
 
-	//Recieve Priority
+	//Receive Priority
 	promptSize = strlen(priorityPrompt);
 	sys_req(WRITE, DEFAULT_DEVICE, priorityPrompt, &promptSize);
 	memset(&pcbPriority, '\0', 2);
@@ -280,7 +286,7 @@ void createPCBWrapper(){
 	sys_req(WRITE, DEFAULT_DEVICE, success, &promptSize);//Success!
 	
 
-	//Recieve Class
+	//Receive Class
 	promptSize = strlen(classPrompt);
 	sys_req(WRITE, DEFAULT_DEVICE, classPrompt, &promptSize);
 	memset(class, '\0', 2);
@@ -382,6 +388,7 @@ void blockWrapper(){
 	memset(blockBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, blockBuffer, &bufferSize);
 
+	//check if the PCB name is too long,and if the name is not too long, then search for the PCB and block PCB if found
 	char* name = strtok(blockBuffer, "");
 	//while (name != NULL){
 		if(strlen(name) > 8){
@@ -416,6 +423,7 @@ void unblockWrapper(){
 	memset(blockBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, blockBuffer, &bufferSize);
 
+	//check if the PCB name is too long,and if the name is not too long, then search for the PCB and unblock PCB if found
 	char* name = strtok(blockBuffer, "");
 	//while (name != NULL){
 		if(strlen(name) > 8){
@@ -454,6 +462,7 @@ void setPriorityWrapper(){
 	memset(showPCBBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, showPCBBuffer, &bufferSize);
 
+	//check if the PCB name is too long,and if the name is not too long, then search for the PCB and change the priority if the PCB is found
 	char* name = strtok(showPCBBuffer, "");
 	//while (name != NULL){
 		if (strlen(name) > 8){
@@ -497,6 +506,7 @@ void showPCBWrapper(){
 	memset(showPCBBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, showPCBBuffer, &bufferSize);
 
+	//check if the PCB name is too long,and if the name is not too long, then show the PCB
 	char* name = strtok(showPCBBuffer, "");
 	//while (name != NULL){
 		if (strlen(name) > 8){
@@ -522,6 +532,7 @@ void initializeHeapWrapper(){
 	memset(initializeBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, initializeBuffer, &bufferSize);
 
+	//initialize the heap to the entered bytes number
 	char* name = strtok(initializeBuffer, "");
 	bytesNum = atoi(name);
 	initializeHeap(bytesNum);
@@ -603,6 +614,7 @@ void freeMemoryWrapper()
 	memset(freeBuffer, '\0', 100);
 	sys_req(READ, DEFAULT_DEVICE, freeBuffer, &bufferSize);
 
+	//free the memory for the entered address
 	char* name = strtok(freeBuffer, "");
 	addressNum = atoi(name);
 	addressNumLong = (unsigned long) addressNum;
@@ -611,6 +623,7 @@ void freeMemoryWrapper()
 }
 
 void comhand(){
+	//set the pointers for the functions
 	char repeat2[] = "pos omega.\n";
 	int repeatSize2 = strlen(repeat2);
 	sys_req(WRITE, DEFAULT_DEVICE, repeat2, &repeatSize2);
@@ -766,10 +779,11 @@ void comhand(){
 		int noCommandSize = strlen(noCommand);
 		int matchFlag = 0;
 
+		//if there is a valid command, go to the corresponding function
 		int shutdownVal;
 		for(i=0; i<sizeof(commands)/sizeof(commands[0]); i++){
 			if(strcmp(cmdBuffer, commands[i])==0){
-				if(i == 0){
+				if(i == 0){ //if shutdown, confirm if user wants to shutdown
 					shutdownVal = shutdown();
 					matchFlag = 1;
 					if(shutdownVal == 1)

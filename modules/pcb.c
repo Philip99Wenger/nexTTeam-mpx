@@ -6,7 +6,9 @@ Queue suspendReadyQueue;
 Queue suspendedBlockedQueue;
 
 void insertPCB(pcb* Pcb){
+	//put the PCB into the ready queue if ready and not suspended
 	if(Pcb->stateRRB == READY && Pcb->stateIsSuspended == NOTSUSPENDED){
+		//set to head if the head is null
 		if(readyQueue.head==NULL){
 			readyQueue.head = Pcb;
 			readyQueue.tail = readyQueue.head;
@@ -17,7 +19,8 @@ void insertPCB(pcb* Pcb){
 		}
 		pcb* current = readyQueue.head;
 		pcb* previous;
-		if(Pcb->priority < current->priority){ //if head priority value is higher than pcb priority, place at the head
+		if(Pcb->priority < current->priority){ 
+				//if head priority value is higher than pcb priority, place at the head
 				readyQueue.head = Pcb;
 				current->pcbPrev = Pcb;
 				Pcb->pcbNext = current;
@@ -25,7 +28,8 @@ void insertPCB(pcb* Pcb){
 				return;
 			}
 		previous = readyQueue.head;
-		while(current){ // place priority where needed in queue
+		while(current){ 
+			// place priority where needed in queue
 			if(Pcb->priority < current->priority){
 				previous = current->pcbPrev;
 				previous->pcbNext = Pcb;
@@ -47,7 +51,10 @@ void insertPCB(pcb* Pcb){
 		readyQueue.count++;
 		return;
 	}
+	
+	//put the PCB into the suspended ready queue if ready and suspended
 	else if(Pcb->stateRRB == READY && Pcb->stateIsSuspended == SUSPENDED){
+		//set the PCB to head if the head is NULL
 		if(suspendReadyQueue.head==NULL){
 			suspendReadyQueue.head = Pcb;
 			suspendReadyQueue.tail = suspendReadyQueue.head;
@@ -66,7 +73,8 @@ void insertPCB(pcb* Pcb){
 				return;
 			}
 		previous=suspendReadyQueue.head;
-		while(current){ // place priority where needed in queue
+		while(current){ 
+			// place priority where needed in queue
 			if(Pcb->priority < current->priority){
 				previous = current->pcbPrev;
 				previous->pcbNext = Pcb;
@@ -89,7 +97,9 @@ void insertPCB(pcb* Pcb){
 		return;
 	}
 
+	//put the PCB into the blocked queue if blocked and not suspended
 	else if(Pcb->stateRRB == BLOCKED && Pcb->stateIsSuspended == NOTSUSPENDED){
+		//if the count is 0, set the head and tail to the PCB
 		if(blockedQueue.count == 0){
 				Pcb->pcbPrev = NULL;
 				Pcb->pcbNext = NULL;
@@ -98,6 +108,7 @@ void insertPCB(pcb* Pcb){
 				blockedQueue.count++;
 				return;
 			}
+		//put the PCB at the tail otherwise
 		else{
 				blockedQueue.tail->pcbNext = Pcb;
 				Pcb->pcbNext = NULL;
@@ -109,7 +120,9 @@ void insertPCB(pcb* Pcb){
 			}
 	}
 
+	//put the PCB into the suspended blocked queue if blocked and suspended
 	else if(Pcb->stateRRB == BLOCKED && Pcb->stateIsSuspended == SUSPENDED){
+		//put at the head if the count is 0
 		if(suspendedBlockedQueue.count == 0){
 				Pcb->pcbPrev = NULL;
 				Pcb->pcbNext = NULL;
@@ -118,6 +131,7 @@ void insertPCB(pcb* Pcb){
 				suspendedBlockedQueue.count++;
 				return;
 			}
+		//put the PCB at the tail otherwise
 		else{
 				suspendedBlockedQueue.tail->pcbNext = Pcb;
 				Pcb->pcbNext = NULL;
@@ -131,6 +145,7 @@ void insertPCB(pcb* Pcb){
 }
 
 pcb* allocatePCB(){
+	//allocate memory for the PCB
 	pcb * thisPCB = (pcb *) sys_alloc_mem(sizeof(pcb));
 	
 	return thisPCB;
@@ -143,11 +158,13 @@ pcb* setupPCB(char *PcbName, int classCode, int priorityCode){
 	//int nameSize = strlen(PcbName);
 	//sys_req(WRITE, DEFAULT_DEVICE, PcbName, &nameSize);
 			
+	//if the PCB already exists with this name, cannot create a duplicate named process
 	if(findPCB(PcbName) != NULL){
 		char repeat[] = "There already exists a process with this name. Cannot create another one.";
 		int repeatSize = strlen(repeat);
 		sys_req(WRITE, DEFAULT_DEVICE, repeat, &repeatSize);
 	}else{
+		//setup the parameter for the PCB
 		newPCB->namePtr = newPCB->processName;	
 		newPCB->namePtr = strcpy(newPCB->namePtr, PcbName);
 		newPCB->priority = priorityCode;
@@ -279,6 +296,7 @@ int removePCB(pcb* process) {
 void setPriority(pcb* priorityPCB, int priorityNum){
 	char noPCB[] = "Priority has successfully been changed.\n";
 	int noSize = strlen(noPCB);
+		//change the priority number, and remove and reinset the PCB into the proper queue
 		priorityPCB->priority = priorityNum;
 		removePCB(priorityPCB);
 		insertPCB(priorityPCB);
@@ -332,6 +350,7 @@ void showBlocked(){
 }
 
 void showAllProcesses(){
+	//print the ready and blocked processes
 	showReady();
 	showBlocked();
 }
@@ -340,9 +359,11 @@ void showPCB(char *name){
 	char noPCB[] = "There is no PCB with that name.\n";
 	int noSize = strlen(noPCB);
 	pcb* onePCB = findPCB(name);
+	//if the PCB is found, print that PCB
 	if (onePCB != NULL){
 		printOnePCB(onePCB);
 	}
+	//if the PCB is not found, print error
 	else{
 		sys_req(WRITE, DEFAULT_DEVICE, noPCB, &noSize);
 	}
@@ -467,6 +488,7 @@ int freePCB(pcb* PCB){
 	sys_free_mem((PCB-> base));		//Pointer to the base of the process
 	sys_free_mem((PCB-> top));*/
 
+	//free the PCB
 	sys_free_mem(PCB);
 
 	return 0;
@@ -502,10 +524,12 @@ void resume(pcb* PCB){
 }
 
 pcb* getReadyQueueHead(){
+	//return the ready queue head
 	return readyQueue.head;
 }
 
 pcb* nextProcess(){
+	//return the next process in the ready queue until next is NULL
 	pcb* next = readyQueue.head;
 	while (next != NULL){
 		next = next->pcbNext;
@@ -515,6 +539,7 @@ pcb* nextProcess(){
 }
 
 void clearQueues(){
+	//clear the four queues by removing the PCB in each queue
 	while(readyQueue.head){
 		//pcb* tempPCB = readyQueue.head;
 		removePCB(readyQueue.head);

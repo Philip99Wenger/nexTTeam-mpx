@@ -96,6 +96,7 @@ void setTime(int hours, int minutes, int seconds){
 
 int bcdToInt(unsigned char value){
 	int integerValue;
+	//convert the unsigned char to an integer
 	integerValue = (int)((value & 0xF0) >> 4);
 	integerValue = integerValue * 10;
 	integerValue = (int)(value & 0x0F) + integerValue;

@@ -179,6 +179,7 @@ void alarmProcess(){
 }
 
 void infinite(){
+	//infinite process is forever, so this is always true
 	while(1){
 		char success[] = "\x1B[32mInfinite Process Is Still Infinite \x1B[37m\n";
 		int successSize = strlen(success);

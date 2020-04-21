@@ -28,6 +28,8 @@ u32int* sys_call(context *registers){
 		//strcpy(version,"   \n");
 		//	versionSize = strlen(version);
 		//	sys_req(WRITE, DEFAULT_DEVICE, version, &versionSize);
+
+		//if the opcode is EXIT, set to ready state and free the cop
 		if (params.op_code == EXIT){
 			//strcpy(version,"pos 3\n");
 			//versionSize = strlen(version);
@@ -37,6 +39,8 @@ u32int* sys_call(context *registers){
 				
 			freePCB(cop);
 		}
+
+		//if the opcode is IDLE, set the top of the context to registers, set cop state to ready, and insert the cop
 		else if (params.op_code == IDLE){
 			/*strcpy(version,"HOWDY \n");
 			int versionSize = strlen(version);
@@ -61,6 +65,8 @@ u32int* sys_call(context *registers){
 
 	//cop = nextProcess();	
 	
+
+	//iif the current PCB is NULL, remove the PCB, set the currentPCB state to running, and set the current operating process to the currentPCB
 	if (currentPcb != NULL){
 		//strcpy(version,"pos 5\n");
 		//int versionSize = strlen(version);
@@ -74,6 +80,8 @@ u32int* sys_call(context *registers){
 		//showAllProcesses();
 		return (u32int*) cop->top;
 	}
+
+	//if the current PCB is NULL, return the current context
 	else{
 		//strcpy(version,"pos 6\n");
 		//	int versionSize = strlen(version);

@@ -13,6 +13,7 @@ int initializeHeap(int size){
 		return -1;
 	}
 	
+	//initialize the heap by setting a free block to the initialized size
 	MCB* head = (MCB*) startHeap;
 	head->type = FREE;
 	head->startAddress = getAddress(head);
@@ -101,15 +102,19 @@ u32int allocateMem(u32int size32){
 }
 
 void sortedInsert(memoryList* curList,MCB* newBlock){
+	//if head is NULL, set the newBlock to the head
 	if (curList->head==NULL){
 		curList->head=newBlock;
 	}
 	
+	//if the startAddress for the head is after the newBlock address, set the newBlock to the head
 	else if ( curList->head->startAddress >= newBlock->startAddress){
 		newBlock->next = curList->head;
 		newBlock->next->previous=newBlock;
 		curList->head= newBlock;
 	}
+	
+	//set the newBlock into the correct spot based off the address
 	else{
 		MCB* cur = curList->head;
 		while ( cur->next != NULL && cur->next->startAddress < newBlock->startAddress){
@@ -222,6 +227,7 @@ unsigned long getAddress (MCB* mcb) {
 	int i;
 	unsigned long address;
 	
+	//get the first usable address by adjusting the address by the size of the MCB
 	address = (unsigned long) mcb;
 	for(i=0; i<(int)sizeof(MCB); i++) {
 		address++;
@@ -234,7 +240,7 @@ void showAllocated(){
 	char allocated[] = "\nAllocated Memory:\n";
 	int allocatedSize = strlen(allocated);
 
-	//Print blocked queue
+	//Print allocated queue
 	sys_req(WRITE, DEFAULT_DEVICE, allocated, &allocatedSize);
 	MCB* current = allocatedBlocks.head;
 	while (current != NULL){
@@ -247,7 +253,7 @@ void showFree(){
 	char free[] = "\nFree Memory:\n";
 	int freeSize = strlen(free);
 
-	//Print blocked queue
+	//Print free queue
 	sys_req(WRITE, DEFAULT_DEVICE, free, &freeSize);
 	MCB* current = freeBlocks.head;
 	while (current != NULL){
@@ -291,20 +297,24 @@ int checkIfEmpty(){
 }
 
 void removeMCB(MCB* mcb){
+	//if the mcb is the free head, remove the head and set next as the head
 	if(mcb == freeBlocks.head){
 		freeBlocks.head = NULL;
 		if(mcb->next != NULL){
 			freeBlocks.head = mcb->next;
 			mcb->next->previous = NULL;
 		}
+	//if the mcb is the allocated head, remove the head and set next as the head
 	}else if (mcb == allocatedBlocks.head){
 		allocatedBlocks.head = NULL;
 		if(mcb->next != NULL){
 			allocatedBlocks.head = mcb->next;
 			mcb->next->previous = NULL;
 		}
+	//if MCB is at the end, set the previous' next as the end
 	}else if (mcb->next == NULL){
 		mcb->previous->next = NULL;
+	//if in the middle, remove from the list and change previous' next and next's previous
 	}else{
 		mcb->previous->next = mcb->next;
 		mcb->next->previous = mcb->previous;

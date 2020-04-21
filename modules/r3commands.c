@@ -33,6 +33,7 @@ void load(char * name, void (*procfunc)(), int priority){
 		context * cp = (context*)(procPCB -> top);
 		memset(cp, 0, sizeof(context));
 		
+		//set the appropriate registers
 		cp -> fs = 0x10;	
 		cp -> gs = 0x10;
 		cp -> ds = 0x10;
@@ -43,6 +44,7 @@ void load(char * name, void (*procfunc)(), int priority){
 		cp -> eip = (u32int)procfunc; //The function correlating to the process, ie. Proc1
 		cp -> eflags = 0x202; 
 	}else{
+		//Return error message if there is already a process with that name
 		char repeat[] = "There already exists a process with this name. Cannot create another one.\n";
 		int repeatSize = strlen(repeat);
 		sys_req(WRITE, DEFAULT_DEVICE, repeat, &repeatSize);
