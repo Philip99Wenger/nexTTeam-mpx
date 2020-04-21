@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 
 	currentDir = root;
 	sizeOfCurrentDir = 224;
-	startOfCurrentDir = 14;	
+	startOfCurrentDir = 19;	
 
 	if(!filePointer){
 		printf("File was not found.\n");
@@ -222,8 +222,9 @@ void printDirectoryEntry(directory* current, int num){
 			continue;
 		else if (((unsigned int) current[i].attribute & 0x02) == 0x02) //file is hidden
 			continue;
-		else //if the file is not free, empty, or hidden, display the file
+		else {//if the file is not free, empty, or hidden, display the file
 			printOneFile(current[i]);
+		}
 		
 	}
 }
@@ -349,6 +350,8 @@ void changeDirectory(char* directoryName) {
 			
 			currentDir = temp;
 			sizeOfCurrentDir = numEntries;
+			printf("Successfully Changed Directory\nPrinting current directory...\n\n");
+			printDirectoryEntry(currentDir, sizeOfCurrentDir);
 			}
 
 		else
@@ -364,13 +367,15 @@ int getDirectoryLocation(char* name, char* extension, int start){
 
 	int j;
 
+	fseek(filePointer, 512*(startOfCurrentDir), SEEK_SET);
 	//for the size of the directory, if the file is not free or deleted, check if the name and extension entered matches the entry and return if it matches
 	for(j=start; j<sizeOfCurrentDir; j++){
+		int compare = strncmp(currentDir[j].fileName, name, strlen(name));
 		if(((unsigned char)currentDir[j].fileName[0])==0x00)
 			break;
 		else if(((unsigned char)currentDir[j].fileName[0])==0xE5)
 			continue;
-		else if(((strcmp(name, "*") == 0) || (strcasecmp(removeWhiteSpaces(currentDir[j].fileName), name)==0)) && ((strcmp(extension, "*") == 0) || (strcasecmp(removeWhiteSpaces(currentDir[j].extension), removeWhiteSpaces(extension))==0)))
+		else if(compare == 0)
 			return j;
 	}
 	//int j=0;
@@ -599,7 +604,7 @@ void renameFile(){
 		printf("HOWDY 1\n");
 		//get the location of the old file
 		int location = getDirectoryLocation(oldName, oldExtension, 0);
-		printf("HOWDY A\n");
+		printf("Location %d\n", location);
 
 		//get the new name and extension
 		char* newName = strtok(newFile, ".");
@@ -659,6 +664,8 @@ void renameFile(){
 					currentDir[location].fileName[j] = ' ';
 				}
 			}
+			
+			printf("File Name Successfully Changed\n");
 			//set the pointer based off if the current directory is root
 			if (currentDir ==  root){
 				fseek(filePointer, 512*(14), SEEK_SET);
