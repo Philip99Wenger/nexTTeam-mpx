@@ -63,6 +63,7 @@ time getTime();
 date getDate();
 void printRootDirectory();
 void changeDirectory(char* directoryName);
+void listDirectory(char* query);
 char * intToAscii(int integer);
 
 
