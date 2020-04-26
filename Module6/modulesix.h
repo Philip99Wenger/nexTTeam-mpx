@@ -63,6 +63,7 @@ void setupDirectory(directory* dir, int startSec, int numEntries);
 time getTime();
 date getDate();
 void printRootDirectory();
+void changeDirectoryWrapper();
 void changeDirectory(char* directoryName);
 void listDirectory(char* query);
 int getDirectoryLocation(char* name, char* extension, int start);
