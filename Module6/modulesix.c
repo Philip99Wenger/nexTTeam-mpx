@@ -61,30 +61,33 @@ int main(int argc, char *argv[])
 	//void (*settime_ptr)() = &settimeWrapper;
 	//void (*getdate_ptr)() = &getdate;
 	//void (*setdate_ptr)() = &setdateWrapper;
+	void (*list_ptr)() = &listWrapper;
 	
-	char commands[4][25]={
+	char commands[5][25]={
 		"quit",
 		"printBootSector", 
 		"printRootDirectory",
-		"changeDirectory"
+		"changeDirectory",
 		//"help",
 		//"getTime",
 		//"setTime",
+		"list"
 		
 	};
 	void (*commands_ptrs[])()={
 		*quitNow_ptr,
 		*printBoot_ptr,
 		*printRootDirectory_ptr,
-		*changeDirectory_ptr
+		*changeDirectory_ptr,
 		//*gettime_ptr,
 		//*settime_ptr,
 		//*getdate_ptr,
+		*list_ptr
 		
 	};
 	
 	//Print welcome message
-	char welcome[] = "Welcome to NextTeam's File Management!\nPlease type one of the available commands:\nquit\nprintBootSector\nprintRootDirectory\nchangeDirectory\n\n";
+	char welcome[] = "Welcome to NextTeam's File Management!\nPlease type one of the available commands:\nquit\nprintBootSector\nprintRootDirectory\nchangeDirectory\nlist\n\n";
 	printf("%s", welcome);	
 		
 	//for(k=0; k<sizeof(commands); k++){
@@ -334,6 +337,12 @@ int getDirectoryLocation(char* name, char* extension, int start){
 			return j;
 	}
 	return -1;
+}
+
+void listWrapper(){
+	char query[] = "\0";
+	char* queryPtr = query;
+	listDirectory(queryPtr);
 }
 
 void listDirectory(char* query){

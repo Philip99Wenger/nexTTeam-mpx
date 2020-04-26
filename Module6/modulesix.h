@@ -65,6 +65,7 @@ date getDate();
 void printRootDirectory();
 void changeDirectoryWrapper();
 void changeDirectory(char* directoryName);
+void listWrapper();
 void listDirectory(char* query);
 int getDirectoryLocation(char* name, char* extension, int start);
 char * intToAscii(int integer);
