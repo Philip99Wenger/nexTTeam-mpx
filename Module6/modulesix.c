@@ -7,6 +7,7 @@ directory root[224]; //14*16 = 224
 directory* currentDir;
 int sizeOfCurrentDir;
 int startOfCurrentDir;
+int quit;
 
 int main(int argc, char *argv[])
 {
@@ -46,13 +47,71 @@ int main(int argc, char *argv[])
 	sizeOfCurrentDir = 224;
 	startOfCurrentDir = 14;	
 
-	printBootSector();
-	printRootDirectory();
-
 	if(!filePointer){
 		printf("File was not found.\n");
 		return -1;
 	}
+
+	unsigned int k;
+	quit = 0;
+	void (*printBoot_ptr)() = &printBootSector;
+	void (*printRootDirectory_ptr)() = &printRootDirectory;
+	void (*quitNow_ptr)() = &quitNow;
+	//void (*gettime_ptr)() = &gettime;
+	//void (*settime_ptr)() = &settimeWrapper;
+	//void (*getdate_ptr)() = &getdate;
+	//void (*setdate_ptr)() = &setdateWrapper;
+	
+	char commands[3][25]={
+		"quit",
+		"printBootSector", 
+		"printRootDirectory",
+		//"help",
+		//"getTime",
+		//"setTime",
+		
+	};
+	void (*commands_ptrs[])()={
+		*quitNow_ptr,
+		*printBoot_ptr,
+		*printRootDirectory_ptr,
+		//*gettime_ptr,
+		//*settime_ptr,
+		//*getdate_ptr,
+		
+	};
+	
+	//Print welcome message
+	char welcome[] = "Welcome to NextTeam's File Management!\nPlease type one of the available commands:\nquit\nprintBootSector\nprintRootDirectory\n\n";
+	printf("%s", welcome);	
+		
+	//for(k=0; k<sizeof(commands); k++){
+	//	printf("%s", commands[k]);
+	//	printf("\n");
+	//}	
+
+	
+	while(!quit){
+		//get a command
+		char newCommands[25];
+		memset(newCommands, '\0', 25);
+		scanf("%s", newCommands);
+		char* cmdBuffer = strtok(newCommands, " ");
+		//pass
+
+		//
+		char noCommand[] = "There is no matching command. Commands are case-sensitive.\n";
+
+		int matchFlag = 0;
+		for(k=0; k<sizeof(commands); k++){
+			if(strcmp(cmdBuffer, commands[k])==0){
+				(*commands_ptrs[k])();
+				matchFlag = 1;
+			}
+		}
+		if(matchFlag == 0){printf("%s", noCommand);}
+	}
+	
 }
 
 void initializeBootSector(){
@@ -224,81 +283,119 @@ void changeDirectory(char* directoryName) {
 	} 
 	//THIS NEEDS TO BE COMPLETED
 	else {
+		int location = getDirectoryLocation(directoryName, "", 0);
+		printf("Location %d\n", location);
+
+		if(location != -1){
+			int sectors = 9;
+			int numEntries = sectors*16;
+
+			directory *temp = malloc(sizeof(directory)*numEntries);
+			int currSector = currentDir[location].firstCluster;
+			fseek(filePointer, 512*(31+currSector), SEEK_SET);
+			setupDirectory(temp, currSector, numEntries);
+			startOfCurrentDir = currentDir[location].firstCluster;
+			
+			currentDir = temp;
+			sizeOfCurrentDir = numEntries;
+			}
+
+		else
+			printf("Did not find directory %s.\n\n", directoryName);
+		
 	}
+}
+
+int getDirectoryLocation(char* name, char* extension, int start){
+	if(extension == "   " || extension == NULL){
+		extension = "";
+	}
+
+	int j;
+
+	for(j=start; j<sizeOfCurrentDir; j++){
+		if(((unsigned char)currentDir[j].fileName[0])==0x00)
+			break;
+		else if(((unsigned char)currentDir[j].fileName[0])==0xE5)
+			continue;
+		else if(((strcmp(name, "*") == 0) || (strcmp((currentDir[j].fileName), name)==0)) && ((strcmp(extension, "*") == 0) || (strcmp((currentDir[j].fileName), name)==0)))
+			return j;
+	}
+	return -1;
 }
 
 void listDirectory(char* query){
 	if(query==NULL){//if the user just enterd "list", print the whole current directory
-		printf("\nDirectory Name: %s", currentDir.filename);
-		if(currentDir.extension!=NULL){printf(".%s", currentDir.extension);}
-		printf("\nDirectory Size: %d", currentDir.fileSize);
+		printf("\nDirectory Name: %s", (*currentDir).fileName);
+		if((*currentDir).extension!=NULL){printf(".%s", (*currentDir).extension);}
+		printf("\nDirectory Size: %d", (*currentDir).fileSize);
 
 		//Properties
-		if(currentDir.attribute!=0x00){
-			printf("\nThis Directory has the following properties:\n");=
-			int readOnly = currentDir.attribute & 0x01;
-			int hidden = currentDir.attribute & 0x02;
-			int system = currentDir.attribute & 0x04;
-			int subdirectory = currentDir.attribute & 0x10;
+		if((*currentDir).attribute!=0x00){
+			printf("\nThis Directory has the following properties:\n");
+			int readOnly = (*currentDir).attribute & 0x01;
+			int hidden = (*currentDir).attribute & 0x02;
+			int system = (*currentDir).attribute & 0x04;
+			int subdirectory = (*currentDir).attribute & 0x10;
 			if(readOnly==0x01){printf("Read Only\n");}
 			if(hidden==0x02){printf("Hidden\n");}
 			if(system==0x04){printf("System\n");}
 			if(subdirectory==0x10){printf("Is a subdirectory\n");}
-			if(currentDir.reserved!=0x00){printf("Reserved\n");}
+			if((*currentDir).reserved!=0x00){printf("Reserved\n");}
 		}
 		
 		//Time Information
-		printf("Creation Time: %s:%s:%s\n", intToAscii(curr.creationTime.hour), intToAscii(curr.creationTime.minute), intToAscii(curr.creationTime.second));
-		printf("Creation Date: %d/%d/%d\n", curr.creationDate.month, curr.creationDate.day, curr.creationDate.year);
-		printf("Last Access Date: %d/%d/%d\n", curr.lastAccessDate.month, curr.lastAccessDate.day, curr.lastAccessDate.year);
-		printf("Last Write Time: %s:%s:%s\n", intToAscii(curr.lastWriteTime.hour), intToAscii(curr.lastWriteTime.minute), intToAscii(curr.lastWriteTime.second));
-		printf("Last Write Date: %d/%d/%d\n", curr.lastWriteDate.month, curr.lastWriteDate.day, curr.lastWriteDate.year);
+		printf("Creation Time: %s:%s:%s\n", intToAscii((*currentDir).creationTime.hour), intToAscii((*currentDir).creationTime.minute), intToAscii((*currentDir).creationTime.second));
+		printf("Creation Date: %d/%d/%d\n", (*currentDir).creationDate.month, (*currentDir).creationDate.day, (*currentDir).creationDate.year);
+		printf("Last Access Date: %d/%d/%d\n", (*currentDir).lastAccessDate.month, (*currentDir).lastAccessDate.day, (*currentDir).lastAccessDate.year);
+		printf("Last Write Time: %s:%s:%s\n", intToAscii((*currentDir).lastWriteTime.hour), intToAscii((*currentDir).lastWriteTime.minute), intToAscii((*currentDir).lastWriteTime.second));
+		printf("Last Write Date: %d/%d/%d\n", (*currentDir).lastWriteDate.month, (*currentDir).lastWriteDate.day, (*currentDir).lastWriteDate.year);
 	
 		//Files & Directories
-		printf("The Files and Folders Contained in this Directory:\n")
-		int startcluster;	//temporary start-cluster holder
+		printf("The Files and Folders Contained in this Directory:\n");
+		int startCluster;	//temporary start-cluster holder
 		int filename;		//temporary file-name holder
 		int key;		//Whether a file(s) is present
 		int sectorSize = 512;	//Size of a sector (fixed)
 		int incrementSector = 0;//how much of the sector have we been through
 		int total = 0;		//how much of the file have we been through
 		int location = 0;	//where we read the data from
-		int currentSector = currentDir.firstCluster;
-		while(total<=currentDir.fileSize){				//Increment till end of file
+		int currentSector = (*currentDir).firstCluster;
+		while(total<=(*currentDir).fileSize){				//Increment till end of file
 			fseek(filePointer, sectorSize*currentSector, SEEK_SET);	//Start at the beginning of the sector
 			while(incrementSector<=sectorSize){			//Increment till end of sector
 				location = (sectorSize*currentSector)+incrementSector;
-				filename = toInt(8);
+				filename = getInt(8);
 				key = filename&0xFF00000000000000;
 				if(key==0xE500000000000000){
-					fprintf("Empty File\n");
+					printf("Empty File\n");
 				} else if(key==0x0000000000000000){
-					fprintf("All else is free\n");
-					total = currentDir.fileSize;
+					printf("All else is free\n");
+					total = (*currentDir).fileSize;
 					break;
 				} else{					//Where The Magic Happens ->
 
 
 					//Print Name
-					printf("Name: %s", &intToAscii(filename));
+					printf("Name: %s", intToAscii(filename));
 					//Print Extention
-					printf(".%s", &intToAscii(toInt(3)));
+					printf(".%s", intToAscii(getInt(3)));
 					fseek(filePointer, 15, SEEK_CUR);
-					startCluster = toInt(2);
+					startCluster = getInt(2);
 					//Print Size
-					printf("	Size: %d bytes", toInt(4));
+					printf("	Size: %d bytes", getInt(4));
 					//Print Start Cluster
 					printf("	Start Cluster: %d\n\n", startCluster);
 
 
 				}					//Where The Magic Happens ^^^^^
 				incrementSector = incrementSector + 32;	
-				if(incrementSector>=currentDir.fileSize){break;}//break if at the end of file before end of sector
+				if(incrementSector>=(*currentDir).fileSize){break;}//break if at the end of file before end of sector
 			}
 			currentSector = fatTable[currentSector+2];		//Find the next sector in the FAT
 			if((currentSector==0x00)||(currentSector==0xFF7)){	//If that sector is broken or empty
 				printf("\x1B[31mThere is an unfortunate error.\x1B[37m\n");
-				total = currentDir.fileSize;			//Break out of loops
+				total = (*currentDir).fileSize;			//Break out of loops
 			}
 			if(currentSector>=0xFF8){				//If this is true, it should be the end
 				printf("  '->  End of Directory\n");
@@ -329,5 +426,32 @@ char * intToAscii(int integer){
 
            	//Return the Array
      	   	return arrayPoint;
+}
+
+char * removeWhiteSpaces(char *word){
+	char *temp = word;
+	int i;	
+
+	if (word == NULL){
+		return NULL;
+	}
+
+	if(word[0] = '\0'){
+		return word;
+	}
+	
+	while(word[i] != '\0'){
+		if(word[i] == ' '){
+			temp[i] = temp[i+1];
+			i++;
+		}
+	}
+
+	return temp;
+	
+}
+
+void quitNow(){
+	quit=1;
 }
 
