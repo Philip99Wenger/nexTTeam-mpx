@@ -357,10 +357,10 @@ int getDirectoryLocation(char* name, char* extension, int start){
 void listWrapper(){
 	char* fileName;
 	char* extension;
-	char* space = strtok(NULL, " ");
-	if(space=="\0"){fileName = "\0"; extension = "\0";} else{
-		fileName = strtok(NULL, ".");
-		extension = strtok(NULL, "");
+	char* theRest = strtok(NULL, "");
+	if(theRest=="\0"){fileName = "\0"; extension = "\0";} else{
+		fileName = strtok(theRest, ".");
+		extension = strtok(NULL, "\0");
 	}
 	listDirectory(fileName, extension);
 }
