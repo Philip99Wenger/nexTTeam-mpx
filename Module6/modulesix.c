@@ -411,10 +411,9 @@ void listDirectory(char* fileName, char* extension){
 		while((unsigned char) currentDir[location].fileName[0] != 0x00){location++;}
 		printDirectoryEntry(currentDir, location);
 	} else {
-		while(currentDir[location].fileName[0]!=0x00){
-			location = getDirectoryLocation(*fileName, *Extension, location);
-			printDirectoryEntry(currentDir, location);
-			location++;
+		while(location>=-1){
+			location = getDirectoryLocation(fileName, extension, location);
+			if(location>=-1){printDirectoryEntry(currentDir, location);}
 		}
 		
 
