@@ -70,7 +70,6 @@ void listWrapper();
 void listDirectory(char* fileName, char* extension);
 int getDirectoryLocation(char* name, char* extension, int start);
 char * intToAscii(int integer);
-char * removeWhiteSpaces(char * word);
 void quitNow();
 void renameFile();
 void typeWrapper();

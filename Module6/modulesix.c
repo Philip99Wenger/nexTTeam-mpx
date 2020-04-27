@@ -540,46 +540,6 @@ char * intToAscii(int integer){
      	   	return arrayPoint;
 }
 
-char * removeWhiteSpaces(char *word){
-	size_t len=0;
-	char *temp = word;
-	char *end = NULL;
-	int i;	
-
-	if (word == NULL){
-		return NULL;
-	}
-
-	if(word[0] = '\0'){
-		return word;
-	}
-	
-	len = strlen(word);
-	end = word + len;
-
-	//while the front is a space, remove the first character
-	while(isspace(*temp)){++temp;}
-	if( end != temp){
-		//while the end is a space, move one character in
-		while(isspace(*(--end)) && end != temp) {}
-	}
-
-	//set the null terminating character if temo, end, and word do not match
-	if(word + len -1 != end)
-		*(end+1) = '\0';
-	else if(temp != word && end == word)
-		*word = '\0';
-
-	end = word;
-	if(temp != word){
-		while(temp){end == temp;}
-		*end = '\0';
-	}
-
-	return word;
-	
-}
-
 void quitNow(){
 	//set quit to 1 so the program quits
 	quit=1;
@@ -615,7 +575,7 @@ void renameFile(){
 		if(!oldName || !newName || location==-1){
 			printf("File name cannot be changed\n");
 		}
-		else if(newExtension != "   " && strcasecmp(removeWhiteSpaces(oldExtension), removeWhiteSpaces(newExtension)) != 0){
+		else if(newExtension != "   " && strncmp(oldExtension, newExtension, 3) != 0){
 			printf("File extension cannot be changed\n");
 		}
 		else{
