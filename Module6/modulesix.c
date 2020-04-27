@@ -346,7 +346,8 @@ void listWrapper(){
 }
 
 void listDirectory(char* query){
-	if(query==NULL){//if the user just enterd "list", print the whole current directory
+	char* nullPtr = "\0";
+	if(query!=nullPtr){//if the user just enterd "list", print the whole current directory
 		printf("\nDirectory Name: %s", (*currentDir).fileName);
 		if((*currentDir).extension!=NULL){printf(".%s", (*currentDir).extension);}
 		printf("\nDirectory Size: %d", (*currentDir).fileSize);
@@ -382,12 +383,15 @@ void listDirectory(char* query){
 		int total = 0;		//how much of the file have we been through
 		int location = 0;	//where we read the data from
 		int currentSector = (*currentDir).firstCluster;
-		while(total<=(*currentDir).fileSize){				//Increment till end of file
+		printf("hi\n");
+		while(total<(*currentDir).fileSize){				//Increment till end of file
 			fseek(filePointer, sectorSize*currentSector, SEEK_SET);	//Start at the beginning of the sector
+			printf("hii\n");
 			while(incrementSector<=sectorSize){			//Increment till end of sector
 				location = (sectorSize*currentSector)+incrementSector;
 				filename = getInt(8);
 				key = filename&0xFF00000000000000;
+				printf("hiii\n");
 				if(key==0xE500000000000000){
 					printf("Empty File\n");
 				} else if(key==0x0000000000000000){
@@ -396,7 +400,7 @@ void listDirectory(char* query){
 					break;
 				} else{					//Where The Magic Happens ->
 
-
+					printf("hiiii4\n");
 					//Print Name
 					printf("Name: %s", intToAscii(filename));
 					//Print Extention
@@ -422,7 +426,9 @@ void listDirectory(char* query){
 				printf("  '->  End of Directory\n");
 			}
 			incrementSector = 0;					//Restart to the beginning of the sector
+			printf("hiiiii5\n");
 		}
+		printf("hiiiiii6\n");
 	}
 	
 }
