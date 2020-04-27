@@ -19,6 +19,8 @@ int main(int argc, char *argv[])
 
 	filePointer = fopen(argv[1], "r+");
 
+	initializeBootSector();
+	initializeFatTable();
 	changeDirectory(NULL);
 	char fileName[] = "SUBDIR";
 	changeDirectory(fileName);
@@ -340,26 +342,26 @@ void changeDirectory(char* directoryName) {
 }
 
 int getDirectoryLocation(char* name, char* extension, int start){
-	//if(extension == "   " || extension == NULL){
-	//	extension = "";
-	//}
+	if(extension == "   " || extension == NULL){
+		extension = "";
+	}
 
-	//int j;
+	int j;
 
-	//for(j=start; j<sizeOfCurrentDir; j++){
-	//	if(((unsigned char)currentDir[j].fileName[0])==0x00)
-	//		break;
-	//	else if(((unsigned char)currentDir[j].fileName[0])==0xE5)
-	//		continue;
-	//	else if(((strcmp(name, "*") == 0) || (strcmp(removeWhiteSpaces(currentDir[j].fileName), removeWhiteSpaces(name))==0)) && ((strcmp(extension, "*") == 0) || (strcmp(removeWhiteSpaces(currentDir[j].extension), removeWhiteSpaces(extension))==0)))
-	//		return j;
-	//}
-	int j=0;
-	while (currentDir[j].fileName[0] != 0x00){
-		if (strcmp(currentDir[j].fileName, name) == 0 && strcmp(currentDir[j].extension, extension) == 0){
+	for(j=start; j<sizeOfCurrentDir; j++){
+		if(((unsigned char)currentDir[j].fileName[0])==0x00)
+			break;
+		else if(((unsigned char)currentDir[j].fileName[0])==0xE5)
+			continue;
+		else if(((strcmp(name, "*") == 0) || (strcasecmp(removeWhiteSpaces(currentDir[j].fileName), name)==0)) && ((strcmp(extension, "*") == 0) || (strcasecmp(removeWhiteSpaces(currentDir[j].extension), removeWhiteSpaces(extension))==0)))
 			return j;
-		}
-	}	j++;
+	}
+	//int j=0;
+	//while (currentDir[j].fileName[0] != 0x00){
+	//	if (strcmp(currentDir[j].fileName, name) == 0 && strcmp(currentDir[j].extension, extension) == 0){
+	//		return j;
+	//	}
+	//}	j++;
 	return -1;
 }
 
@@ -513,7 +515,9 @@ char * intToAscii(int integer){
 }
 
 char * removeWhiteSpaces(char *word){
+	size_t len=0;
 	char *temp = word;
+	char *end = NULL;
 	int i;	
 
 	if (word == NULL){
@@ -524,15 +528,26 @@ char * removeWhiteSpaces(char *word){
 		return word;
 	}
 	
-	while(word[i] != '\0'){
-		if(word[i] == ' '){
-			temp[i] = temp[i+1];
-			i++;
-		}
-	}
-	printf("%s", temp);
+	len = strlen(word);
+	end = word + len;
 
-	return temp;
+	while(isspace(*temp)){++temp;}
+	if( end != temp){
+		while(isspace(*(--end)) && end != temp) {}
+	}
+
+	if(word + len -1 != end)
+		*(end+1) = '\0';
+	else if(temp != word && end == word)
+		*word = '\0';
+
+	end = word;
+	if(temp != word){
+		while(temp){end == temp;}
+		*end = '\0';
+	}
+
+	return word;
 	
 }
 
@@ -554,15 +569,16 @@ void renameFile(){
 		if(!oldExtension){
 			oldExtension = "   ";
 		}
-
+		printf("HOWDY 1\n");
 		int location = getDirectoryLocation(oldName, oldExtension, 0);
+		printf("HOWDY A\n");
 
 		char* newName = strtok(newFile, ".");
 		char* newExtension = strtok(NULL, "");
 		if(!newExtension){
 			newExtension = "   ";
 		}
-
+		printf("HOWDY 2\n");
 		if(!oldName || !newName || location==-1){
 			printf("File name cannot be changed\n");
 		}
@@ -570,6 +586,7 @@ void renameFile(){
 			printf("File extension cannot be changed\n");
 		}
 		else{
+			printf("HOWDY 3\n");
 
 			int j;
 			int sector = location/16;
