@@ -404,8 +404,15 @@ void listDirectory(char* fileName, char* extension){
 		printf("Last Write Date: %d/%d/%d\n", (*currentDir).lastWriteDate.month, (*currentDir).lastWriteDate.day, (*currentDir).lastWriteDate.year);
 	
 		//Files & Directories
-		printf("The Files and Folders Contained in this Directory:\n");
-		unsigned char startCluster[2];		//temporary start-cluster holder
+		printf("The Files and Folders Contained in this Directory:\n\n");
+		int number = 0;
+		while((unsigned char) currentDir[number].fileName[0] != 0x00){number++;}
+		printDirectoryEntry(currentDir, number);
+
+
+
+
+		/*unsigned char startCluster[2];	//temporary start-cluster holder
 		unsigned char filename[8];	//temporary file-name holder
 		unsigned char extension[3];	//temporary extension holder
 		unsigned char size[4];		//temporary size holder
@@ -415,17 +422,13 @@ void listDirectory(char* fileName, char* extension){
 		int location = 0;		//where we read the data from
 		int currentSector = (*currentDir).firstCluster;
 		int t, s;
-		printf("hi\n");
-		while(currentSector!=0xFF8){			//Increment till end of file
+		while(currentSector!=0xFF8){					//Increment till end of file
 			fseek(filePointer, sectorSize*currentSector, SEEK_SET);	//Start at the beginning of the sector
-			printf("hii\n");
 			while(incrementSector<=sectorSize){			//Increment till end of sector
 				location = (sectorSize*currentSector)+incrementSector;
-				//filename = getInt(8);
-				fread(byteHolder, 1, 1, filePointer);
+				fread(byteHolder, 1, 1, filePointer);//=1
 				filename[7] = *byteHolder;
-				printf("\nshoelace->>>  %d\n", filename[7]);
-				printf("hiii\n");
+				printf("signal->>>  %d\n", filename[7]);
 				if(filename[7]==0xE5){
 					printf("Empty File\n");
 				} else if(filename[7]==0x00){
@@ -433,11 +436,11 @@ void listDirectory(char* fileName, char* extension){
 					return;
 				} else{					//Where The Magic Happens ->
 
-					printf("hiiii4\n");
+
 					//Print Name
 					t = 6;
 					for(s=0; s<7; s++){
-						fread(byteHolder, 1, 1, filePointer);
+						fread(byteHolder, 1, 1, filePointer);//=8
 						filename[t] = *byteHolder;
 						t--;
 					}
@@ -445,33 +448,33 @@ void listDirectory(char* fileName, char* extension){
 					//Print Extention
 					t = 2;
 					for(s=0; s<3; s++){
-						fread(byteHolder, 1, 1, filePointer);
+						fread(byteHolder, 1, 1, filePointer);//=11
 						extension[t] = *byteHolder;
 						t--;
 					}
 					printf(".%s", extension);
-					fseek(filePointer, 15, SEEK_CUR);
+					fseek(filePointer, 16, SEEK_CUR);//=26
 					t = 1;
 					for(s=0; s<2; s++){
-						fread(byteHolder, 1, 1, filePointer);
+						fread(byteHolder, 1, 1, filePointer);//=28
 						startCluster[t] = *byteHolder;
 						t--;
 					}
 					//Print Size
 					t = 3;
-					for(s=0; s<2; s++){
-						fread(byteHolder, 1, 1, filePointer);
+					for(s=0; s<4; s++){
+						fread(byteHolder, 1, 1, filePointer);//=32
 						size[t] = *byteHolder;
 						t--;
 					}
-					printf("	Size: %d bytes", *size);
+					printf("	Size: %d bytes", (int)*size);
 					//Print Start Cluster
-					printf("	Start Cluster: %d\n\n", *startCluster);
+					printf("	Start Cluster: %d\n\n", (int)*startCluster);
 
 
 				}					//Where The Magic Happens ^^^^^
 				incrementSector = incrementSector + 32;	
-				if(fatTable[currentSector+2]==0xFF8){break;}//break if at the end of file before end of sector
+				if(fatTable[currentSector+2]==0xFF8){break;}	//break if at the end of file before end of sector
 			}
 			currentSector = fatTable[currentSector+2];		//Find the next sector in the FAT
 			if((currentSector==0x00)||(currentSector==0xFF7)){	//If that sector is broken or empty
@@ -482,9 +485,7 @@ void listDirectory(char* fileName, char* extension){
 				printf("  '->  End of Directory\n");
 			}
 			incrementSector = 0;					//Restart to the beginning of the sector
-			printf("hiiiii5\n");
-		}
-		printf("hiiiiii6\n");
+		}*/
 	}
 	
 }
