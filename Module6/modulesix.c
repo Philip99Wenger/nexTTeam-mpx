@@ -367,6 +367,7 @@ void listWrapper(){
 
 void listDirectory(char* fileName, char* extension){
 	char* nullPtr = "\0";
+	printf("\n%s\n", fileName);
 	if(fileName==nullPtr){//if the user just enterd "list", print the whole current directory
 		printf("\nDirectory Name: %s", (*currentDir).fileName);
 		if((*currentDir).extension!=NULL){printf(".%s", (*currentDir).extension);}
