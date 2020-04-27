@@ -349,20 +349,19 @@ int getDirectoryLocation(char* name, char* extension, int start){
 }
 
 void listWrapper(){
-	char* variableName;
-	char* query;
+	char* fileName;
+	char* extension;
 	char* space = strtok(NULL, " ");
-	if(space=="\0"){query = "\0";} else{
-		query = strtok(variableName, ".");
-		char* extension = strtok(NULL, "");
+	if(space=="\0"){fileName = "\0"; extension = "\0";} else{
+		fileName = strtok(NULL, ".");
+		extension = strtok(NULL, "");
 	}
-	char* queryPtr = query;
-	listDirectory(queryPtr);
+	listDirectory(fileName, extension);
 }
 
-void listDirectory(char* query){
+void listDirectory(char* fileName, char* extension){
 	char* nullPtr = "\0";
-	if(query!=nullPtr){//if the user just enterd "list", print the whole current directory
+	if(fileName==nullPtr){//if the user just enterd "list", print the whole current directory
 		printf("\nDirectory Name: %s", (*currentDir).fileName);
 		if((*currentDir).extension!=NULL){printf(".%s", (*currentDir).extension);}
 		printf("\nDirectory Size: %d", (*currentDir).fileSize);
