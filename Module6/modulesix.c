@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 	//initialize the boot sector and the fat table
 	initializeBootSector();
 	initializeFatTable();
-	changeDirectory(NULL);
+	//changeDirectory(NULL);
 	char fileName[] = "SUBDIR";
 	changeDirectory(fileName);
 
@@ -139,7 +139,7 @@ void help(){
 	printf("changeDirectory <directoryName>\n\tChanges the directory to a subdirectory of the current directory\n");
 	printf("list <file.extension>\n\tLists the info for current directory by default, but lists for specified file if specified\n");
 	printf("rename <oldFileName.extension> <newFileName.extension>\n\tChanges the file name\n");
-	printf("type <fileName.extension>\n\tDisplay the file enterd\n");
+	printf("type <fileName.extension>\n\tDisplay the file entered\n");
 }
 
 void initializeBootSector(){
@@ -601,7 +601,6 @@ void renameFile(){
 		if(!oldExtension){
 			oldExtension = "   ";
 		}
-		printf("HOWDY 1\n");
 		//get the location of the old file
 		int location = getDirectoryLocation(oldName, oldExtension, 0);
 		printf("Location %d\n", location);
@@ -612,7 +611,6 @@ void renameFile(){
 		if(!newExtension){
 			newExtension = "   ";
 		}
-		printf("HOWDY 2\n");
 		//if there's no old name, new name, or location not found, print error
 		if(!oldName || !newName || location==-1){
 			printf("File name cannot be changed\n");
@@ -621,7 +619,6 @@ void renameFile(){
 			printf("File extension cannot be changed\n");
 		}
 		else{
-			printf("HOWDY 3\n");
 
 			int j;
 			int sector = location/16;
@@ -689,8 +686,67 @@ void typeWrapper(){
 	//get the file name and the extension if file name was entered
 	else{
 		char* name = strtok(fileNameEntered, ".");
-		char* externsion = strtok(NULL, " ");
+		char* extension = strtok(NULL, " ");
 
-		printf("Cannot print file\n");
+		type(name, extension);
 	}
+}
+
+void type(char* name, char* extension){
+	if(extension == NULL)
+		extension = "";
+	if((strncmp(extension, "BAT", 3)==0) || (strncmp(extension, "BAT", 3)==0) || (strncmp(extension, "C", 1)==0)){
+		printf("Can only display files with extension of BAT, TXT, or C\n");
+		return;
+	}
+
+	int location = getDirectoryLocation(name, extension, 0);
+
+	if(location == -1){
+		printf("The file entered was not found in the current directory\n");
+		return;
+	}
+
+	int a=0;
+	int b=0; 
+
+	int currSector = currentDir[location].firstCluster;
+	fseek(filePointer, 512*(currSector+31), SEEK_SET);
+
+	char buffer[513];
+	buffer[512] = '\0';
+
+	int sector = numSectors(currSector);
+	while(b < sector && a < currentDir[location].fileSize){
+		if((currentDir[location].fileSize-a) > 512){
+			fread(buffer, 1, 512, filePointer);
+			printf("%s", buffer);
+			a=a+512;
+			getchar();
+		}
+		else{
+			fread(buffer, 1, currentDir[location].fileSize-a, filePointer);
+			buffer[currentDir[location].fileSize-a]='\0';
+			printf("%s", buffer);
+		}
+		currSector = fatTable[currSector];
+		fseek(filePointer, 512*(currSector+31), SEEK_SET);
+		b++;
+	}
+	printf("Finished printing file\n");
+	
+}
+
+int numSectors(int startSector){
+	int k=1;
+
+	while(1){
+		//if the file is in the last cluster, the next cluster is unused, or the next cluster is bad, break
+		if(((startSector >= 0xFF8) && (startSector <= 0xFFF) || (fatTable[startSector] == 0x00) || (fatTable[startSector] == 0xFF7))){
+			break;
+		}
+		startSector = fatTable[startSector];
+		k++;
+	}
+	return k;
 }

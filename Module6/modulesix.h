@@ -74,5 +74,7 @@ char * removeWhiteSpaces(char * word);
 void quitNow();
 void renameFile();
 void typeWrapper();
+void type(char* name, char* extension);
+int numSectors(int startSector);
 
 #endif
