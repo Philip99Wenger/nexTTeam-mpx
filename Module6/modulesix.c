@@ -414,6 +414,7 @@ void listDirectory(char* fileName, char* extension){
 		int incrementSector = 0;	//how much of the sector have we been through
 		int location = 0;		//where we read the data from
 		int currentSector = (*currentDir).firstCluster;
+		int t, s;
 		printf("hi\n");
 		while(currentSector!=0xFF8){			//Increment till end of file
 			fseek(filePointer, sectorSize*currentSector, SEEK_SET);	//Start at the beginning of the sector
@@ -427,41 +428,45 @@ void listDirectory(char* fileName, char* extension){
 				printf("hiii\n");
 				if(filename[7]==0xE5){
 					printf("Empty File\n");
-				} else if(*filename[7]==0x00){
+				} else if(filename[7]==0x00){
 					printf("All else is free\n");
 					return;
 				} else{					//Where The Magic Happens ->
 
 					printf("hiiii4\n");
 					//Print Name
-					int t = 6;
-					for(int s=0; s<7; s++){
-						fread(filename[t], 1, 1, filePointer);
+					t = 6;
+					for(s=0; s<7; s++){
+						fread(byteHolder, 1, 1, filePointer);
+						filename[t] = *byteHolder;
 						t--;
 					}
 					printf("Name: %s", filename);
 					//Print Extention
-					int t = 2;
-					for(int s=0; s<3; s++){
-						fread(extension[t], 1, 1, filePointer);
+					t = 2;
+					for(s=0; s<3; s++){
+						fread(byteHolder, 1, 1, filePointer);
+						extension[t] = *byteHolder;
 						t--;
 					}
 					printf(".%s", extension);
 					fseek(filePointer, 15, SEEK_CUR);
-					int t = 1;
-					for(int s=0; s<2; s++){
-						fread(startCluster[t], 1, 1, filePointer);
+					t = 1;
+					for(s=0; s<2; s++){
+						fread(byteHolder, 1, 1, filePointer);
+						startCluster[t] = *byteHolder;
 						t--;
 					}
 					//Print Size
-					int t = 3;
-					for(int s=0; s<2; s++){
-						fread(size[t], 1, 1, filePointer);
+					t = 3;
+					for(s=0; s<2; s++){
+						fread(byteHolder, 1, 1, filePointer);
+						size[t] = *byteHolder;
 						t--;
 					}
-					printf("	Size: %d bytes", size);
+					printf("	Size: %d bytes", *size);
 					//Print Start Cluster
-					printf("	Start Cluster: %d\n\n", startCluster);
+					printf("	Start Cluster: %d\n\n", *startCluster);
 
 
 				}					//Where The Magic Happens ^^^^^
