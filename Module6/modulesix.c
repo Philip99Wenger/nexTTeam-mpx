@@ -379,40 +379,44 @@ void listWrapper(){
 void listDirectory(char* fileName, char* extension){
 	char* nullPtr = "\0";
 	printf("\n%s\n", fileName);
-	if(fileName==NULL){//if the user just enterd "list", print the whole current directory
-		printf("\nDirectory Name: %s", (*currentDir).fileName);
-		if((*currentDir).extension!=NULL){printf(".%s", (*currentDir).extension);}
-		printf("\nDirectory Size: %d", (*currentDir).fileSize);
+	printf("\nDirectory Name: %s", (*currentDir).fileName);
+	if((*currentDir).extension!=NULL){printf(".%s", (*currentDir).extension);}
+	printf("\nDirectory Size: %d", (*currentDir).fileSize);
 
-		//Properties
-		if((*currentDir).attribute!=0x00){
-			printf("\nThis Directory has the following properties:\n");
-			int readOnly = (*currentDir).attribute & 0x01;
-			int hidden = (*currentDir).attribute & 0x02;
-			int system = (*currentDir).attribute & 0x04;
-			int subdirectory = (*currentDir).attribute & 0x10;
-			if(readOnly==0x01){printf("Read Only\n");}
-			if(hidden==0x02){printf("Hidden\n");}
-			if(system==0x04){printf("System\n");}
-			if(subdirectory==0x10){printf("Is a subdirectory\n");}
-			if((*currentDir).reserved!=0x00){printf("Reserved\n");}
+	//Properties
+	if((*currentDir).attribute!=0x00){
+		printf("\nThis Directory has the following properties:\n");
+		int readOnly = (*currentDir).attribute & 0x01;
+		int hidden = (*currentDir).attribute & 0x02;
+		int system = (*currentDir).attribute & 0x04;
+		int subdirectory = (*currentDir).attribute & 0x10;
+		if(readOnly==0x01){printf("Read Only\n");}
+		if(hidden==0x02){printf("Hidden\n");}
+		if(system==0x04){printf("System\n");}
+		if(subdirectory==0x10){printf("Is a subdirectory\n");}
+		if((*currentDir).reserved!=0x00){printf("Reserved\n");}
+	}
+	
+	//Time Information
+	printf("Creation Time: %s:%s:%s\n", intToAscii((*currentDir).creationTime.hour), intToAscii((*currentDir).creationTime.minute), intToAscii((*currentDir).creationTime.second));
+	printf("Creation Date: %d/%d/%d\n", (*currentDir).creationDate.month, (*currentDir).creationDate.day, (*currentDir).creationDate.year);
+	printf("Last Access Date: %d/%d/%d\n", (*currentDir).lastAccessDate.month, (*currentDir).lastAccessDate.day, (*currentDir).lastAccessDate.year);
+	printf("Last Write Time: %s:%s:%s\n", intToAscii((*currentDir).lastWriteTime.hour), intToAscii((*currentDir).lastWriteTime.minute), intToAscii((*currentDir).lastWriteTime.second));
+	printf("Last Write Date: %d/%d/%d\n", (*currentDir).lastWriteDate.month, (*currentDir).lastWriteDate.day, (*currentDir).lastWriteDate.year);
+
+	//Files & Directories
+	printf("The Files and Folders Contained in this Directory:\n\n");
+	int location = 0;
+	if(fileName==NULL){//if the user just entered "list", print the whole current directory
+		while((unsigned char) currentDir[location].fileName[0] != 0x00){location++;}
+		printDirectoryEntry(currentDir, location);
+	} else {
+		while(currentDir[location].fileName[0]!=0x00){
+			location = getDirectoryLocation(*fileName, *Extension, location);
+			printDirectoryEntry(currentDir, location);
+			location++;
 		}
 		
-		//Time Information
-		printf("Creation Time: %s:%s:%s\n", intToAscii((*currentDir).creationTime.hour), intToAscii((*currentDir).creationTime.minute), intToAscii((*currentDir).creationTime.second));
-		printf("Creation Date: %d/%d/%d\n", (*currentDir).creationDate.month, (*currentDir).creationDate.day, (*currentDir).creationDate.year);
-		printf("Last Access Date: %d/%d/%d\n", (*currentDir).lastAccessDate.month, (*currentDir).lastAccessDate.day, (*currentDir).lastAccessDate.year);
-		printf("Last Write Time: %s:%s:%s\n", intToAscii((*currentDir).lastWriteTime.hour), intToAscii((*currentDir).lastWriteTime.minute), intToAscii((*currentDir).lastWriteTime.second));
-		printf("Last Write Date: %d/%d/%d\n", (*currentDir).lastWriteDate.month, (*currentDir).lastWriteDate.day, (*currentDir).lastWriteDate.year);
-	
-		//Files & Directories
-		printf("The Files and Folders Contained in this Directory:\n\n");
-		int number = 0;
-		while((unsigned char) currentDir[number].fileName[0] != 0x00){number++;}
-		printDirectoryEntry(currentDir, number);
-
-
-
 
 		/*unsigned char startCluster[2];	//temporary start-cluster holder
 		unsigned char filename[8];	//temporary file-name holder
