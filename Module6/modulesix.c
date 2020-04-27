@@ -695,11 +695,14 @@ void typeWrapper(){
 void type(char* name, char* extension){
 	if(extension == NULL)
 		extension = "";
+	
+	//if the file extension is not a valid extension, print error message
 	if((strncmp(extension, "BAT", 3)==0) || (strncmp(extension, "BAT", 3)==0) || (strncmp(extension, "C", 1)==0)){
 		printf("Can only display files with extension of BAT, TXT, or C\n");
 		return;
 	}
 
+	//get the location of the file, and if the file is not found, print error message
 	int location = getDirectoryLocation(name, extension, 0);
 
 	if(location == -1){
@@ -710,19 +713,21 @@ void type(char* name, char* extension){
 	int a=0;
 	int b=0; 
 
+	//set the file pointer to the sector for the file
 	int currSector = currentDir[location].firstCluster;
 	fseek(filePointer, 512*(currSector+31), SEEK_SET);
 
 	char buffer[513];
 	buffer[512] = '\0';
 
+	//while is data remaining in the file to print, print the file
 	int sector = numSectors(currSector);
 	while(b < sector && a < currentDir[location].fileSize){
 		if((currentDir[location].fileSize-a) > 512){
 			fread(buffer, 1, 512, filePointer);
 			printf("%s", buffer);
 			a=a+512;
-			getchar();
+			getchar(); //wait for enter to print the next set of data
 		}
 		else{
 			fread(buffer, 1, currentDir[location].fileSize-a, filePointer);
