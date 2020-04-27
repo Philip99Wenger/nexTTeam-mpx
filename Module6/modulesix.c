@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 		//"help",
 		//"getTime",
 		//"setTime",
-		"list"
+		"list",
 		"rename"
 		
 	};
@@ -556,7 +556,7 @@ void renameFile(){
 
 		int location = getDirectoryLocation(oldName, oldExtension, 0);
 
-		char* newName = strtok(oldFile, ".");
+		char* newName = strtok(newFile, ".");
 		char* newExtension = strtok(NULL, "");
 		if(!newExtension){
 			newExtension = "   ";
