@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 		//get a command
 		char newCommands[25];
 		memset(newCommands, '\0', 25);
-		scanf("%s", newCommands);
+		scanf(" %[^\n]", newCommands);
 		char* cmdBuffer = strtok(newCommands, " ");
 		//pass
 
@@ -288,9 +288,7 @@ void printRootDirectory(){
 }
 
 void changeDirectoryWrapper(){
-	char *directoryName;
-	printf("What is the name of the subdirectory?\n");
-	scanf("%s", directoryName);
+	char *directoryName = strtok(NULL, " ");
 	printf("Hi\n");
 	changeDirectory(directoryName);
 }
