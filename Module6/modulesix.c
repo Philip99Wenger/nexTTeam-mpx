@@ -288,18 +288,24 @@ void printRootDirectory(){
 }
 
 void changeDirectoryWrapper(){
-	char *directoryName = strtok(NULL, " ");
-	printf("Hi\n");
-	changeDirectory(directoryName);
+	char* directoryN = strtok(NULL, " ");
+	printf("%s\n", directoryN);
+	char s1[25]; 
+	strcpy(s1, directoryN);
+	changeDirectory(s1);
+	//changeDirectory(directoryN);
+	//changeDirectory(directoryName);
 }
 
 void changeDirectory(char* directoryName) {
+	printf("Hello");
 	if(directoryName ==  NULL){ //if null, reset to root
 		if(currentDir != root) {
 			free(currentDir);
 		}
 		printf("Hi\n");
 		int startSector = 19;
+		currentDir = root;
 		fseek(filePointer, 512*(startSector), SEEK_SET);
 		sizeOfCurrentDir = 224;
 		startOfCurrentDir = 14;
