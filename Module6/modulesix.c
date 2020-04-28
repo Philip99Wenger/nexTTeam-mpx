@@ -55,6 +55,12 @@ int main(int argc, char *argv[])
 		printf("File was not found.\n");
 		return -1;
 	}
+	if(argc >= 3){
+		changeDirectory(argv[2]);
+	}
+	if(argc >= 4){
+		changeDirectory(argv[3]);
+	}
 
 	unsigned int k;
 	quit = 0;
@@ -434,10 +440,15 @@ void listDirectory(char* fileName, char* extension){
 		while((unsigned char) currentDir[location].fileName[0] != 0x00){location++;}
 		printDirectoryEntry(currentDir, location);
 	} else {
-		while(location>=-1){
+		changeDirectory(fileName);
+		while((unsigned char) currentDir[location].fileName[0] != 0x00){location++;}
+		//printDirectoryEntry(currentDir, location);
+		changeDirectory(NULL);
+		
+		/*while(location>-1){
 			location = getDirectoryLocation(fileName, extension, location);
 			if(location>=-1){printDirectoryEntry(currentDir, location);}
-		}
+		}*/
 		
 
 		/*unsigned char startCluster[2];	//temporary start-cluster holder
